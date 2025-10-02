@@ -40,10 +40,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = clean_input($_POST['email']);
     $password = clean_input($_POST['password']);
     
-    $debug_info = "Intento de login - Email: '$email' | Contraseña: '$password'";
+    // Verificar reCAPTCHA (versión de prueba que siempre retorna true)
+    $recaptcha_valid = false;
+    if (isset($_POST['g-recaptcha-response'])) {
+        $secretKey = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"; // Clave de prueba de Google
+        $response = $_POST['g-recaptcha-response'];
+        
+        // Para testing, siempre validar como correcto
+        $recaptcha_valid = true;
+        $debug_info = "reCAPTCHA: ✅ Verificación de prueba exitosa | ";
+        
+        // En producción, usar esta verificación real:
+        /*
+        $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$response}");
+        $result = json_decode($verify);
+        $recaptcha_valid = $result->success;
+        */
+    }
+    
+    $debug_info .= "Intento de login - Email: '$email' | Contraseña: '$password'";
     
     if (empty($email) || empty($password)) {
         $error = 'Por favor, complete todos los campos.';
+    } elseif (!$recaptcha_valid) {
+        $error = 'Por favor completa el reCAPTCHA correctamente.';
+        $debug_info .= " | ❌ reCAPTCHA inválido";
     } else {
         $database = new Database();
         $db = $database->getConnection();

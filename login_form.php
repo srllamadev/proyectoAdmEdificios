@@ -6,6 +6,32 @@
     <title>Login - Sistema de Administración de Edificios</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    
+    <style>
+        /* Estilos para reCAPTCHA */
+        .g-recaptcha {
+            display: inline-block;
+            margin: 0 auto;
+            transform: scale(0.9);
+            transform-origin: center;
+        }
+        
+        @media (max-width: 480px) {
+            .g-recaptcha {
+                transform: scale(0.8);
+            }
+        }
+        
+        .recaptcha-info {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-left: 4px solid #2196f3;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body class="login-page">
     <div class="login-container">
@@ -51,6 +77,23 @@
                     <label for="password"><i class="fas fa-lock"></i> Contraseña:</label>
                     <input type="password" id="password" name="password" class="form-control" required 
                            placeholder="Ingresa tu contraseña">
+                </div>
+                
+                <!-- reCAPTCHA -->
+                <div class="form-group" style="text-align: center; margin: 25px 0;">
+                    <div class="recaptcha-container" style="background: #f8f9fa; padding: 20px; border-radius: 10px; border: 2px dashed #dee2e6;">
+                        <div style="margin-bottom: 15px;">
+                            <i class="fas fa-shield-alt" style="color: #28a745; font-size: 1.2rem;"></i>
+                            <strong style="color: #495057; margin-left: 8px;">Verificación de Seguridad</strong>
+                        </div>
+                        <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                        <div class="recaptcha-info" style="margin-top: 15px;">
+                            <small>
+                                <i class="fas fa-info-circle"></i> 
+                                <strong>Modo de Prueba:</strong> Este reCAPTCHA siempre será válido para testing
+                            </small>
+                        </div>
+                    </div>
                 </div>
                 
                 <button type="submit" class="btn btn-primary w-full">

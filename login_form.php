@@ -87,12 +87,7 @@
                             <strong style="color: #495057; margin-left: 8px;">Verificación de Seguridad</strong>
                         </div>
                         <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
-                        <div class="recaptcha-info" style="margin-top: 15px;">
-                            <small>
-                                <i class="fas fa-info-circle"></i> 
-                                <strong>Modo de Prueba:</strong> Este reCAPTCHA siempre será válido para testing
-                            </small>
-                        </div>
+                        
                     </div>
                 </div>
                 

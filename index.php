@@ -1143,7 +1143,7 @@ $servicios = [
         </div>
     </footer>
 
-    <!-- Modal para galería -->
+    <!-- Modal para galería  -->
     <div id="galleryModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>

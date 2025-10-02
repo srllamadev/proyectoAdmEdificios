@@ -238,6 +238,7 @@ $servicios = [
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 50px rgba(0, 255, 255, 0.3);
             animation: glow 2s ease-in-out infinite alternate;
+            
         }
 
         .hero .subtitle {
@@ -886,7 +887,7 @@ $servicios = [
     <!-- Hero Section -->
     <section class="hero" id="inicio">
         <div class="hero-content">
-            <h1>SLH</h1>
+            <h1>🏠 Smart Living Hub </h1>
             <p class="subtitle">El Futuro de la Vida Urbana Inteligente</p>
             <p class="description">
                 Bienvenido al ecosistema residencial más avanzado del siglo XXI. 
@@ -1337,3 +1338,4 @@ $servicios = [
     </script>
 </body>
 </html>
+

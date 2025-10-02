@@ -1,0 +1,778 @@
+/* =====================================================
+   SISTEMA DE ADMINISTRACIÓN DE EDIFICIOS - CSS
+   Paleta de colores:
+   #1DCDFE - Azul claro principal
+   #21D0B2 - Verde agua
+   #34F5C5 - Verde menta
+   #2F455C - Azul oscuro
+   ===================================================== */
+
+/* Variables CSS */
+:root {
+    --primary-blue: #1DCDFE;
+    --secondary-green: #21D0B2;
+    --accent-mint: #34F5C5;
+    --dark-blue: #2F455C;
+    --white: #ffffff;
+    --light-gray: #f8f9fa;
+    --gray: #e9ecef;
+    --dark-gray: #6c757d;
+    --border-radius: 12px;
+    --shadow: 0 4px 6px rgba(47, 69, 92, 0.1);
+    --shadow-hover: 0 8px 25px rgba(47, 69, 92, 0.15);
+    --transition: all 0.3s ease;
+}
+
+/* Reset y base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--dark-blue);
+    background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
+    min-height: 100vh;
+}
+
+/* Layout principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-green) 100%);
+    color: white;
+    padding: 30px;
+    border-radius: var(--border-radius);
+    margin-bottom: 30px;
+    box-shadow: var(--shadow);
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Estilo Bento - Grid Cards */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.bento-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    border: 1px solid var(--gray);
+    position: relative;
+    overflow: hidden;
+}
+
+.bento-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-blue), var(--secondary-green), var(--accent-mint));
+}
+
+.bento-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.bento-card h3 {
+    color: var(--dark-blue);
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.bento-card p {
+    color: var(--dark-gray);
+    margin-bottom: 20px;
+}
+
+/* Tarjetas de estadísticas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    border: 1px solid var(--gray);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.stat-card:nth-child(1) .stat-number { color: var(--primary-blue); }
+.stat-card:nth-child(2) .stat-number { color: var(--secondary-green); }
+.stat-card:nth-child(3) .stat-number { color: var(--accent-mint); }
+.stat-card:nth-child(4) .stat-number { color: var(--dark-blue); }
+
+.stat-label {
+    color: var(--dark-gray);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+/* Botones */
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-green));
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(29, 205, 254, 0.3);
+}
+
+.btn-secondary {
+    background: var(--accent-mint);
+    color: var(--dark-blue);
+}
+
+.btn-secondary:hover {
+    background: var(--secondary-green);
+    color: white;
+}
+
+.btn-danger {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-warning {
+    background: #f39c12;
+    color: white;
+}
+
+.btn-success {
+    background: var(--secondary-green);
+    color: white;
+}
+
+/* Navegación superior */
+.top-nav {
+    background: white;
+    padding: 15px 25px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.nav-links a {
+    color: var(--dark-blue);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.nav-links a:hover {
+    color: var(--primary-blue);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--dark-blue);
+    font-weight: 500;
+}
+
+/* Formularios */
+.form-container {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 30px;
+    box-shadow: var(--shadow);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark-blue);
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--gray);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(29, 205, 254, 0.1);
+}
+
+/* Tablas */
+.table-container {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    background: var(--dark-blue);
+    color: white;
+    padding: 15px 20px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--gray);
+}
+
+.table tr:hover {
+    background-color: var(--light-gray);
+}
+
+/* Mensajes de estado */
+.alert {
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    background-color: rgba(52, 245, 197, 0.1);
+    border-left-color: var(--accent-mint);
+    color: var(--dark-blue);
+}
+
+.alert-error {
+    background-color: rgba(231, 76, 60, 0.1);
+    border-left-color: #e74c3c;
+    color: #c0392b;
+}
+
+.alert-warning {
+    background-color: rgba(243, 156, 18, 0.1);
+    border-left-color: #f39c12;
+    color: #d68910;
+}
+
+.alert-info {
+    background-color: rgba(29, 205, 254, 0.1);
+    border-left-color: var(--primary-blue);
+    color: var(--dark-blue);
+}
+
+/* Estados de elementos */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-active { background-color: var(--accent-mint); color: var(--dark-blue); }
+.status-pending { background-color: #f39c12; color: white; }
+.status-expired { background-color: #e74c3c; color: white; }
+.status-completed { background-color: var(--secondary-green); color: white; }
+
+/* Login específico */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-green) 50%, var(--accent-mint) 100%);
+}
+
+.login-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(47, 69, 92, 0.2);
+    width: 100%;
+    max-width: 450px;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header h1 {
+    color: var(--dark-blue);
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.login-header p {
+    color: var(--dark-gray);
+}
+
+.demo-credentials {
+    background: var(--light-gray);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.demo-credentials h4 {
+    color: var(--dark-blue);
+    margin-bottom: 15px;
+}
+
+.demo-credentials p {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.demo-credentials strong {
+    color: var(--primary-blue);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .bento-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .page-header h1 {
+        font-size: 2rem;
+    }
+    
+    .top-nav {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .login-card {
+        margin: 20px;
+        padding: 30px 25px;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Utilidades */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.mb-0 { margin-bottom: 0; }
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }
+.mt-20 { margin-top: 20px; }
+.p-20 { padding: 20px; }
+
+.d-flex { display: flex; }
+.justify-between { justify-content: space-between; }
+.align-center { align-items: center; }
+.gap-10 { gap: 10px; }
+.gap-20 { gap: 20px; }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+/* Estilos para páginas de pagos */
+.payment-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: var(--box-shadow);
+    border-left: 4px solid var(--primary-blue);
+    transition: transform 0.2s ease;
+}
+
+.payment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.payment-card[data-estado="pagado"] {
+    border-left-color: var(--secondary-green);
+    background: linear-gradient(135deg, rgba(33, 208, 178, 0.05), rgba(255,255,255,1));
+}
+
+.payment-card[data-estado="vencido"] {
+    border-left-color: #dc3545;
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.05), rgba(255,255,255,1));
+}
+
+.payment-card[data-estado="pendiente"] {
+    border-left-color: #ffc107;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.05), rgba(255,255,255,1));
+}
+
+.payment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.payment-header h4 {
+    margin: 0;
+    color: var(--dark-blue);
+    font-size: 1.2rem;
+}
+
+.payment-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-bottom: 20px;
+}
+
+.detail-group h5 {
+    color: var(--primary-blue);
+    margin-bottom: 10px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.detail-group p {
+    margin: 8px 0;
+    color: var(--dark-gray);
+}
+
+.detail-group p strong {
+    color: var(--dark-blue);
+    margin-right: 5px;
+}
+
+.payment-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 15px;
+    border-top: 1px solid var(--light-gray);
+}
+
+.payment-actions .btn {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+}
+
+/* Estilos para página de empleados */
+.employee-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: var(--box-shadow);
+    border-left: 4px solid var(--primary-blue);
+    transition: transform 0.2s ease;
+}
+
+.employee-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.employee-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.employee-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.employee-detail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--dark-gray);
+}
+
+.employee-detail i {
+    color: var(--primary-blue);
+    width: 16px;
+}
+
+.employee-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    padding-top: 15px;
+    border-top: 1px solid var(--light-gray);
+}
+
+.cargo-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.cargo-mantenimiento {
+    background: linear-gradient(135deg, #ffc107, #ffeb3b);
+    color: #333;
+}
+
+.cargo-seguridad {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-green));
+    color: white;
+}
+
+.cargo-administracion {
+    background: linear-gradient(135deg, var(--accent-mint), var(--secondary-green));
+    color: var(--dark-blue);
+}
+
+.cargo-limpieza {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    color: var(--dark-blue);
+}
+
+/* Estilos para tablas de empleados */
+.table tbody tr:hover {
+    background: rgba(29, 205, 254, 0.05);
+    transform: scale(1.01);
+}
+
+.table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.employee-email {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.employee-email:hover {
+    text-decoration: underline;
+}
+
+.employee-dni {
+    background: var(--light-gray);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+/* Estadísticas específicas para empleados */
+.employee-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.employee-stat-card {
+    background: white;
+    padding: 25px 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    text-align: center;
+    border-top: 4px solid var(--primary-blue);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.employee-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.employee-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-blue), var(--secondary-green));
+}
+
+.employee-stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary-blue);
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+.employee-stat-label {
+    color: var(--dark-gray);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.employee-stat-label i {
+    margin-right: 5px;
+    color: var(--primary-blue);
+}
+
+/* Distribución de empleados */
+.employee-distribution {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.distribution-item {
+    text-align: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+}
+
+.distribution-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.distribution-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* Responsive para empleados */
+@media (max-width: 768px) {
+    .employee-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .employee-distribution {
+        grid-template-columns: 1fr;
+    }
+    
+    .cargo-badge {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+    
+    .employee-dni {
+        font-size: 0.8rem;
+    }
+}

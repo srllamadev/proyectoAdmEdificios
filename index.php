@@ -27,11 +27,6 @@ $servicios = [
         'descripcion' => 'Sistema de comunicación integrado que mantiene a toda la comunidad informada y conectada.'
     ],
     [
-        'icon' => 'fas fa-shield-alt',
-        'titulo' => 'Seguridad Avanzada',
-        'descripcion' => 'Protocolos de seguridad digital y física para garantizar la tranquilidad de nuestros residentes.'
-    ],
-    [
         'icon' => 'fas fa-leaf',
         'titulo' => 'Sustentabilidad',
         'descripcion' => 'Comprometidos con el medio ambiente a través de tecnologías verdes y eficiencia energética.'
@@ -44,7 +39,7 @@ $servicios = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EdiTech Tower - El Futuro de la Vida Urbana</title>
+    <title>SLH - El Futuro de la Vida Urbana</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -874,7 +869,7 @@ $servicios = [
     <header class="header" id="header">
         <div class="nav-container">
             <div class="logo">
-                <i class="fas fa-building"></i> EdiTech Tower
+                <i class="fas fa-building"></i> SLH
             </div>
             <nav>
                 <ul class="nav-links">
@@ -891,7 +886,7 @@ $servicios = [
     <!-- Hero Section -->
     <section class="hero" id="inicio">
         <div class="hero-content">
-            <h1>EdiTech Tower</h1>
+            <h1>SLH</h1>
             <p class="subtitle">El Futuro de la Vida Urbana Inteligente</p>
             <p class="description">
                 Bienvenido al ecosistema residencial más avanzado del siglo XXI. 
@@ -1107,20 +1102,7 @@ $servicios = [
                     <h3>Piscina Climatizada</h3>
                     <p>Área de relajación con sistema de climatización inteligente</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-seedling"></i>
-                    </div>
-                    <h3>Jardines Verticales</h3>
-                    <p>Espacios verdes integrados con sistema de purificación de aire</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-concierge-bell"></i>
-                    </div>
-                    <h3>Concierge Digital</h3>
-                    <p>Asistente virtual disponible las 24 horas para residentes</p>
-                </div>
+                
             </div>
         </div>
 
@@ -1148,7 +1130,7 @@ $servicios = [
     <!-- Footer -->
     <footer class="footer" id="contacto">
         <div class="footer-content">
-            <p>&copy; <?php echo date('Y'); ?> EdiTech Tower. Redefiniendo el futuro urbano.</p>
+            <p>&copy; <?php echo date('Y'); ?> SLH. Redefiniendo el futuro urbano.</p>
             <p>Sistema de Administración Inteligente | Versión 2.0</p>
             
             <div class="social-links">

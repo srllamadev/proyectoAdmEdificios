@@ -31,6 +31,53 @@
             border-radius: 8px;
             margin: 10px 0;
         }
+        
+        .bento-input-group {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .bento-input-toggle {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition-normal);
+        }
+        
+        .bento-input-toggle:hover {
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+        
+        .bento-input-group .bento-form-input {
+            padding-right: 50px;
+        }
+        
+        .bento-login-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-light-gray);
+        }
+        
+        .bento-login-link {
+            color: var(--color-dark-blue);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            transition: var(--transition-normal);
+        }
+        
+        .bento-login-link:hover {
+            color: var(--color-pink);
+        }
     </style>
 </head>
 <body class="bento-body">
@@ -55,9 +102,9 @@
             <?php endif; ?>
             
             <?php if (isset($error)): ?>
-                <div class="bento-alert bento-alert-error">
-                    <i class="fas fa-exclamation-triangle"></i> <strong>Error:</strong> <?php echo $error; ?>
-                </div>
+                <!--<div class="bento-alert bento-alert-error">-->
+                    <!--<i class="fas fa-exclamation-triangle"></i> <strong>Error:</strong> <?php echo $error; ?>-->
+                <!--</div>-->
             <?php endif; ?>
             
             <?php if (isset($debug_info) && !empty($debug_info)): ?>
@@ -69,14 +116,19 @@
             <form method="POST" action="">
                 <div class="bento-form-group">
                     <label for="email" class="bento-form-label"><i class="fas fa-envelope"></i> Email:</label>
-                    <input type="email" id="email" name="email" class="bento-form-control" required 
+                    <input type="email" id="email" name="email" class="bento-form-input" required 
                            placeholder="Ingresa tu email">
                 </div>
                 
                 <div class="bento-form-group">
                     <label for="password" class="bento-form-label"><i class="fas fa-lock"></i> Contraseña:</label>
-                    <input type="password" id="password" name="password" class="bento-form-control" required 
-                           placeholder="Ingresa tu contraseña">
+                    <div class="bento-input-group">
+                        <input type="password" id="password" name="password" class="bento-form-input" required 
+                               placeholder="Ingresa tu contraseña">
+                        <button type="button" class="bento-input-toggle" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="password-icon"></i>
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- reCAPTCHA -->
@@ -95,44 +147,16 @@
                 </button>
             </form>
             
-            <div class="bento-demo-credentials">
-                <h4 class="bento-demo-title"><i class="fas fa-users"></i> Usuarios de Prueba:</h4>
-                
-                <div class="bento-demo-item">
-                    <p class="bento-demo-role"><strong>Administrador:</strong></p>
-                    <p class="bento-demo-creds">
-                        <strong class="bento-demo-email">admin@edificio.com</strong> / 
-                        <strong class="bento-demo-password">password</strong>
-                        <button type="button" onclick="fillCredentials('admin@edificio.com', 'password')" 
-                                class="bento-btn bento-btn-secondary bento-btn-small">
-                            <i class="fas fa-copy"></i> Usar
-                        </button>
-                    </p>
-                </div>
-                
-                <div class="bento-demo-item">
-                    <p class="bento-demo-role"><strong>Empleados:</strong></p>
-                    <p class="bento-demo-creds">
-                        <strong class="bento-demo-email">empleado1@edificio.com</strong> / 
-                        <strong class="bento-demo-password">password</strong>
-                        <button type="button" onclick="fillCredentials('empleado1@edificio.com', 'password')" 
-                                class="bento-btn bento-btn-secondary bento-btn-small">
-                            <i class="fas fa-copy"></i> Usar
-                        </button>
-                    </p>
-                </div>
-                
-                <div class="bento-demo-item">
-                    <p class="bento-demo-role"><strong>Inquilinos:</strong></p>
-                    <p class="bento-demo-creds">
-                        <strong class="bento-demo-email">inquilino1@edificio.com</strong> / 
-                        <strong class="bento-demo-password">password</strong>
-                        <button type="button" onclick="fillCredentials('inquilino1@edificio.com', 'password')" 
-                                class="bento-btn bento-btn-secondary bento-btn-small">
-                            <i class="fas fa-copy"></i> Usar
-                        </button>
-                    </p>
-                </div>
+            <div class="bento-login-links">
+                <a href="register.php" class="bento-login-link">
+                    <i class="fas fa-user-plus"></i> Crear Cuenta
+                </a>
+                <a href="forgot-password.php" class="bento-login-link">
+                    <i class="fas fa-key"></i> Olvidé mi Contraseña
+                </a>
+            </div>
+            
+            <!--elimine unas cositas con codigo: DERFS12-->
                 
                 <div class="bento-demo-tip">
                     <small><i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Haz clic en "Usar" para autocompletar las credenciales</small>
@@ -145,6 +169,19 @@
         function fillCredentials(email, password) {
             document.getElementById('email').value = email;
             document.getElementById('password').value = password;
+        }
+        
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('password-icon');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
         }
     </script>
 </body>

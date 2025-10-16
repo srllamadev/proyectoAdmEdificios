@@ -29,9 +29,9 @@ try {
 }
 ?>
 
-<div class="page-header">
-    <h1><i class="fas fa-users"></i> Gestión de Inquilinos</h1>
-    <p>Administración completa de inquilinos y alquileres</p>
+<div class="bento-page-header">
+    <h1 class="bento-page-title"><i class="fas fa-users"></i> Gestión de Inquilinos</h1>
+    <p class="bento-page-subtitle">Administración completa de inquilinos y alquileres</p>
 </div>
 
 <?php if (isset($error)): ?>
@@ -39,28 +39,28 @@ try {
 <?php endif; ?>
 
 <!-- Estadísticas rápidas -->
-<div class="stats-grid" style="margin-bottom: 30px;">
-    <div class="stat-card">
-        <div class="stat-number"><?php echo count($inquilinos); ?></div>
-        <div class="stat-label">Total Inquilinos</div>
+<div class="bento-stats-grid">
+    <div class="bento-stat-card">
+        <div class="bento-stat-number"><?php echo count($inquilinos); ?></div>
+        <div class="bento-stat-label">Total Inquilinos</div>
     </div>
-    <div class="stat-card">
-        <div class="stat-number"><?php echo count(array_filter($inquilinos, function($i) { return $i['estado'] == 'activo'; })); ?></div>
-        <div class="stat-label">Inquilinos Activos</div>
+    <div class="bento-stat-card">
+        <div class="bento-stat-number"><?php echo count(array_filter($inquilinos, function($i) { return $i['estado'] == 'activo'; })); ?></div>
+        <div class="bento-stat-label">Inquilinos Activos</div>
     </div>
-    <div class="stat-card">
-        <div class="stat-number"><?php echo count(array_filter($inquilinos, function($i) { return !empty($i['numero_departamento']); })); ?></div>
-        <div class="stat-label">Con Alquiler</div>
+    <div class="bento-stat-card">
+        <div class="bento-stat-number"><?php echo count(array_filter($inquilinos, function($i) { return !empty($i['numero_departamento']); })); ?></div>
+        <div class="bento-stat-label">Con Alquiler</div>
     </div>
-    <div class="stat-card">
-        <div class="stat-number">$<?php echo number_format(array_sum(array_map(function($i) { return $i['precio_mensual'] ?? 0; }, $inquilinos)), 0); ?></div>
-        <div class="stat-label">Ingresos Mensuales</div>
+    <div class="bento-stat-card">
+        <div class="bento-stat-number">$<?php echo number_format(array_sum(array_map(function($i) { return $i['precio_mensual'] ?? 0; }, $inquilinos)), 0); ?></div>
+        <div class="bento-stat-label">Ingresos Mensuales</div>
     </div>
 </div>
 
 <!-- Lista de inquilinos en tarjetas bento -->
 <div class="bento-card">
-    <h3><i class="fas fa-list"></i> Lista de Inquilinos</h3>
+    <h3 class="bento-card-title"><i class="fas fa-list"></i> Lista de Inquilinos</h3>
     
     <?php if (!empty($inquilinos)): ?>
         <div class="table-container">
@@ -85,7 +85,7 @@ try {
                             <td><?php echo htmlspecialchars($inquilino['name']); ?></td>
                             <td>
                                 <a href="mailto:<?php echo htmlspecialchars($inquilino['email']); ?>" 
-                                   style="color: var(--primary-blue); text-decoration: none;">
+                                   class="bento-link-email">
                                     <?php echo htmlspecialchars($inquilino['email']); ?>
                                 </a>
                             </td>
@@ -102,9 +102,9 @@ try {
                             </td>
                             <td>
                                 <?php if ($inquilino['precio_mensual']): ?>
-                                    <strong style="color: var(--secondary-green);">$<?php echo number_format($inquilino['precio_mensual'], 2); ?></strong>
+                                    <strong class="bento-price-green">$<?php echo number_format($inquilino['precio_mensual'], 2); ?></strong>
                                 <?php else: ?>
-                                    <span style="color: var(--dark-gray);">N/A</span>
+                                    <span class="bento-text-muted">N/A</span>
                                 <?php endif; ?>
                             </td>
                             <td>
@@ -117,7 +117,7 @@ try {
                                 <?php if ($inquilino['fecha_ingreso']): ?>
                                     <i class="fas fa-calendar-alt"></i> <?php echo date('d/m/Y', strtotime($inquilino['fecha_ingreso'])); ?>
                                 <?php else: ?>
-                                    <span style="color: var(--dark-gray);">N/A</span>
+                                    <span class="bento-text-muted">N/A</span>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -126,38 +126,38 @@ try {
             </table>
         </div>
     <?php else: ?>
-        <div style="text-align: center; padding: 40px; background: var(--light-gray); border-radius: var(--border-radius);">
-            <i class="fas fa-users" style="font-size: 3rem; color: var(--dark-gray); margin-bottom: 15px;"></i>
-            <h3 style="color: var(--dark-gray);">No hay inquilinos registrados</h3>
-            <p style="color: var(--dark-gray);">Los inquilinos aparecerán aquí cuando se registren en el sistema.</p>
+        <div class="bento-empty-state">
+            <i class="fas fa-users"></i>
+            <h3>No hay inquilinos registrados</h3>
+            <p>Los inquilinos aparecerán aquí cuando se registren en el sistema.</p>
         </div>
     <?php endif; ?>
 </div>
 
 <!-- Acciones adicionales -->
-<div class="bento-grid" style="margin-top: 30px;">
-    <div class="bento-card" style="background: linear-gradient(135deg, var(--accent-mint), var(--secondary-green));">
-        <h3><i class="fas fa-plus-circle"></i> Acciones Rápidas</h3>
-        <p style="color: var(--dark-blue);">Herramientas útiles para la gestión de inquilinos.</p>
-        <div class="d-flex gap-10" style="flex-wrap: wrap;">
-            <a href="../shared/comunicaciones.php" class="btn" style="background: var(--dark-blue); color: white;">
+<div class="bento-grid bento-actions-grid">
+    <div class="bento-card bento-card-actions">
+        <h3 class="bento-card-title"><i class="fas fa-plus-circle"></i> Acciones Rápidas</h3>
+        <p class="bento-card-description">Herramientas útiles para la gestión de inquilinos.</p>
+        <div class="bento-actions-buttons">
+            <a href="../shared/comunicaciones.php" class="bento-btn bento-btn-dark">
                 <i class="fas fa-envelope"></i> Ver Comunicaciones
             </a>
-            <a href="pagos.php" class="btn" style="background: var(--dark-blue); color: white;">
+            <a href="pagos.php" class="bento-btn bento-btn-dark">
                 <i class="fas fa-money-bill-wave"></i> Gestionar Pagos
             </a>
         </div>
     </div>
     
-    <div class="bento-card" style="background: linear-gradient(135deg, var(--primary-blue), var(--secondary-green)); color: white;">
-        <h3><i class="fas fa-chart-bar"></i> Resumen Financiero</h3>
-        <p style="color: rgba(255,255,255,0.9);">Estado financiero de los alquileres activos.</p>
-        <div class="d-flex justify-between align-center">
-            <div>
-                <strong style="font-size: 1.5rem;">$<?php echo number_format(array_sum(array_map(function($i) { return $i['precio_mensual'] ?? 0; }, $inquilinos)), 2); ?></strong>
+    <div class="bento-card bento-card-finance">
+        <h3 class="bento-card-title"><i class="fas fa-chart-bar"></i> Resumen Financiero</h3>
+        <p class="bento-card-description">Estado financiero de los alquileres activos.</p>
+        <div class="bento-finance-summary">
+            <div class="bento-finance-amount">
+                <strong>$<?php echo number_format(array_sum(array_map(function($i) { return $i['precio_mensual'] ?? 0; }, $inquilinos)), 2); ?></strong>
                 <br><small>Ingresos Mensuales Totales</small>
             </div>
-            <i class="fas fa-dollar-sign" style="font-size: 2rem; opacity: 0.7;"></i>
+            <i class="fas fa-dollar-sign"></i>
         </div>
     </div>
 </div>

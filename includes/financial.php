@@ -142,18 +142,45 @@ function integratePaymentGateway($gateway, $payload = []) {
 }
 
 function generateInvoicePDF($invoice) {
-    $html = "<h1>Factura {$invoice['reference']}</h1>";
-    $html .= "<p>Monto: {$invoice['amount']}</p>";
-    $html .= "<p>Vence: {$invoice['due_date']}</p>";
-    if (!empty($invoice['items'])) {
-        $html .= "<ul>";
-        foreach ($invoice['items'] as $it) {
-            $html .= "<li>{$it['description']} x{$it['qty']} @ {$it['unit_price']}</li>";
-        }
-        $html .= "</ul>";
-    }
-    $html .= "<p>Generado: ".date('c')."</p>";
+    // Construir HTML elegante para la factura
+    $companyName = 'Administración del Edificio';
+    $html = "<html><head><meta charset='utf-8'><style>
+        body{font-family: Arial,Helvetica,sans-serif;color:#222}
+        .header{display:flex;justify-content:space-between;align-items:center}
+        .meta{font-size:12px;color:#666}
+        .items{width:100%;border-collapse:collapse;margin-top:12px}
+        .items th, .items td{border:1px solid #ddd;padding:8px;text-align:left}
+        .total{font-size:18px;font-weight:700;margin-top:12px}
+        .qr{margin-top:16px}
+    </style></head><body>";
+    $html .= "<div class='header'><div><h2>{$companyName}</h2><div class='meta'>Factura: <strong>{$invoice['reference']}</strong></div></div>";
 
+    $payUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . 
+        dirname($_SERVER['PHP_SELF']) . "/pay_invoice.php?ref=" . urlencode($invoice['reference']);
+    $qrUrl = generateQRCodeUrl($payUrl, 180);
+    $html .= "<div style='text-align:right'><div class='meta'>Vence: " . htmlspecialchars($invoice['due_date']) . "</div>";
+    $html .= "<div class='meta'>Generado: " . date('Y-m-d H:i') . "</div></div></div>";
+
+    $html .= "<table class='items'><thead><tr><th>Descripción</th><th>Cantidad</th><th>Precio Unit.</th><th>Subtotal</th></tr></thead><tbody>";
+    $sum = 0;
+    if (!empty($invoice['items'])) {
+        foreach ($invoice['items'] as $it) {
+            $qty = intval($it['qty'] ?? 1);
+            $price = number_format((float)($it['unit_price'] ?? 0), 2);
+            $sub = $qty * ((float)($it['unit_price'] ?? 0));
+            $sum += $sub;
+            $html .= "<tr><td>" . htmlspecialchars($it['description']) . "</td><td>".$qty."</td><td>$".$price."</td><td>$".number_format($sub,2)."</td></tr>";
+        }
+    }
+    $html .= "</tbody></table>";
+    $total = number_format((float)($invoice['amount'] ?? $sum), 2);
+    $html .= "<div class='total'>Total: $" . $total . "</div>";
+
+    // QR para pago/estado
+    $html .= "<div class='qr'><strong>Pago rápido / Estado</strong><br><img src='" . htmlspecialchars($qrUrl) . "' alt='QR pago' /></div>";
+    $html .= "</body></html>";
+
+    // Si existe Dompdf, generar PDF binario, si no, devolver HTML para mostrar en navegador
     if (class_exists('Dompdf\\Dompdf')) {
         $dompdf = new \Dompdf\Dompdf();
         $dompdf->loadHtml($html);

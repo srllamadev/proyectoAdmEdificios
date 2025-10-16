@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-10-2025 a las 12:48:31
+-- Tiempo de generación: 16-10-2025 a las 19:08:37
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,24 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `edificio_admin`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `alertas`
+--
+
+CREATE TABLE `alertas` (
+  `id` bigint(20) NOT NULL,
+  `departamento_id` int(11) NOT NULL,
+  `sensor_id` int(11) DEFAULT NULL,
+  `tipo` enum('consumo_alto','posible_fuga','corte','info') NOT NULL,
+  `prioridad` enum('baja','media','alta') DEFAULT 'media',
+  `mensaje` varchar(512) NOT NULL,
+  `metadata` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`metadata`)),
+  `leido` tinyint(1) DEFAULT 0,
+  `creado_en` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -113,6 +131,50 @@ INSERT INTO `comunicacion` (`id`, `remitente_id`, `destinatario_id`, `asunto`, `
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `departamentos`
+--
+
+CREATE TABLE `departamentos` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `piso` varchar(50) DEFAULT NULL,
+  `propietario` varchar(150) DEFAULT NULL,
+  `creado_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `device_tokens`
+--
+
+CREATE TABLE `device_tokens` (
+  `id` int(11) NOT NULL,
+  `dispositivo_id` int(11) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `activo` tinyint(1) DEFAULT 1,
+  `creado_en` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `dispositivos`
+--
+
+CREATE TABLE `dispositivos` (
+  `id` int(11) NOT NULL,
+  `departamento_id` int(11) NOT NULL,
+  `identificador` varchar(128) NOT NULL,
+  `tipo` enum('medidor','gateway','sensor') NOT NULL DEFAULT 'medidor',
+  `descripcion` varchar(255) DEFAULT NULL,
+  `activo` tinyint(1) DEFAULT 1,
+  `creado_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `empleados`
 --
 
@@ -184,6 +246,13 @@ CREATE TABLE `invoices` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `invoices`
+--
+
+INSERT INTO `invoices` (`id`, `reference`, `resident_id`, `amount`, `due_date`, `status`, `meta`, `created_at`) VALUES
+(1, 'INV-D5BCC7AE', 1, 80.00, '2030-11-20', 'pending', NULL, '2025-10-16 16:52:40');
+
 -- --------------------------------------------------------
 
 --
@@ -198,6 +267,23 @@ CREATE TABLE `invoice_items` (
   `unit_price` decimal(12,2) DEFAULT 0.00,
   `total` decimal(12,2) GENERATED ALWAYS AS (`qty` * `unit_price`) VIRTUAL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `lecturas`
+--
+
+CREATE TABLE `lecturas` (
+  `id` bigint(20) NOT NULL,
+  `sensor_id` int(11) NOT NULL,
+  `departamento_id` int(11) NOT NULL,
+  `valor` double NOT NULL,
+  `tipo` enum('instantaneo','acumulado') NOT NULL DEFAULT 'instantaneo',
+  `recibido_en` datetime NOT NULL,
+  `creado_en` datetime DEFAULT current_timestamp(),
+  `procesado` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -336,6 +422,93 @@ INSERT INTO `reservas` (`id`, `inquilino_id`, `area_comun_id`, `fecha_inicio`, `
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `security_logs`
+--
+
+CREATE TABLE `security_logs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `action` varchar(100) NOT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `details` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `security_logs`
+--
+
+INSERT INTO `security_logs` (`id`, `user_id`, `action`, `ip_address`, `user_agent`, `details`, `created_at`) VALUES
+(1, 1, 'account_created', NULL, NULL, 'Cuenta de administrador creada durante setup inicial', '2025-10-16 13:34:01'),
+(2, 2, 'account_created', NULL, NULL, 'Cuenta de empleado creada durante setup inicial', '2025-10-16 13:34:01'),
+(3, 3, 'account_created', NULL, NULL, 'Cuenta de empleado creada durante setup inicial', '2025-10-16 13:34:01'),
+(4, 4, 'account_created', NULL, NULL, 'Cuenta de empleado creada durante setup inicial', '2025-10-16 13:34:01'),
+(5, 5, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:34:01'),
+(6, 6, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:34:01'),
+(7, 7, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:34:01'),
+(8, 8, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:34:01'),
+(9, 9, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:34:01'),
+(10, 1, 'account_created', NULL, NULL, 'Cuenta de administrador creada durante setup inicial', '2025-10-16 13:40:50'),
+(11, 2, 'account_created', NULL, NULL, 'Cuenta de empleado creada durante setup inicial', '2025-10-16 13:40:50'),
+(12, 3, 'account_created', NULL, NULL, 'Cuenta de empleado creada durante setup inicial', '2025-10-16 13:40:50'),
+(13, 4, 'account_created', NULL, NULL, 'Cuenta de empleado creada durante setup inicial', '2025-10-16 13:40:50'),
+(14, 5, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:40:50'),
+(15, 6, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:40:50'),
+(16, 7, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:40:50'),
+(17, 8, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:40:50'),
+(18, 9, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:40:50'),
+(19, 1, 'account_created', NULL, NULL, 'Cuenta de administrador creada durante setup inicial', '2025-10-16 13:43:23'),
+(20, 2, 'account_created', NULL, NULL, 'Cuenta de empleado creada durante setup inicial', '2025-10-16 13:43:23'),
+(21, 3, 'account_created', NULL, NULL, 'Cuenta de empleado creada durante setup inicial', '2025-10-16 13:43:23'),
+(22, 4, 'account_created', NULL, NULL, 'Cuenta de empleado creada durante setup inicial', '2025-10-16 13:43:23'),
+(23, 5, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:43:23'),
+(24, 6, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:43:23'),
+(25, 7, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:43:23'),
+(26, 8, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:43:23'),
+(27, 9, 'account_created', NULL, NULL, 'Cuenta de inquilino creada durante setup inicial', '2025-10-16 13:43:23'),
+(28, NULL, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 13:45:50'),
+(29, NULL, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 13:46:41'),
+(30, NULL, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 13:47:18'),
+(31, NULL, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 13:47:45'),
+(32, NULL, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 13:49:20'),
+(33, 2, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 13:50:21'),
+(34, 2, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 13:50:29'),
+(35, 2, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 13:50:35'),
+(36, 2, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 13:50:41'),
+(37, 10, 'account_created', '::1', 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36 Edg/141.0.0.0', 'Cuenta creada mediante registro', '2025-10-16 13:59:40'),
+(38, NULL, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 14:06:00'),
+(39, NULL, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 14:06:27'),
+(40, 1, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 14:07:29'),
+(41, 1, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 14:07:40'),
+(42, 1, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 14:08:56'),
+(43, 2, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 14:10:20'),
+(44, 10, 'login_success', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Login exitoso', '2025-10-16 14:11:08'),
+(45, 1, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 14:13:39'),
+(46, 1, 'failed_login_attempt', '::1', 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36 Edg/141.0.0.0', 'Intento fallido desde IP: ::1', '2025-10-16 14:18:40'),
+(47, 1, 'login_success', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Login exitoso', '2025-10-16 14:19:06'),
+(48, 1, 'login_success', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'Login exitoso', '2025-10-16 16:49:00');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `sensores`
+--
+
+CREATE TABLE `sensores` (
+  `id` int(11) NOT NULL,
+  `dispositivo_id` int(11) NOT NULL,
+  `canal` varchar(64) NOT NULL,
+  `tipo` enum('agua','luz','gas') NOT NULL,
+  `unidad` varchar(16) NOT NULL DEFAULT 'kWh',
+  `descripcion` varchar(255) DEFAULT NULL,
+  `activo` tinyint(1) DEFAULT 1,
+  `creado_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `servicios`
 --
 
@@ -412,6 +585,23 @@ CREATE TABLE `transactions` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `umbrales`
+--
+
+CREATE TABLE `umbrales` (
+  `id` int(11) NOT NULL,
+  `sensor_id` int(11) DEFAULT NULL,
+  `departamento_id` int(11) DEFAULT NULL,
+  `tipo_alerta` enum('consumo_alto','posible_fuga','corte') NOT NULL,
+  `valor` double NOT NULL,
+  `ventana_minutos` int(11) DEFAULT 60,
+  `activo` tinyint(1) DEFAULT 1,
+  `creado_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `users`
 --
 
@@ -423,6 +613,13 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `role` enum('admin','empleado','inquilino') NOT NULL DEFAULT 'inquilino',
   `remember_token` varchar(100) DEFAULT NULL,
+  `password_reset_token` varchar(255) DEFAULT NULL,
+  `password_reset_expires` timestamp NULL DEFAULT NULL,
+  `failed_login_attempts` int(11) DEFAULT 0,
+  `locked_until` timestamp NULL DEFAULT NULL,
+  `last_failed_login` timestamp NULL DEFAULT NULL,
+  `password_changed_at` timestamp NULL DEFAULT NULL,
+  `account_locked` tinyint(1) DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -431,20 +628,53 @@ CREATE TABLE `users` (
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Administrador Principal', 'admin@edificio.com', '2025-10-16 07:47:16', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', NULL, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
-(2, 'Carlos Mendoza', 'empleado1@edificio.com', '2025-10-16 07:47:16', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'empleado', NULL, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
-(3, 'María González', 'empleado2@edificio.com', '2025-10-16 07:47:16', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'empleado', NULL, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
-(4, 'Luis Rodríguez', 'empleado3@edificio.com', '2025-10-16 07:47:16', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'empleado', NULL, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
-(5, 'Ana Pérez', 'inquilino1@edificio.com', '2025-10-16 07:47:16', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'inquilino', NULL, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
-(6, 'Roberto Silva', 'inquilino2@edificio.com', '2025-10-16 07:47:16', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'inquilino', NULL, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
-(7, 'Laura Martínez', 'inquilino3@edificio.com', '2025-10-16 07:47:16', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'inquilino', NULL, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
-(8, 'Diego Torres', 'inquilino4@edificio.com', '2025-10-16 07:47:16', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'inquilino', NULL, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
-(9, 'Carmen López', 'inquilino5@edificio.com', '2025-10-16 07:47:16', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'inquilino', NULL, '2025-10-16 07:47:16', '2025-10-16 07:47:16');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `password_reset_token`, `password_reset_expires`, `failed_login_attempts`, `locked_until`, `last_failed_login`, `password_changed_at`, `account_locked`, `created_at`, `updated_at`) VALUES
+(1, 'Administrador Principal', 'admin@edificio.com', '2025-10-16 07:47:16', '$argon2id$v=19$m=65536,t=4,p=3$ZldIZDJlZ0Y2YVM1SlVMQQ$Y+22NM0518cnyrHd3u0B2xBeERT6nTJr3bDJ4/yO0YU', 'admin', NULL, NULL, NULL, 0, NULL, NULL, '2025-10-16 07:47:16', 0, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
+(2, 'Carlos Mendoza', 'empleado1@edificio.com', '2025-10-16 07:47:16', '$argon2id$v=19$m=65536,t=4,p=3$NnQ0YzNhWGdIMHhwMDJzdg$xpaGbHF1uIwIh+AaaPxwYF0/J3p0JWBlal33hT5RJnA', 'empleado', NULL, NULL, NULL, 5, '2025-10-16 14:25:20', '2025-10-16 14:10:20', '2025-10-16 07:47:16', 0, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
+(3, 'María González', 'empleado2@edificio.com', '2025-10-16 07:47:16', '$argon2id$v=19$m=65536,t=4,p=3$a2l2RUYucTdSd0lCVzVZYQ$BLtrLFMDlKm28YpJw3Ak/bM5Zt3X7CTU06livBTBpO4', 'empleado', NULL, NULL, NULL, 0, NULL, NULL, '2025-10-16 07:47:16', 0, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
+(4, 'Luis Rodríguez', 'empleado3@edificio.com', '2025-10-16 07:47:16', '$argon2id$v=19$m=65536,t=4,p=3$VC56ZGpqSk4zQ2FmaUZ4cg$0g5UNEW6yf2+SHZzi8J3vLNEzquRXOdCKJcSBTWgQ8s', 'empleado', NULL, NULL, NULL, 0, NULL, NULL, '2025-10-16 07:47:16', 0, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
+(5, 'Ana Pérez', 'inquilino1@edificio.com', '2025-10-16 07:47:16', '$argon2id$v=19$m=65536,t=4,p=3$UXQ4LzNZWFd0Q2tneEZwZQ$z2IgBbhekk0g7jTksK56naB9BebCtKZDZVVnZP23BSQ', 'inquilino', NULL, NULL, NULL, 0, NULL, NULL, '2025-10-16 07:47:16', 0, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
+(6, 'Roberto Silva', 'inquilino2@edificio.com', '2025-10-16 07:47:16', '$argon2id$v=19$m=65536,t=4,p=3$TjRGTmk1Y2tSNmZnTHF6aA$tajnmhcSBLr15Je3KG9tqE6Lo9PklWgTDdJ/IM0fAdg', 'inquilino', NULL, NULL, NULL, 0, NULL, NULL, '2025-10-16 07:47:16', 0, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
+(7, 'Laura Martínez', 'inquilino3@edificio.com', '2025-10-16 07:47:16', '$argon2id$v=19$m=65536,t=4,p=3$VG8zYlJWMjZCZnlTMzJybA$lsJ3uALR7EenteBYX65YWvj5CFEckPvIar3ASyK3KLQ', 'inquilino', NULL, NULL, NULL, 0, NULL, NULL, '2025-10-16 07:47:16', 0, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
+(8, 'Diego Torres', 'inquilino4@edificio.com', '2025-10-16 07:47:16', '$argon2id$v=19$m=65536,t=4,p=3$dE9zR0lzbklOYTZpYmFIeQ$V5f1ME9KBouvZ6eXNMBy4Rhpp5dbHzLeZyHvLag0adY', 'inquilino', NULL, NULL, NULL, 0, NULL, NULL, '2025-10-16 07:47:16', 0, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
+(9, 'Carmen López', 'inquilino5@edificio.com', '2025-10-16 07:47:16', '$argon2id$v=19$m=65536,t=4,p=3$Y2QySXZmOEE2eUdzYk41OQ$mgPt+zoAHHBddVSQ/LflimukDzvwLLSnF9EdeFHdD1s', 'inquilino', NULL, NULL, NULL, 0, NULL, NULL, '2025-10-16 07:47:16', 0, '2025-10-16 07:47:16', '2025-10-16 07:47:16'),
+(10, 'UUUU', 'uuuu@gmail.com', NULL, '$argon2id$v=19$m=65536,t=4,p=3$VHVIZzdmRWx6a3VEd3VQaA$UvEpZVtIWz2nMJoLoS2zew91czkpME/3b9zYIH8gOug', 'inquilino', NULL, NULL, NULL, 0, NULL, NULL, '2025-10-16 13:59:40', 0, '2025-10-16 13:59:40', '2025-10-16 13:59:40');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vw_consumo_por_hora`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vw_consumo_por_hora` (
+`departamento_id` int(11)
+,`sensor_id` int(11)
+,`hora` varchar(24)
+,`avg_valor` double
+,`min_valor` double
+,`max_valor` double
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vw_consumo_por_hora`
+--
+DROP TABLE IF EXISTS `vw_consumo_por_hora`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_consumo_por_hora`  AS SELECT `lecturas`.`departamento_id` AS `departamento_id`, `lecturas`.`sensor_id` AS `sensor_id`, date_format(`lecturas`.`recibido_en`,'%Y-%m-%d %H:00:00') AS `hora`, avg(`lecturas`.`valor`) AS `avg_valor`, min(`lecturas`.`valor`) AS `min_valor`, max(`lecturas`.`valor`) AS `max_valor` FROM `lecturas` GROUP BY `lecturas`.`departamento_id`, `lecturas`.`sensor_id`, date_format(`lecturas`.`recibido_en`,'%Y-%m-%d %H') ;
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `alertas`
+--
+ALTER TABLE `alertas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `departamento_id` (`departamento_id`),
+  ADD KEY `sensor_id` (`sensor_id`);
 
 --
 -- Indices de la tabla `alquileres`
@@ -466,6 +696,28 @@ ALTER TABLE `comunicacion`
   ADD PRIMARY KEY (`id`),
   ADD KEY `comunicacion_remitente_id_foreign` (`remitente_id`),
   ADD KEY `comunicacion_destinatario_id_foreign` (`destinatario_id`);
+
+--
+-- Indices de la tabla `departamentos`
+--
+ALTER TABLE `departamentos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `device_tokens`
+--
+ALTER TABLE `device_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `token` (`token`),
+  ADD KEY `dispositivo_id` (`dispositivo_id`);
+
+--
+-- Indices de la tabla `dispositivos`
+--
+ALTER TABLE `dispositivos`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `identificador` (`identificador`),
+  ADD KEY `departamento_id` (`departamento_id`);
 
 --
 -- Indices de la tabla `empleados`
@@ -496,6 +748,16 @@ ALTER TABLE `invoices`
 ALTER TABLE `invoice_items`
   ADD PRIMARY KEY (`id`),
   ADD KEY `invoice_id` (`invoice_id`);
+
+--
+-- Indices de la tabla `lecturas`
+--
+ALTER TABLE `lecturas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sensor_id` (`sensor_id`),
+  ADD KEY `departamento_id` (`departamento_id`),
+  ADD KEY `recibido_en` (`recibido_en`),
+  ADD KEY `idx_lecturas_dep_time` (`departamento_id`,`recibido_en`);
 
 --
 -- Indices de la tabla `pagos`
@@ -540,6 +802,22 @@ ALTER TABLE `reservas`
   ADD KEY `reservas_area_comun_id_foreign` (`area_comun_id`);
 
 --
+-- Indices de la tabla `security_logs`
+--
+ALTER TABLE `security_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_user_id` (`user_id`),
+  ADD KEY `idx_action` (`action`),
+  ADD KEY `idx_created_at` (`created_at`);
+
+--
+-- Indices de la tabla `sensores`
+--
+ALTER TABLE `sensores`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `dispositivo_id` (`dispositivo_id`);
+
+--
 -- Indices de la tabla `servicios`
 --
 ALTER TABLE `servicios`
@@ -560,15 +838,32 @@ ALTER TABLE `transactions`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `umbrales`
+--
+ALTER TABLE `umbrales`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sensor_id` (`sensor_id`),
+  ADD KEY `departamento_id` (`departamento_id`);
+
+--
 -- Indices de la tabla `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `users_email_unique` (`email`);
+  ADD UNIQUE KEY `users_email_unique` (`email`),
+  ADD KEY `idx_password_reset_token` (`password_reset_token`),
+  ADD KEY `idx_locked_until` (`locked_until`),
+  ADD KEY `idx_failed_attempts` (`failed_login_attempts`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `alertas`
+--
+ALTER TABLE `alertas`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `alquileres`
@@ -589,6 +884,24 @@ ALTER TABLE `comunicacion`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT de la tabla `departamentos`
+--
+ALTER TABLE `departamentos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `device_tokens`
+--
+ALTER TABLE `device_tokens`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `dispositivos`
+--
+ALTER TABLE `dispositivos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `empleados`
 --
 ALTER TABLE `empleados`
@@ -604,13 +917,19 @@ ALTER TABLE `inquilinos`
 -- AUTO_INCREMENT de la tabla `invoices`
 --
 ALTER TABLE `invoices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `invoice_items`
 --
 ALTER TABLE `invoice_items`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `lecturas`
+--
+ALTER TABLE `lecturas`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `pagos`
@@ -649,6 +968,18 @@ ALTER TABLE `reservas`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de la tabla `security_logs`
+--
+ALTER TABLE `security_logs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+
+--
+-- AUTO_INCREMENT de la tabla `sensores`
+--
+ALTER TABLE `sensores`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `servicios`
 --
 ALTER TABLE `servicios`
@@ -667,14 +998,27 @@ ALTER TABLE `transactions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `umbrales`
+--
+ALTER TABLE `umbrales`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `alertas`
+--
+ALTER TABLE `alertas`
+  ADD CONSTRAINT `alertas_ibfk_1` FOREIGN KEY (`departamento_id`) REFERENCES `departamentos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `alertas_ibfk_2` FOREIGN KEY (`sensor_id`) REFERENCES `sensores` (`id`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `alquileres`
@@ -688,6 +1032,18 @@ ALTER TABLE `alquileres`
 ALTER TABLE `comunicacion`
   ADD CONSTRAINT `comunicacion_destinatario_id_foreign` FOREIGN KEY (`destinatario_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `comunicacion_remitente_id_foreign` FOREIGN KEY (`remitente_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `device_tokens`
+--
+ALTER TABLE `device_tokens`
+  ADD CONSTRAINT `device_tokens_ibfk_1` FOREIGN KEY (`dispositivo_id`) REFERENCES `dispositivos` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `dispositivos`
+--
+ALTER TABLE `dispositivos`
+  ADD CONSTRAINT `dispositivos_ibfk_1` FOREIGN KEY (`departamento_id`) REFERENCES `departamentos` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `empleados`
@@ -706,6 +1062,13 @@ ALTER TABLE `inquilinos`
 --
 ALTER TABLE `invoice_items`
   ADD CONSTRAINT `invoice_items_ibfk_1` FOREIGN KEY (`invoice_id`) REFERENCES `invoices` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `lecturas`
+--
+ALTER TABLE `lecturas`
+  ADD CONSTRAINT `lecturas_ibfk_1` FOREIGN KEY (`sensor_id`) REFERENCES `sensores` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `lecturas_ibfk_2` FOREIGN KEY (`departamento_id`) REFERENCES `departamentos` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `pagos`
@@ -727,11 +1090,30 @@ ALTER TABLE `reservas`
   ADD CONSTRAINT `reservas_inquilino_id_foreign` FOREIGN KEY (`inquilino_id`) REFERENCES `inquilinos` (`id`) ON DELETE CASCADE;
 
 --
+-- Filtros para la tabla `security_logs`
+--
+ALTER TABLE `security_logs`
+  ADD CONSTRAINT `security_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Filtros para la tabla `sensores`
+--
+ALTER TABLE `sensores`
+  ADD CONSTRAINT `sensores_ibfk_1` FOREIGN KEY (`dispositivo_id`) REFERENCES `dispositivos` (`id`) ON DELETE CASCADE;
+
+--
 -- Filtros para la tabla `tareas`
 --
 ALTER TABLE `tareas`
   ADD CONSTRAINT `tareas_asignado_por_foreign` FOREIGN KEY (`asignado_por`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `tareas_empleado_id_foreign` FOREIGN KEY (`empleado_id`) REFERENCES `empleados` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `umbrales`
+--
+ALTER TABLE `umbrales`
+  ADD CONSTRAINT `umbrales_ibfk_1` FOREIGN KEY (`sensor_id`) REFERENCES `sensores` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `umbrales_ibfk_2` FOREIGN KEY (`departamento_id`) REFERENCES `departamentos` (`id`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

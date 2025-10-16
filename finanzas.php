@@ -19,6 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_invoice'])) {
     $res = createInvoice($data);
     if ($res['status'] === 'ok') {
         $message = "Factura creada: {$res['reference']}";
+        $createdRef = $res['reference'];
+        // conservar invoice id/ref para mostrar enlaces
     } else {
         $message = "Error: {$res['message']}";
     }
@@ -57,6 +59,16 @@ $report = reportIncomeExpenses(date('Y-m-01'), date('Y-m-t'));
         <?php if ($message): ?>
             <div class="bento-alert bento-alert-info">
                 <i class="fas fa-info-circle"></i> <?php echo htmlspecialchars($message); ?>
+                <?php if (!empty($createdRef)): ?>
+                    <div style="margin-top:8px">
+                        <a class="bento-btn bento-btn-primary" href="api/invoice_pdf.php?ref=<?php echo urlencode($createdRef); ?>" target="_blank">
+                            <i class="fas fa-file-pdf"></i> Descargar PDF
+                        </a>
+                        <a class="bento-btn bento-btn-outline" href="pay_invoice.php?ref=<?php echo urlencode($createdRef); ?>" target="_blank">
+                            <i class="fas fa-qrcode"></i> Ir a Pago / QR
+                        </a>
+                    </div>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
 

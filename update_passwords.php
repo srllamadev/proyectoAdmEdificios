@@ -1,38 +1,47 @@
 <?php
 require_once 'includes/functions.php';
 
+// Configuración de las nuevas contraseñas
+$newPasswords = [
+    'admin@edificio.com' => 'ko87K#adm-0',
+    'empleado1@edificio.com' => 'ko87K#emp-1',
+    'empleado2@edificio.com' => 'ko87K#emp-2',
+    'empleado3@edificio.com' => 'ko87K#emp-3',
+    'inquilino1@edificio.com' => 'ko87K#fo-inq-1',
+    'inquilino2@edificio.com' => 'ko87K#fo-inq-2',
+    'inquilino3@edificio.com' => 'ko87K#fo-inq-3',
+    'inquilino4@edificio.com' => 'ko87K#fo-inq-4',
+    'inquilino5@edificio.com' => 'ko87K#fo-inq-5',
+];
+
 try {
-    $database = new Database();
-    $db = $database->getConnection();
+    // Conectar a la base de datos
+    $pdo = new PDO('mysql:host=localhost;dbname=edificio_admin;charset=utf8', 'root', '');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    echo "<h2>Actualizando contraseñas de usuarios de prueba...</h2>";
+    echo "<h2>Actualizando contraseñas de usuarios...</h2>";
+    echo "<pre>";
 
-    // Contraseña por defecto para testing
-    $defaultPassword = 'password';
-    $hashedPassword = hashPassword($defaultPassword);
+    foreach ($newPasswords as $email => $plainPassword) {
+        // Generar hash de la nueva contraseña
+        $hashedPassword = hashPassword($plainPassword);
 
-    // Actualizar todas las contraseñas de usuarios existentes
-    $sql = "UPDATE users SET
-            password = ?,
-            password_changed_at = NOW(),
-            failed_login_attempts = 0,
-            account_locked = 0,
-            locked_until = NULL
-            WHERE password NOT LIKE '$2y$%'"; // Solo actualizar si no están hasheadas
+        // Actualizar en la base de datos
+        $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE email = ?");
+        $stmt->execute([$hashedPassword, $email]);
 
-    $stmt = $db->prepare($sql);
-    $result = $stmt->execute([$hashedPassword]);
-
-    if ($result) {
-        echo "✅ Contraseñas actualizadas exitosamente<br>";
-        echo "Nueva contraseña hasheada: " . substr($hashedPassword, 0, 20) . "...<br>";
-        echo "Para testing, usar: <strong>'password'</strong><br>";
-    } else {
-        echo "❌ Error al actualizar contraseñas<br>";
+        if ($stmt->rowCount() > 0) {
+            echo "✓ Contraseña actualizada para: $email\n";
+        } else {
+            echo "✗ No se encontró el usuario: $email\n";
+        }
     }
 
-} catch (Exception $e) {
-    echo "<h3 style='color: red;'>❌ Error:</h3>";
-    echo "<p>" . $e->getMessage() . "</p>";
+    echo "\nActualización completada exitosamente!";
+    echo "</pre>";
+
+} catch (PDOException $e) {
+    echo "<h2>Error en la actualización:</h2>";
+    echo "<pre>" . $e->getMessage() . "</pre>";
 }
 ?>

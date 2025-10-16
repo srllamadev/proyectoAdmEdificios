@@ -49,15 +49,15 @@ try {
 }
 ?>
 
-<div class="page-header">
-    <h1><i class="fas fa-tachometer-alt"></i> Panel de Administración</h1>
-    <p>Bienvenido al sistema de gestión de edificios</p>
+<div class="bento-page-header">
+    <h1 class="bento-page-title"><i class="fas fa-tachometer-alt"></i> Panel de Administración</h1>
+    <p class="bento-page-subtitle">Bienvenido al sistema de gestión de edificios</p>
 </div>
 
 <?php // Banner de depuración visible sólo en localhost para confirmar que este archivo es el servido
 if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false): ?>
-    <div style="background:#ffefc6;border:3px solid #ff8a00;padding:10px;border-radius:8px;margin-bottom:15px;color:#5a3700;font-weight:700;">
-        DEBUG: Módulo Finanzas integrado en este dashboard (archivo actualizado en servidor).
+    <div class="bento-alert bento-alert-warning">
+        <i class="fas fa-info-circle"></i> <strong>DEBUG:</strong> Módulo Finanzas integrado en este dashboard (archivo actualizado en servidor).
     </div>
 <?php endif; ?>
 
@@ -66,114 +66,114 @@ if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false): ?>
 <?php endif; ?>
 
 <!-- Estadísticas principales -->
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-number"><i class="fas fa-users"></i> <?php echo $total_inquilinos; ?></div>
-        <div class="stat-label">Inquilinos Activos</div>
+<div class="bento-stats-grid">
+    <div class="bento-stat-card">
+        <div class="bento-stat-number"><i class="fas fa-users"></i> <?php echo $total_inquilinos; ?></div>
+        <div class="bento-stat-label">Inquilinos Activos</div>
     </div>
-    <div class="stat-card">
-        <div class="stat-number"><i class="fas fa-user-tie"></i> <?php echo $total_empleados; ?></div>
-        <div class="stat-label">Empleados Activos</div>
+    <div class="bento-stat-card">
+        <div class="bento-stat-number"><i class="fas fa-user-tie"></i> <?php echo $total_empleados; ?></div>
+        <div class="bento-stat-label">Empleados Activos</div>
     </div>
-    <div class="stat-card">
-        <div class="stat-number"><i class="fas fa-money-bill-wave"></i> <?php echo $pagos_pendientes; ?></div>
-        <div class="stat-label">Pagos Pendientes</div>
+    <div class="bento-stat-card">
+        <div class="bento-stat-number"><i class="fas fa-money-bill-wave"></i> <?php echo $pagos_pendientes; ?></div>
+        <div class="bento-stat-label">Pagos Pendientes</div>
     </div>
-    <div class="stat-card">
-        <div class="stat-number"><i class="fas fa-calendar-check"></i> <?php echo $reservas_pendientes; ?></div>
-        <div class="stat-label">Reservas Pendientes</div>
+    <div class="bento-stat-card">
+        <div class="bento-stat-number"><i class="fas fa-calendar-check"></i> <?php echo $reservas_pendientes; ?></div>
+        <div class="bento-stat-label">Reservas Pendientes</div>
     </div>
 </div>
 
 <!-- Módulos principales en grid bento (Finanzas movida al inicio para visibilidad) -->
 <div class="bento-grid">
-    <div id="finanzas-card" class="bento-card" style="border:4px solid #ff8a00;background:linear-gradient(135deg,#fff8e1,#fff3e0);">
-        <h3><i class="fas fa-wallet" style="color: #b26a00;"></i> Gestión Financiera</h3>
-        <p style="color:#5a3700;">Facturación, control de pagos, morosidad, nómina e integraciones de pasarelas.</p>
+    <div id="finanzas-card" class="bento-card bento-card-finanzas">
+        <h3 class="bento-card-title"><i class="fas fa-wallet"></i> Gestión Financiera</h3>
+        <p class="bento-card-description">Facturación, control de pagos, morosidad, nómina e integraciones de pasarelas.</p>
         <?php if (!empty($overdue_count) && $overdue_count > 0): ?>
-            <div style="margin-bottom:10px;"><span class="status-badge status-expired"><?=htmlspecialchars($overdue_count)?> Vencida(s)</span></div>
+            <div class="bento-card-badge"><span class="status-badge status-expired"><?=htmlspecialchars($overdue_count)?> Vencida(s)</span></div>
         <?php endif; ?>
-        <a href="../../finanzas.php" class="btn btn-primary">
+        <a href="../../finanzas.php" class="bento-btn bento-btn-primary">
             <i class="fas fa-chart-pie"></i> Abrir Finanzas
         </a>
     </div>
 
     <div class="bento-card">
-        <h3><i class="fas fa-users" style="color: var(--primary-blue);"></i> Gestión de Inquilinos</h3>
-        <p>Administra inquilinos, alquileres y información de residentes del edificio.</p>
-        <a href="inquilinos.php" class="btn btn-primary">
+        <h3 class="bento-card-title"><i class="fas fa-users"></i> Gestión de Inquilinos</h3>
+        <p class="bento-card-description">Administra inquilinos, alquileres y información de residentes del edificio.</p>
+        <a href="inquilinos.php" class="bento-btn bento-btn-primary">
             <i class="fas fa-eye"></i> Ver Inquilinos
         </a>
     </div>
     
     <div class="bento-card">
-        <h3><i class="fas fa-user-tie" style="color: var(--secondary-green);"></i> Gestión de Empleados</h3>
-        <p>Controla empleados, asigna tareas y supervisa el personal del edificio.</p>
-        <a href="empleados.php" class="btn btn-primary">
+        <h3 class="bento-card-title"><i class="fas fa-user-tie"></i> Gestión de Empleados</h3>
+        <p class="bento-card-description">Controla empleados, asigna tareas y supervisa el personal del edificio.</p>
+        <a href="empleados.php" class="bento-btn bento-btn-primary">
             <i class="fas fa-eye"></i> Ver Empleados
         </a>
     </div>
     
     <div class="bento-card">
-        <h3><i class="fas fa-money-bill-wave" style="color: var(--accent-mint);"></i> Gestión de Pagos</h3>
-        <p>Control completo de pagos de alquiler, vencimientos y reportes financieros.</p>
-        <a href="pagos.php" class="btn btn-primary">
+        <h3 class="bento-card-title"><i class="fas fa-money-bill-wave"></i> Gestión de Pagos</h3>
+        <p class="bento-card-description">Control completo de pagos de alquiler, vencimientos y reportes financieros.</p>
+        <a href="pagos.php" class="bento-btn bento-btn-primary">
             <i class="fas fa-eye"></i> Ver Pagos
         </a>
     </div>
     
     <div class="bento-card">
-        <h3><i class="fas fa-calendar-check" style="color: var(--dark-blue);"></i> Reservas de Áreas</h3>
-        <p>Gestiona reservas de áreas comunes y supervisa la disponibilidad.</p>
-        <a href="reservas.php" class="btn btn-primary">
+        <h3 class="bento-card-title"><i class="fas fa-calendar-check"></i> Reservas de Áreas</h3>
+        <p class="bento-card-description">Gestiona reservas de áreas comunes y supervisa la disponibilidad.</p>
+        <a href="reservas.php" class="bento-btn bento-btn-primary">
             <i class="fas fa-eye"></i> Ver Reservas
         </a>
     </div>
     
     <div class="bento-card">
-        <h3><i class="fas fa-comments" style="color: var(--primary-blue);"></i> Centro de Comunicación</h3>
-        <p>Envía avisos generales, mensajes personales y notificaciones importantes.</p>
-        <a href="comunicacion.php" class="btn btn-primary">
+        <h3 class="bento-card-title"><i class="fas fa-comments"></i> Centro de Comunicación</h3>
+        <p class="bento-card-description">Envía avisos generales, mensajes personales y notificaciones importantes.</p>
+        <a href="comunicacion.php" class="bento-btn bento-btn-primary">
             <i class="fas fa-paper-plane"></i> Enviar Comunicación
         </a>
     </div>
     
     <div class="bento-card">
-        <h3><i class="fas fa-swimming-pool" style="color: var(--secondary-green);"></i> Áreas Comunes</h3>
-        <p>Configura y administra las áreas comunes disponibles para reserva.</p>
-        <a href="areas_comunes.php" class="btn btn-primary">
+        <h3 class="bento-card-title"><i class="fas fa-swimming-pool"></i> Áreas Comunes</h3>
+        <p class="bento-card-description">Configura y administra las áreas comunes disponibles para reserva.</p>
+        <a href="areas_comunes.php" class="bento-btn bento-btn-primary">
             <i class="fas fa-cog"></i> Configurar Áreas
         </a>
     </div>
 </div>
 
 <!-- Acciones rápidas -->
-<div class="bento-grid" style="margin-top: 30px;">
-    <div class="bento-card" style="background: linear-gradient(135deg, var(--primary-blue), var(--secondary-green)); color: white;">
-        <h3><i class="fas fa-plus-circle"></i> Acciones Rápidas</h3>
-        <p style="color: rgba(255,255,255,0.9);">Herramientas de acceso rápido para tareas comunes.</p>
-        <div class="d-flex gap-10" style="flex-wrap: wrap;">
-            <a href="comunicacion.php" class="btn btn-secondary">
+<div class="bento-grid bento-actions-grid">
+    <div class="bento-card bento-card-actions">
+        <h3 class="bento-card-title"><i class="fas fa-plus-circle"></i> Acciones Rápidas</h3>
+        <p class="bento-card-description">Herramientas de acceso rápido para tareas comunes.</p>
+        <div class="bento-actions-buttons">
+            <a href="comunicacion.php" class="bento-btn bento-btn-secondary">
                 <i class="fas fa-bullhorn"></i> Enviar Aviso
             </a>
-            <a href="pagos.php" class="btn btn-secondary">
+            <a href="pagos.php" class="bento-btn bento-btn-secondary">
                 <i class="fas fa-search"></i> Buscar Pago
             </a>
-            <a href="../../finanzas.php" class="btn btn-primary" style="background: #ffb74d; color: #2f455c;">
+            <a href="../../finanzas.php" class="bento-btn bento-btn-finanzas">
                 <i class="fas fa-wallet"></i> Abrir Finanzas (Panel)
             </a>
         </div>
     </div>
     
 
-    <div class="bento-card" style="background: linear-gradient(135deg, var(--accent-mint), var(--secondary-green)); color: var(--dark-blue);">
-        <h3><i class="fas fa-chart-line"></i> Reportes y Estadísticas</h3>
-        <p>Visualiza información importante del edificio en tiempo real.</p>
-        <div class="d-flex gap-10" style="flex-wrap: wrap;">
-            <a href="../../estado_sesion.php" class="btn" style="background: var(--dark-blue); color: white;">
+    <div class="bento-card bento-card-reports">
+        <h3 class="bento-card-title"><i class="fas fa-chart-line"></i> Reportes y Estadísticas</h3>
+        <p class="bento-card-description">Visualiza información importante del edificio en tiempo real.</p>
+        <div class="bento-actions-buttons">
+            <a href="../../estado_sesion.php" class="bento-btn bento-btn-dark">
                 <i class="fas fa-info-circle"></i> Estado Sistema
             </a>
-            <a href="../../test_sistema.php" class="btn" style="background: var(--dark-blue); color: white;">
+            <a href="../../test_sistema.php" class="bento-btn bento-btn-dark">
                 <i class="fas fa-tools"></i> Test Conexión
             </a>
         </div>

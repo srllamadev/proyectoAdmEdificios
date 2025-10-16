@@ -539,7 +539,7 @@ try {
                 <i class="fas fa-credit-card"></i>
                 <span>Ver Mis Pagos</span>
             </a>
-            <a href="comunicaciones.php" class="action-btn communications">
+            <a href="../shared/comunicaciones.php" class="action-btn communications">
                 <i class="fas fa-comments"></i>
                 <span>Ver Comunicaciones</span>
             </a>

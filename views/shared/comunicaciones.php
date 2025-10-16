@@ -32,7 +32,7 @@ try {
         $stmt->execute();
         
         // Recargar la página para actualizar el estado
-        header('Location: comunicaciones.php');
+        header('Location: shared/comunicaciones.php');
         exit();
     }
     
@@ -64,28 +64,37 @@ switch($_SESSION['role']) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comunicaciones - Sistema de Edificios</title>
+    <link rel="stylesheet" href="../../assets/css/bento-style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Centro de Comunicaciones</h1>
-    <p><a href="<?php echo $ruta_dashboard; ?>">← Volver al Dashboard</a> | <a href="../../logout.php">Cerrar Sesión</a></p>
-    
-    <hr>
+<body class="bento-body">
+    <div class="bento-page-header">
+        <h1 class="bento-page-title"><i class="fas fa-comments"></i> Centro de Comunicaciones</h1>
+        <p class="bento-page-subtitle">Mensajes y comunicaciones del edificio</p>
+    </div>
+
+    <div class="bento-container">
+        <div class="bento-nav-links">
+            <a href="<?php echo $ruta_dashboard; ?>" class="bento-btn bento-btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver al Dashboard
+            </a>
+            <a href="../../logout.php" class="bento-btn bento-btn-outline">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
+        </div>
     
     <?php if (isset($error)): ?>
-        <div style="color: red; background: #ffe6e6; padding: 10px; border: 1px solid red; margin: 10px 0;">
-            <strong>Error:</strong> <?php echo $error; ?>
+        <div class="bento-alert bento-alert-error">
+            <i class="fas fa-exclamation-triangle"></i> <strong>Error:</strong> <?php echo $error; ?>
         </div>
     <?php endif; ?>
     
-    <h2>Mis Comunicaciones</h2>
+    <h2 class="bento-section-title"><i class="fas fa-envelope"></i> Mis Comunicaciones</h2>
     
     <?php if (!empty($comunicaciones)): ?>
-        <div style="margin: 20px 0;">
+        <div class="bento-communications-list">
             <?php foreach ($comunicaciones as $comunicacion): ?>
-                <div style="border: 1px solid #ddd; padding: 20px; margin: 15px 0; background: <?php echo $comunicacion['leido'] ? '#f9f9f9' : '#e6f3ff'; ?>; border-left: 4px solid <?php 
-                    echo $comunicacion['prioridad'] == 'alta' ? 'red' : 
-                        ($comunicacion['prioridad'] == 'media' ? 'orange' : 'green'); 
-                ?>;">
+                <div class="bento-communication-card <?php echo $comunicacion['leido'] ? 'bento-communication-read' : 'bento-communication-unread'; ?> bento-priority-<?php echo $comunicacion['prioridad']; ?>">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
                         <h3 style="margin: 0; color: <?php 
                             echo $comunicacion['prioridad'] == 'alta' ? 'red' : 
@@ -133,24 +142,24 @@ switch($_SESSION['role']) {
     
     <hr>
     
-    <h3>Resumen de Comunicaciones</h3>
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+    <h3 class="bento-section-title"><i class="fas fa-chart-bar"></i> Resumen de Comunicaciones</h3>
+    <div class="bento-stats-grid">
         <?php
         $total = count($comunicaciones);
         $no_leidas = count(array_filter($comunicaciones, function($c) { return !$c['leido']; }));
         $prioridad_alta = count(array_filter($comunicaciones, function($c) { return $c['prioridad'] == 'alta'; }));
         ?>
-        <div style="border: 1px solid #ccc; padding: 15px; min-width: 150px; text-align: center;">
-            <h4>Total</h4>
-            <p style="font-size: 24px; font-weight: bold; margin: 0;"><?php echo $total; ?></p>
+        <div class="bento-stat-card">
+            <div class="bento-stat-number"><?php echo $total; ?></div>
+            <div class="bento-stat-label">Total</div>
         </div>
-        <div style="border: 1px solid #ccc; padding: 15px; min-width: 150px; text-align: center;">
-            <h4>No Leídas</h4>
-            <p style="font-size: 24px; font-weight: bold; margin: 0; color: <?php echo $no_leidas > 0 ? 'red' : 'green'; ?>;"><?php echo $no_leidas; ?></p>
+        <div class="bento-stat-card">
+            <div class="bento-stat-number <?php echo $no_leidas > 0 ? 'bento-stat-alert' : ''; ?>"><?php echo $no_leidas; ?></div>
+            <div class="bento-stat-label">No Leídas</div>
         </div>
-        <div style="border: 1px solid #ccc; padding: 15px; min-width: 150px; text-align: center;">
-            <h4>Alta Prioridad</h4>
-            <p style="font-size: 24px; font-weight: bold; margin: 0; color: <?php echo $prioridad_alta > 0 ? 'red' : 'green'; ?>;"><?php echo $prioridad_alta; ?></p>
+        <div class="bento-stat-card">
+            <div class="bento-stat-number <?php echo $prioridad_alta > 0 ? 'bento-stat-alert' : ''; ?>"><?php echo $prioridad_alta; ?></div>
+            <div class="bento-stat-label">Alta Prioridad</div>
         </div>
     </div>
 </body>

@@ -41,12 +41,360 @@ $servicios = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SLH - El Futuro de la Vida Urbana</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/bento-style.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* Estilos específicos del landing page */
+        .hero-section {
+            background: linear-gradient(135deg, var(--color-dark-blue), var(--color-pink));
+            color: var(--text-white);
+            padding: var(--spacing-2xl) 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="60" cy="30" r="1.5" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--spacing-lg);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: var(--font-size-xl);
+            opacity: 0.9;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .stats-section {
+            background: var(--bg-primary);
+            padding: var(--spacing-2xl) 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-xl);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: var(--spacing-xl);
+            background: var(--bg-primary);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .stat-number {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-dark-blue);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .stat-label {
+            font-size: var(--font-size-lg);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .services-section {
+            background: var(--bg-secondary);
+            padding: var(--spacing-2xl) 0;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: var(--bg-primary);
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: var(--transition-normal);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .service-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--color-pink), var(--color-dark-blue));
+            border-radius: var(--border-radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-lg);
+            color: var(--text-white);
+            font-size: var(--font-size-2xl);
+        }
+
+        .service-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .service-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .gallery-section {
+            background: var(--bg-accent);
+            padding: var(--spacing-2xl) 0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .gallery-card {
+            background: var(--bg-primary);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-normal);
+            cursor: pointer;
+        }
+
+        .gallery-card:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .gallery-content {
+            padding: var(--spacing-lg);
+        }
+
+        .gallery-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .gallery-description {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        .features-section {
+            background: var(--bg-primary);
+            padding: var(--spacing-2xl) 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, var(--color-blush), var(--color-beige));
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .feature-icon {
+            font-size: var(--font-size-3xl);
+            color: var(--color-dark-blue);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .feature-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--color-dark-blue), var(--color-pink));
+            color: var(--text-white);
+            padding: var(--spacing-2xl) 0;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .modal-content {
+            background-color: var(--bg-primary);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: var(--border-radius-xl);
+            width: 90%;
+            max-width: 600px;
+            box-shadow: var(--shadow-xl);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--color-pink), var(--color-dark-blue));
+            color: var(--text-white);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: var(--spacing-xl);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .close {
+            color: var(--text-white);
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .close:hover {
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: var(--font-size-3xl);
+            }
+
+            .hero-buttons,
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stats-grid,
+            .services-grid,
+            .gallery-grid,
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+    </link>
 
         :root {
             --primary-cyan: #00ffff;
@@ -848,11 +1196,27 @@ $servicios = [
             animation: bounce 2s infinite;
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-            40% { transform: translateX(-50%) translateY(-10px); }
-            60% { transform: translateX(-50%) translateY(-5px); }
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
     </style>
 </head>
 <body>
@@ -867,85 +1231,81 @@ $servicios = [
     </div>
 
     <!-- Header -->
-    <header class="header" id="header">
-        <div class="nav-container">
-            <div class="logo">
-                <i class="fas fa-building"></i> SLH
+    <header class="bento-header">
+        <div class="bento-container">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-md">
+                    <i class="fas fa-building text-3xl text-white"></i>
+                    <span class="bento-title">SLH</span>
+                </div>
+                <nav class="bento-nav">
+                    <ul class="flex">
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#departamentos">Departamentos</a></li>
+                        <li><a href="#servicios">Servicios</a></li>
+                        <li><a href="#estadisticas">Estadísticas</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                        <li><a href="finanzas.php">Finanzas</a></li>
+                    </ul>
+                </nav>
             </div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="#inicio">Inicio</a></li>
-                    <li><a href="#departamentos">Departamentos</a></li>
-                    <li><a href="#servicios">Servicios</a></li>
-                    <li><a href="#estadisticas">Estadísticas</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
-                    <li><a href="finanzas.php">Finanzas</a></li>
-                </ul>
-            </nav>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero" id="inicio">
-        <div class="hero-content">
-            <h1>🏠 Smart Living Hub </h1>
-            <p class="subtitle">El Futuro de la Vida Urbana Inteligente</p>
-            <p class="description">
-                Bienvenido al ecosistema residencial más avanzado del siglo XXI. 
-                Donde la tecnología, la sostenibilidad y la comunidad se fusionan 
-                para crear la experiencia de vida perfecta.
-            </p>
-            <div class="cta-buttons">
-                <a href="login.php" class="btn btn-primary">
-                    <i class="fas fa-rocket"></i> Acceder al Sistema
-                </a>
-                <a href="#servicios" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Descubrir Más
-                </a>
+    <section class="hero-section" id="inicio">
+        <div class="bento-container">
+            <div class="hero-content">
+                <h1 class="hero-title">🏠 Smart Living Hub</h1>
+                <p class="hero-subtitle">El Futuro de la Vida Urbana Inteligente</p>
+                <p class="text-lg mb-xl text-center max-w-2xl mx-auto">
+                    Bienvenido al ecosistema residencial más avanzado del siglo XXI.
+                    Donde la tecnología, la sostenibilidad y la comunidad se fusionan
+                    para crear la experiencia de vida perfecta.
+                </p>
+                <div class="hero-buttons">
+                    <a href="login.php" class="bento-btn bento-btn-primary">
+                        <i class="fas fa-rocket"></i> Acceder al Sistema
+                    </a>
+                    <a href="#servicios" class="bento-btn bento-btn-secondary">
+                        <i class="fas fa-info-circle"></i> Descubrir Más
+                    </a>
+                </div>
             </div>
         </div>
-        
-        <!-- Building Visualization -->
-        <div class="building-visual">
-            <div class="building">
-                <?php for ($floor = 0; $floor < 10; $floor++): ?>
-                    <div class="building-floor"></div>
-                <?php endfor; ?>
-            </div>
-        </div>
-        
-        <div class="scroll-indicator">
-            <i class="fas fa-chevron-down"></i>
+
+        <div class="scroll-indicator text-center mt-2xl">
+            <i class="fas fa-chevron-down text-2xl animate-bounce"></i>
         </div>
     </section>
 
     <!-- Stats Section -->
     <section class="stats-section" id="estadisticas">
-        <div class="container">
-            <div class="section-title">
-                <h2>Números que Nos Definen</h2>
-                <p>La excelencia se refleja en cada cifra</p>
+        <div class="bento-container">
+            <div class="text-center mb-2xl">
+                <h2 class="text-4xl font-bold text-primary mb-md">Números que Nos Definen</h2>
+                <p class="text-xl text-secondary">La excelencia se refleja en cada cifra</p>
             </div>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-number"><?php echo $edificio_stats['departamentos']; ?></span>
-                    <div class="stat-label">Departamentos</div>
+            <div class="bento-stats">
+                <div class="bento-stat-card">
+                    <div class="bento-stat-number"><?php echo $edificio_stats['departamentos']; ?></div>
+                    <div class="bento-stat-label">Departamentos</div>
                 </div>
-                <div class="stat-card">
-                    <span class="stat-number"><?php echo $edificio_stats['residentes']; ?></span>
-                    <div class="stat-label">Residentes</div>
+                <div class="bento-stat-card">
+                    <div class="bento-stat-number"><?php echo $edificio_stats['residentes']; ?></div>
+                    <div class="bento-stat-label">Residentes</div>
                 </div>
-                <div class="stat-card">
-                    <span class="stat-number"><?php echo $edificio_stats['areas_comunes']; ?></span>
-                    <div class="stat-label">Áreas Comunes</div>
+                <div class="bento-stat-card">
+                    <div class="bento-stat-number"><?php echo $edificio_stats['areas_comunes']; ?></div>
+                    <div class="bento-stat-label">Áreas Comunes</div>
                 </div>
-                <div class="stat-card">
-                    <span class="stat-number"><?php echo $edificio_stats['años_operacion']; ?></span>
-                    <div class="stat-label">Años de Excelencia</div>
+                <div class="bento-stat-card">
+                    <div class="bento-stat-number"><?php echo $edificio_stats['años_operacion']; ?></div>
+                    <div class="bento-stat-label">Años de Excelencia</div>
                 </div>
-                <div class="stat-card">
-                    <span class="stat-number"><?php echo $edificio_stats['satisfaccion']; ?>%</span>
-                    <div class="stat-label">Satisfacción</div>
+                <div class="bento-stat-card">
+                    <div class="bento-stat-number"><?php echo $edificio_stats['satisfaccion']; ?>%</div>
+                    <div class="bento-stat-label">Satisfacción</div>
                 </div>
             </div>
         </div>
@@ -953,10 +1313,10 @@ $servicios = [
 
     <!-- Gallery Section -->
     <section class="gallery-section" id="departamentos">
-        <div class="container">
-            <div class="section-title">
-                <h2>Nuestros Departamentos Exclusivos</h2>
-                <p>Espacios diseñados para el futuro, donde la comodidad y la tecnología se encuentran</p>
+        <div class="bento-container">
+            <div class="text-center mb-2xl">
+                <h2 class="text-4xl font-bold text-primary mb-md">Nuestros Departamentos Exclusivos</h2>
+                <p class="text-xl text-secondary">Espacios diseñados para el futuro, donde la comodidad y la tecnología se encuentran</p>
             </div>
             <div class="gallery-grid">
                 <?php 
@@ -1037,30 +1397,16 @@ $servicios = [
                 ?>
                 
                 <?php foreach ($departamentos as $index => $depto): ?>
-                    <div class="apartment-card" onclick="openModal(<?php echo $index; ?>)">
-                        <img src="<?php echo $depto['image']; ?>" alt="<?php echo $depto['title']; ?>" class="apartment-image">
-                        <div class="apartment-overlay">
-                            <a href="#" class="view-btn">
-                                <i class="fas fa-eye"></i>
-                                Ver Detalles
-                            </a>
-                        </div>
-                        <div class="apartment-info">
-                            <div class="apartment-title"><?php echo $depto['title']; ?></div>
-                            <div class="apartment-features">
-                                <div class="feature">
-                                    <i class="fas fa-bed"></i>
-                                    <?php echo $depto['bedrooms']; ?> hab
-                                </div>
-                                <div class="feature">
-                                    <i class="fas fa-bath"></i>
-                                    <?php echo $depto['bathrooms']; ?> baños
-                                </div>
-                                <div class="feature">
-                                    <i class="fas fa-ruler-combined"></i>
-                                    <?php echo $depto['area']; ?>m²
-                                </div>
+                    <div class="gallery-card" onclick="openModal(<?php echo $index; ?>)">
+                        <img src="<?php echo $depto['image']; ?>" alt="<?php echo $depto['title']; ?>" class="gallery-image">
+                        <div class="gallery-content">
+                            <div class="gallery-title"><?php echo $depto['title']; ?></div>
+                            <div class="flex gap-sm text-sm text-secondary mb-sm">
+                                <span><i class="fas fa-bed"></i> <?php echo $depto['bedrooms']; ?> hab</span>
+                                <span><i class="fas fa-bath"></i> <?php echo $depto['bathrooms']; ?> baños</span>
+                                <span><i class="fas fa-ruler-combined"></i> <?php echo $depto['area']; ?>m²</span>
                             </div>
+                            <div class="gallery-description"><?php echo $depto['description']; ?></div>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -1070,10 +1416,10 @@ $servicios = [
 
     <!-- Features Section -->
     <section class="features-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Características Premium</h2>
-                <p>Amenidades que definen un estilo de vida excepcional</p>
+        <div class="bento-container">
+            <div class="text-center mb-2xl">
+                <h2 class="text-4xl font-bold text-primary mb-md">Características Premium</h2>
+                <p class="text-xl text-secondary">Amenidades que definen un estilo de vida excepcional</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
@@ -1110,10 +1456,10 @@ $servicios = [
 
     <!-- Services Section -->
     <section class="services-section" id="servicios">
-        <div class="container">
-            <div class="section-title">
-                <h2>Servicios de Vanguardia</h2>
-                <p>Tecnología que transforma la experiencia residencial</p>
+        <div class="bento-container">
+            <div class="text-center mb-2xl">
+                <h2 class="text-4xl font-bold text-primary mb-md">Servicios de Vanguardia</h2>
+                <p class="text-xl text-secondary">Tecnología que transforma la experiencia residencial</p>
             </div>
             <div class="services-grid">
                 <?php foreach ($servicios as $servicio): ?>
@@ -1121,8 +1467,8 @@ $servicios = [
                         <div class="service-icon">
                             <i class="<?php echo $servicio['icon']; ?>"></i>
                         </div>
-                        <h3><?php echo $servicio['titulo']; ?></h3>
-                        <p><?php echo $servicio['descripcion']; ?></p>
+                        <h3 class="service-title"><?php echo $servicio['titulo']; ?></h3>
+                        <p class="service-description"><?php echo $servicio['descripcion']; ?></p>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -1130,29 +1476,29 @@ $servicios = [
     </section>
 
     <!-- Footer -->
-    <footer class="footer" id="contacto">
-        <div class="footer-content">
-            <p>&copy; <?php echo date('Y'); ?> SLH. Redefiniendo el futuro urbano.</p>
-            <p>Sistema de Administración Inteligente | Versión 2.0</p>
-            
-            <div class="social-links">
-                <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+    <footer class="bento-section bento-footer" id="contacto">
+        <div class="bento-container text-center">
+            <p class="text-lg mb-md">&copy; <?php echo date('Y'); ?> SLH. Redefiniendo el futuro urbano.</p>
+            <p class="text-secondary mb-xl">Sistema de Administración Inteligente | Versión 2.0</p>
+
+            <div class="flex justify-center gap-lg">
+                <a href="#" class="text-2xl text-white hover:text-pink transition-fast"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-2xl text-white hover:text-pink transition-fast"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-2xl text-white hover:text-pink transition-fast"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-2xl text-white hover:text-pink transition-fast"><i class="fab fa-linkedin-in"></i></a>
             </div>
         </div>
     </footer>
 
     <!-- Modal para galería  -->
-    <div id="galleryModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <img id="modalImage" class="modal-image" src="" alt="">
-            <div class="modal-info">
-                <h3 id="modalTitle" style="color: var(--text-light); margin-bottom: 15px; font-size: 1.8rem;"></h3>
-                <div id="modalFeatures" style="display: flex; gap: 20px; margin-bottom: 20px; color: var(--primary-cyan);"></div>
-                <p id="modalDescription" style="color: var(--text-gray); line-height: 1.8; font-size: 1.1rem;"></p>
+    <div id="galleryModal" class="bento-modal">
+        <div class="bento-modal-content">
+            <span class="bento-modal-close" onclick="closeModal()">&times;</span>
+            <img id="modalImage" class="bento-modal-image" src="" alt="">
+            <div class="bento-modal-info">
+                <h3 id="modalTitle" class="bento-modal-title"></h3>
+                <div id="modalFeatures" class="bento-modal-features"></div>
+                <p id="modalDescription" class="bento-modal-description"></p>
             </div>
         </div>
     </div>
@@ -1200,15 +1546,15 @@ $servicios = [
             modalDescription.textContent = depto.description;
             
             modalFeatures.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="bento-modal-feature">
                     <i class="fas fa-bed"></i>
                     <span>${depto.bedrooms} Habitaciones</span>
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="bento-modal-feature">
                     <i class="fas fa-bath"></i>
                     <span>${depto.bathrooms} Baños</span>
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px;">
+                <div class="bento-modal-feature">
                     <i class="fas fa-ruler-combined"></i>
                     <span>${depto.area}m² Área Total</span>
                 </div>

@@ -879,6 +879,7 @@ $servicios = [
                     <li><a href="#servicios">Servicios</a></li>
                     <li><a href="#estadisticas">Estadísticas</a></li>
                     <li><a href="#contacto">Contacto</a></li>
+                    <li><a href="finanzas.php">Finanzas</a></li>
                 </ul>
             </nav>
         </div>

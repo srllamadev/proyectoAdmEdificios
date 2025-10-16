@@ -38,12 +38,28 @@ try {
 } catch (PDOException $e) {
     $error = "Error al obtener estadísticas: " . $e->getMessage();
 }
+
+// Contar facturas vencidas (morosidad)
+try {
+    $stmt = $db->prepare("SELECT COUNT(*) as total FROM invoices WHERE status <> 'paid' AND due_date IS NOT NULL AND due_date < CURDATE()");
+    $stmt->execute();
+    $overdue_count = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+} catch (PDOException $e) {
+    $overdue_count = 0;
+}
 ?>
 
 <div class="page-header">
     <h1><i class="fas fa-tachometer-alt"></i> Panel de Administración</h1>
     <p>Bienvenido al sistema de gestión de edificios</p>
 </div>
+
+<?php // Banner de depuración visible sólo en localhost para confirmar que este archivo es el servido
+if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false): ?>
+    <div style="background:#ffefc6;border:3px solid #ff8a00;padding:10px;border-radius:8px;margin-bottom:15px;color:#5a3700;font-weight:700;">
+        DEBUG: Módulo Finanzas integrado en este dashboard (archivo actualizado en servidor).
+    </div>
+<?php endif; ?>
 
 <?php if (isset($error)): ?>
     <?php showAlert($error, 'error'); ?>
@@ -69,8 +85,19 @@ try {
     </div>
 </div>
 
-<!-- Módulos principales en grid bento -->
+<!-- Módulos principales en grid bento (Finanzas movida al inicio para visibilidad) -->
 <div class="bento-grid">
+    <div id="finanzas-card" class="bento-card" style="border:4px solid #ff8a00;background:linear-gradient(135deg,#fff8e1,#fff3e0);">
+        <h3><i class="fas fa-wallet" style="color: #b26a00;"></i> Gestión Financiera</h3>
+        <p style="color:#5a3700;">Facturación, control de pagos, morosidad, nómina e integraciones de pasarelas.</p>
+        <?php if (!empty($overdue_count) && $overdue_count > 0): ?>
+            <div style="margin-bottom:10px;"><span class="status-badge status-expired"><?=htmlspecialchars($overdue_count)?> Vencida(s)</span></div>
+        <?php endif; ?>
+        <a href="../../finanzas.php" class="btn btn-primary">
+            <i class="fas fa-chart-pie"></i> Abrir Finanzas
+        </a>
+    </div>
+
     <div class="bento-card">
         <h3><i class="fas fa-users" style="color: var(--primary-blue);"></i> Gestión de Inquilinos</h3>
         <p>Administra inquilinos, alquileres y información de residentes del edificio.</p>
@@ -132,9 +159,13 @@ try {
             <a href="pagos.php" class="btn btn-secondary">
                 <i class="fas fa-search"></i> Buscar Pago
             </a>
+            <a href="../../finanzas.php" class="btn btn-primary" style="background: #ffb74d; color: #2f455c;">
+                <i class="fas fa-wallet"></i> Abrir Finanzas (Panel)
+            </a>
         </div>
     </div>
     
+
     <div class="bento-card" style="background: linear-gradient(135deg, var(--accent-mint), var(--secondary-green)); color: var(--dark-blue);">
         <h3><i class="fas fa-chart-line"></i> Reportes y Estadísticas</h3>
         <p>Visualiza información importante del edificio en tiempo real.</p>

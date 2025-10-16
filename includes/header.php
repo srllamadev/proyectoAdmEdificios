@@ -39,21 +39,41 @@ function getUserClass() {
         
         <div class="nav-links">
             <?php
+            // Base path relativo al root del proyecto desde el script actual
+            $basePath = str_repeat('../', max(0, substr_count($_SERVER['SCRIPT_NAME'], '/') - 2));
+
             $dashboard_link = '';
             switch($_SESSION['role']) {
                 case 'admin':
-                    $dashboard_link = str_repeat('../', max(0, substr_count($_SERVER['SCRIPT_NAME'], '/') - 2)) . 'views/admin/dashboard.php';
+                    $dashboard_link = $basePath . 'views/admin/dashboard.php';
                     break;
                 case 'empleado':
-                    $dashboard_link = str_repeat('../', max(0, substr_count($_SERVER['SCRIPT_NAME'], '/') - 2)) . 'views/empleado/dashboard.php';
+                    $dashboard_link = $basePath . 'views/empleado/dashboard.php';
                     break;
                 case 'inquilino':
-                    $dashboard_link = str_repeat('../', max(0, substr_count($_SERVER['SCRIPT_NAME'], '/') - 2)) . 'views/inquilino/dashboard.php';
+                    $dashboard_link = $basePath . 'views/inquilino/dashboard.php';
                     break;
+            }
+
+            // Contar morosidad para mostrar badge (solo para admin)
+            $overdue_link = '';
+            if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+                // Intentar cargar conexión DB (silencioso en fallo)
+                try {
+                    require_once __DIR__ . '/db.php';
+                    $stmt = $pdo->query("SELECT COUNT(*) FROM invoices WHERE status <> 'paid' AND due_date IS NOT NULL AND due_date < CURDATE()");
+                    $overdue_count = (int)$stmt->fetchColumn();
+                } catch (Exception $e) {
+                    $overdue_count = 0;
+                }
+                $overdue_link = $basePath . 'finanzas.php';
             }
             ?>
             <a href="<?php echo $dashboard_link; ?>"><i class="fas fa-home"></i> Inicio</a>
-            <a href="<?php echo str_repeat('../', max(0, substr_count($_SERVER['SCRIPT_NAME'], '/') - 2)) . 'logout.php'; ?>" class="btn btn-danger">
+            <?php if (!empty($overdue_link)): ?>
+                <a href="<?php echo $overdue_link; ?>"><i class="fas fa-wallet"></i> Finanzas<?php if (!empty($overdue_count) && $overdue_count > 0) echo ' <span class="status-badge status-expired">'.htmlspecialchars($overdue_count).'</span>'; ?></a>
+            <?php endif; ?>
+            <a href="<?php echo $basePath . 'logout.php'; ?>" class="btn btn-danger">
                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
             </a>
         </div>

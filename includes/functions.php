@@ -98,4 +98,63 @@ function getStatusBadge($status) {
                 <i class='fas fa-{$badge['icon']}'></i> {$badge['text']}
             </span>";
 }
+
+// Obtener conexión PDO reusando Database class
+function get_db_connection() {
+    static $conn = null;
+    if ($conn) return $conn;
+
+    $db = new Database();
+    $conn = $db->getConnection();
+    return $conn;
+}
+
+// Validar token de dispositivo sencillo (busca en device_tokens)
+function validate_device_token($token) {
+    if (empty($token)) return false;
+    $conn = get_db_connection();
+    if (!$conn) return false;
+    $sql = "SELECT dispositivo_id, activo FROM device_tokens WHERE token = :token LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([':token' => $token]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$row) return false;
+    return (int)$row['activo'] === 1 ? (int)$row['dispositivo_id'] : false;
+}
+
+// Helper para escribir respuestas JSON y terminar
+function json_response($data, $status_code = 200) {
+    http_response_code($status_code);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($data);
+    exit();
+}
+
+// Crear alerta en base de datos
+function create_alert($departamento_id, $sensor_id, $tipo, $mensaje, $prioridad = 'media', $metadata = null) {
+    $conn = get_db_connection();
+    $sql = "INSERT INTO alertas (departamento_id, sensor_id, tipo, prioridad, mensaje, metadata, leido, creado_en) VALUES (:departamento_id, :sensor_id, :tipo, :prioridad, :mensaje, :metadata, 0, NOW())";
+    $stmt = $conn->prepare($sql);
+    $meta_json = null;
+    if (!is_null($metadata)) {
+        $meta_json = json_encode($metadata, JSON_UNESCAPED_UNICODE);
+    }
+    $stmt->execute([
+        ':departamento_id' => $departamento_id,
+        ':sensor_id' => $sensor_id,
+        ':tipo' => $tipo,
+        ':prioridad' => $prioridad,
+        ':mensaje' => $mensaje,
+        ':metadata' => $meta_json
+    ]);
+    return $conn->lastInsertId();
+}
+
+// Obtener umbrales activos (puede devolver por sensor o por departamento)
+function get_active_umbrales() {
+    $conn = get_db_connection();
+    $sql = "SELECT * FROM umbrales WHERE activo = 1";
+    $stmt = $conn->query($sql);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>

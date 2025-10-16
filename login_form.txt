@@ -7,8 +7,8 @@ codigo: DERFS12
                     <p class="bento-demo-role"><strong>Administrador:</strong></p>
                     <p class="bento-demo-creds">
                         <strong class="bento-demo-email">admin@edificio.com</strong> / 
-                        <strong class="bento-demo-password">password</strong>
-                        <button type="button" onclick="fillCredentials('admin@edificio.com', 'password')" 
+                        <strong class="bento-demo-password">ko87K#adm-0</strong>
+                        <button type="button" onclick="fillCredentials('admin@edificio.com', 'ko87K#adm-0')" 
                                 class="bento-btn bento-btn-secondary bento-btn-small">
                             <i class="fas fa-copy"></i> Usar
                         </button>
@@ -19,8 +19,24 @@ codigo: DERFS12
                     <p class="bento-demo-role"><strong>Empleados:</strong></p>
                     <p class="bento-demo-creds">
                         <strong class="bento-demo-email">empleado1@edificio.com</strong> / 
-                        <strong class="bento-demo-password">password</strong>
-                        <button type="button" onclick="fillCredentials('empleado1@edificio.com', 'password')" 
+                        <strong class="bento-demo-password">ko87K#emp-1</strong>
+                        <button type="button" onclick="fillCredentials('empleado1@edificio.com', 'ko87K#emp-1')" 
+                                class="bento-btn bento-btn-secondary bento-btn-small">
+                            <i class="fas fa-copy"></i> Usar
+                        </button>
+                    </p>
+                    <p class="bento-demo-creds">
+                        <strong class="bento-demo-email">empleado2@edificio.com</strong> / 
+                        <strong class="bento-demo-password">ko87K#emp-2</strong>
+                        <button type="button" onclick="fillCredentials('empleado2@edificio.com', 'ko87K#emp-2')" 
+                                class="bento-btn bento-btn-secondary bento-btn-small">
+                            <i class="fas fa-copy"></i> Usar
+                        </button>
+                    </p>
+                    <p class="bento-demo-creds">
+                        <strong class="bento-demo-email">empleado3@edificio.com</strong> / 
+                        <strong class="bento-demo-password">ko87K#emp-3</strong>
+                        <button type="button" onclick="fillCredentials('empleado3@edificio.com', 'ko87K#emp-3')" 
                                 class="bento-btn bento-btn-secondary bento-btn-small">
                             <i class="fas fa-copy"></i> Usar
                         </button>
@@ -31,8 +47,40 @@ codigo: DERFS12
                     <p class="bento-demo-role"><strong>Inquilinos:</strong></p>
                     <p class="bento-demo-creds">
                         <strong class="bento-demo-email">inquilino1@edificio.com</strong> / 
-                        <strong class="bento-demo-password">password</strong>
-                        <button type="button" onclick="fillCredentials('inquilino1@edificio.com', 'password')" 
+                        <strong class="bento-demo-password">ko87K#fo-inq-1</strong>
+                        <button type="button" onclick="fillCredentials('inquilino1@edificio.com', 'ko87K#fo-inq-1')" 
+                                class="bento-btn bento-btn-secondary bento-btn-small">
+                            <i class="fas fa-copy"></i> Usar
+                        </button>
+                    </p>
+                    <p class="bento-demo-creds">
+                        <strong class="bento-demo-email">inquilino2@edificio.com</strong> / 
+                        <strong class="bento-demo-password">ko87K#fo-inq-2</strong>
+                        <button type="button" onclick="fillCredentials('inquilino2@edificio.com', 'ko87K#fo-inq-2')" 
+                                class="bento-btn bento-btn-secondary bento-btn-small">
+                            <i class="fas fa-copy"></i> Usar
+                        </button>
+                    </p>
+                    <p class="bento-demo-creds">
+                        <strong class="bento-demo-email">inquilino3@edificio.com</strong> / 
+                        <strong class="bento-demo-password">ko87K#fo-inq-3</strong>
+                        <button type="button" onclick="fillCredentials('inquilino3@edificio.com', 'ko87K#fo-inq-3')" 
+                                class="bento-btn bento-btn-secondary bento-btn-small">
+                            <i class="fas fa-copy"></i> Usar
+                        </button>
+                    </p>
+                    <p class="bento-demo-creds">
+                        <strong class="bento-demo-email">inquilino4@edificio.com</strong> / 
+                        <strong class="bento-demo-password">ko87K#fo-inq-4</strong>
+                        <button type="button" onclick="fillCredentials('inquilino4@edificio.com', 'ko87K#fo-inq-4')" 
+                                class="bento-btn bento-btn-secondary bento-btn-small">
+                            <i class="fas fa-copy"></i> Usar
+                        </button>
+                    </p>
+                    <p class="bento-demo-creds">
+                        <strong class="bento-demo-email">inquilino5@edificio.com</strong> / 
+                        <strong class="bento-demo-password">ko87K#fo-inq-5</strong>
+                        <button type="button" onclick="fillCredentials('inquilino5@edificio.com', 'ko87K#fo-inq-5')" 
                                 class="bento-btn bento-btn-secondary bento-btn-small">
                             <i class="fas fa-copy"></i> Usar
                         </button>

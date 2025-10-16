@@ -1,0 +1,60 @@
+# Archivos temporales
+*.tmp
+*.temp
+*.log
+*.cache
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos de logs
+logs/*.log
+*.log
+
+# Archivos temporales de desarrollo
+temp_files/
+aaa.txt
+bbb.txt
+hola.txt
+holaCCC.txt
+
+# Configuraciones locales
+config/local.php
+.env
+.env.local
+
+# Archivos de backup
+*.bak
+*.backup
+*~
+
+# Archivos de sesión PHP
+session_*.txt
+
+# Archivos de debug
+debug.log
+error_log
+
+# Archivos de composer (si se usa en el futuro)
+vendor/
+composer.lock
+
+# Archivos de npm/node (si se usa en el futuro)
+node_modules/
+package-lock.json
+
+# Archivos de base de datos local
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos de configuración de XAMPP local
+xampp/</content>
+<parameter name="filePath">c:\xampp\htdocs\proyectoAdmEdificios\.gitignore

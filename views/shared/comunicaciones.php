@@ -32,7 +32,7 @@ try {
         $stmt->execute();
         
         // Recargar la página para actualizar el estado
-        header('Location: comunicaciones.php');
+        header('Location: shared/comunicaciones.php');
         exit();
     }
     

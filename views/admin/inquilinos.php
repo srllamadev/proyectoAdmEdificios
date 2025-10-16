@@ -140,7 +140,7 @@ try {
         <h3><i class="fas fa-plus-circle"></i> Acciones Rápidas</h3>
         <p style="color: var(--dark-blue);">Herramientas útiles para la gestión de inquilinos.</p>
         <div class="d-flex gap-10" style="flex-wrap: wrap;">
-            <a href="../comunicaciones.php" class="btn" style="background: var(--dark-blue); color: white;">
+            <a href="../shared/comunicaciones.php" class="btn" style="background: var(--dark-blue); color: white;">
                 <i class="fas fa-envelope"></i> Ver Comunicaciones
             </a>
             <a href="pagos.php" class="btn" style="background: var(--dark-blue); color: white;">

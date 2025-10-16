@@ -577,7 +577,7 @@ try {
                         </div>
                     <?php endforeach; ?>
                     
-                    <a href="comunicaciones.php" class="view-all-btn">
+                    <a href="../shared/comunicaciones.php" class="view-all-btn">
                         <i class="fas fa-envelope-open"></i>
                         Ver Todas las Comunicaciones
                     </a>

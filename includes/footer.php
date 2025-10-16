@@ -1,4 +1,4 @@
-    </div> <!-- Cierra container -->
+    </div> <!-- Cierra bento-container -->
     
     <script>
         // Animación de entrada para las tarjetas

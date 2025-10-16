@@ -33,9 +33,9 @@ try {
 }
 ?>
 
-<div class="page-header">
-    <h1><i class="fas fa-user-tie"></i> Gestión de Empleados</h1>
-    <p>Administración del personal y empleados del edificio</p>
+<div class="bento-page-header">
+    <h1 class="bento-page-title"><i class="fas fa-user-tie"></i> Gestión de Empleados</h1>
+    <p class="bento-page-subtitle">Administración del personal y empleados del edificio</p>
 </div>
 
 <?php if (isset($error)): ?>
@@ -43,133 +43,44 @@ try {
 <?php endif; ?>
 
 <!-- Estadísticas rápidas -->
-<div class="employee-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px;">
-    <div class="employee-stat-card" style="background: white; padding: 25px 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; border-top: 4px solid #1DCDFE; transition: transform 0.3s ease;">
-        <div class="employee-stat-number" style="font-size: 2.5rem; font-weight: bold; color: #1DCDFE; margin-bottom: 8px; line-height: 1;">
+<div class="bento-employee-stats">
+    <div class="bento-employee-stat-card bento-stat-total">
+        <div class="bento-employee-stat-number">
             <?php echo count($empleados); ?>
         </div>
-        <div class="employee-stat-label" style="color: #2F455C; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
-            <i class="fas fa-users" style="margin-right: 5px; color: #1DCDFE;"></i> Total Empleados
+        <div class="bento-employee-stat-label">
+            <i class="fas fa-users"></i> Total Empleados
         </div>
     </div>
-    <div class="employee-stat-card" style="background: white; padding: 25px 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; border-top: 4px solid #21D0B2; transition: transform 0.3s ease;">
-        <div class="employee-stat-number" style="font-size: 2.5rem; font-weight: bold; color: #21D0B2; margin-bottom: 8px; line-height: 1;">
+    <div class="bento-employee-stat-card bento-stat-active">
+        <div class="bento-employee-stat-number">
             <?php echo count(array_filter($empleados, function($e) { return $e['estado'] == 'activo'; })); ?>
         </div>
-        <div class="employee-stat-label" style="color: #2F455C; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
-            <i class="fas fa-check-circle" style="margin-right: 5px; color: #21D0B2;"></i> Activos
+        <div class="bento-employee-stat-label">
+            <i class="fas fa-check-circle"></i> Activos
         </div>
     </div>
-    <div class="employee-stat-card" style="background: white; padding: 25px 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; border-top: 4px solid #ffc107; transition: transform 0.3s ease;">
-        <div class="employee-stat-number" style="font-size: 2.5rem; font-weight: bold; color: #ffc107; margin-bottom: 8px; line-height: 1;">
+    <div class="bento-employee-stat-card bento-stat-maintenance">
+        <div class="bento-employee-stat-number">
             <?php echo count(array_filter($empleados, function($e) { return $e['cargo'] == 'mantenimiento'; })); ?>
         </div>
-        <div class="employee-stat-label" style="color: #2F455C; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
-            <i class="fas fa-tools" style="margin-right: 5px; color: #ffc107;"></i> Mantenimiento
+        <div class="bento-employee-stat-label">
+            <i class="fas fa-tools"></i> Mantenimiento
         </div>
     </div>
-    <div class="employee-stat-card" style="background: white; padding: 25px 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; border-top: 4px solid #2F455C; transition: transform 0.3s ease;">
-        <div class="employee-stat-number" style="font-size: 2.5rem; font-weight: bold; color: #2F455C; margin-bottom: 8px; line-height: 1;">
+    <div class="bento-employee-stat-card bento-stat-security">
+        <div class="bento-employee-stat-number">
             <?php echo count(array_filter($empleados, function($e) { return $e['cargo'] == 'seguridad'; })); ?>
         </div>
-        <div class="employee-stat-label" style="color: #2F455C; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
-            <i class="fas fa-shield-alt" style="margin-right: 5px; color: #2F455C;"></i> Seguridad
+        <div class="bento-employee-stat-label">
+            <i class="fas fa-shield-alt"></i> Seguridad
         </div>
     </div>
 </div>
 
-<style>
-.employee-stats .employee-stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
-}
-
-.employee-stats {
-    animation: fadeInUp 0.6s ease-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.employee-stat-card {
-    cursor: pointer;
-}
-
-.cargo-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.cargo-mantenimiento {
-    background: linear-gradient(135deg, #ffc107, #ffeb3b);
-    color: #333;
-}
-
-.cargo-seguridad {
-    background: linear-gradient(135deg, #1DCDFE, #21D0B2);
-    color: white;
-}
-
-.cargo-administracion {
-    background: linear-gradient(135deg, #34F5C5, #21D0B2);
-    color: #2F455C;
-}
-
-.cargo-conserje {
-    background: linear-gradient(135deg, #6f42c1, #8b5cf6);
-    color: white;
-}
-
-.cargo-limpieza {
-    background: linear-gradient(135deg, #20c997, #17a2b8);
-    color: white;
-}
-
-.cargo-general {
-    background: linear-gradient(135deg, #6c757d, #495057);
-    color: white;
-}
-
-.employee-email {
-    color: #1DCDFE;
-    text-decoration: none;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.employee-email:hover {
-    text-decoration: underline;
-}
-
-.employee-dni {
-    background: #f8f9fa;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    color: #2F455C;
-}
-</style>
-
 <!-- Lista de empleados -->
 <div class="bento-card">
-    <h3><i class="fas fa-users"></i> Lista de Empleados</h3>
+    <h3 class="bento-card-title"><i class="fas fa-users"></i> Lista de Empleados</h3>
     
     <?php if (!empty($empleados)): ?>
         <div class="table-container">
@@ -260,16 +171,16 @@ try {
                                 }
                                 
                                 if ($fecha_mostrar): ?>
-                                    <div style="display: flex; flex-direction: column; align-items: center;">
-                                        <span style="color: #1DCDFE; font-weight: 500;">
+                                    <div class="bento-employee-date">
+                                        <span class="bento-employee-date-main">
                                             <i class="fas fa-calendar-alt"></i> <?php echo formatDate($fecha_mostrar); ?>
                                         </span>
-                                        <small style="color: #6c757d; font-size: 0.75rem;">
+                                        <small class="bento-employee-date-type">
                                             <?php echo $tipo_fecha; ?>
                                         </small>
                                     </div>
                                 <?php else: ?>
-                                    <span style="color: #6c757d; text-align: center; display: block;">
+                                    <span class="bento-employee-no-date">
                                         <i class="fas fa-calendar-times"></i><br>
                                         <small>Sin fecha</small>
                                     </span>
@@ -282,10 +193,10 @@ try {
             </table>
         </div>
     <?php else: ?>
-        <div style="text-align: center; padding: 40px; background: var(--light-gray); border-radius: var(--border-radius);">
-            <i class="fas fa-user-tie" style="font-size: 3rem; color: var(--dark-gray); margin-bottom: 15px;"></i>
-            <h3 style="color: var(--dark-gray);">No hay empleados registrados</h3>
-            <p style="color: var(--dark-gray);">Los empleados aparecerán aquí cuando se registren en el sistema.</p>
+        <div class="bento-empty-state">
+            <i class="fas fa-user-tie"></i>
+            <h3>No hay empleados registrados</h3>
+            <p>Los empleados aparecerán aquí cuando se registren en el sistema.</p>
         </div>
     <?php endif; ?>
 </div>

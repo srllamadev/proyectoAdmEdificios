@@ -1,0 +1,63 @@
+-- Tablas para módulo de Gestión Financiera
+CREATE TABLE IF NOT EXISTS invoices (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  reference VARCHAR(64) NOT NULL UNIQUE,
+  resident_id INT DEFAULT NULL,
+  amount DECIMAL(12,2) NOT NULL,
+  due_date DATE,
+  status ENUM('pending','paid','overdue','cancelled') DEFAULT 'pending',
+  meta JSON DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS invoice_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  invoice_id INT NOT NULL,
+  description VARCHAR(255),
+  qty INT DEFAULT 1,
+  unit_price DECIMAL(12,2) DEFAULT 0,
+  total DECIMAL(12,2) GENERATED ALWAYS AS (qty*unit_price) VIRTUAL,
+  FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS payments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  invoice_id INT DEFAULT NULL,
+  amount DECIMAL(12,2) NOT NULL,
+  method VARCHAR(50),
+  gateway VARCHAR(50),
+  tx_ref VARCHAR(128),
+  metadata JSON DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS payroll (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  staff_id INT NOT NULL,
+  period VARCHAR(20) NOT NULL,
+  gross DECIMAL(12,2) NOT NULL,
+  deductions DECIMAL(12,2) DEFAULT 0,
+  net DECIMAL(12,2) GENERATED ALWAYS AS (gross - deductions) VIRTUAL,
+  paid TINYINT(1) DEFAULT 0,
+  meta JSON DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS transactions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  type ENUM('income','expense','payout') NOT NULL,
+  reference VARCHAR(128),
+  amount DECIMAL(12,2) NOT NULL,
+  category VARCHAR(64),
+  metadata JSON DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS payment_gateways (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(64) NOT NULL,
+  config JSON DEFAULT NULL,
+  active TINYINT(1) DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

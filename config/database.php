@@ -6,6 +6,9 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_PORT', '3306');
 
+// Modo de desarrollo - en true los correos se guardan en archivos en lugar de enviarse
+define('DEVELOPMENT_MODE', true);
+
 class Database {
     private $host = DB_HOST;
     private $db_name = DB_NAME;

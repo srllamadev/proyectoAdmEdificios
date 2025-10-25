@@ -1,0 +1,103 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                   🔄 CREDENCIALES DE ADMINISTRADOR ACTUALIZADAS              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✅ CAMBIO REALIZADO EXITOSAMENTE
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📧 NUEVO EMAIL DEL ADMINISTRADOR:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                              │
+│   Email anterior:  admin@edificio.com → llamakachera@gmail.com              │
+│                                                                              │
+│   Email actual:    admin@admin.com                                          │
+│                                                                              │
+│   Contraseña:      ko87K#adm-0                                              │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔐 CÓMO INICIAR SESIÓN:
+
+1. Ve a: http://localhost/proyectoAdmEdificios/login.php
+
+2. Ingresa las credenciales:
+   Email:     admin@admin.com
+   Password:  ko87K#adm-0
+
+3. Serás redirigido automáticamente al Dashboard de Administrador
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 ARCHIVOS ACTUALIZADOS:
+
+✅ Base de datos (tabla users)
+✅ login_form.txt (credenciales de prueba)
+✅ SISTEMA_SEGURIDAD.md (documentación)
+✅ RESUMEN_EJECUTIVO.txt (resumen ejecutivo)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 PROBAR EL CAMBIO:
+
+1. Probar Login:
+   → http://localhost/proyectoAdmEdificios/login.php
+   → Usar: admin@admin.com / ko87K#adm-0
+
+2. Probar Recuperación de Contraseña:
+   → http://localhost/proyectoAdmEdificios/forgot-password.php
+   → Ingresar: admin@admin.com
+
+3. Ver Panel de Pruebas:
+   → http://localhost/proyectoAdmEdificios/test_correos.php
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ FUNCIONALIDADES QUE FUNCIONAN CON EL NUEVO EMAIL:
+
+✅ Login normal
+✅ Recuperación de contraseña
+✅ Notificación por intentos fallidos (después de 3 intentos)
+✅ Bloqueo de cuenta (después de 5 intentos)
+✅ Envío de correos (guardados en logs/emails/)
+✅ Logs de seguridad
+✅ Todas las funciones de administrador
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+👥 OTROS USUARIOS DEL SISTEMA:
+
+EMPLEADOS:
+  • empleado1@edificio.com / ko87K#emp-1
+  • empleado2@edificio.com / ko87K#emp-2
+  • empleado3@edificio.com / ko87K#emp-3
+
+INQUILINOS:
+  • inquilino1@edificio.com / ko87K#fo-inq-1
+  • inquilino2@edificio.com / ko87K#fo-inq-2
+  • inquilino3@edificio.com / ko87K#fo-inq-3
+  • inquilino4@edificio.com / ko87K#fo-inq-4
+  • inquilino5@edificio.com / ko87K#fo-inq-5
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 ESTADO FINAL:
+
+✅ Email del administrador: admin@admin.com
+✅ Contraseña: ko87K#adm-0
+✅ Sistema 100% funcional
+✅ Todas las funcionalidades operativas
+✅ Documentación actualizada
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Fecha de actualización: 24 de octubre de 2025
+Cambio solicitado por: Usuario
+Estado: ✅ COMPLETADO
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

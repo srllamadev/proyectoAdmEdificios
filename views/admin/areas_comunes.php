@@ -14,12 +14,13 @@ $database = new Database();
 $db = $database->getConnection();
 
 // Obtener áreas comunes
+$areas = [];
 try {
     $query = "SELECT a.*, 
                      COUNT(r.id) as total_reservas,
-                     COUNT(CASE WHEN r.fecha >= CURDATE() AND r.estado = 'activa' THEN 1 END) as reservas_futuras
+                     COUNT(CASE WHEN r.fecha_inicio >= NOW() AND r.estado = 'confirmada' THEN 1 END) as reservas_futuras
               FROM areas_comunes a 
-              LEFT JOIN reservas r ON a.id = r.area_id
+              LEFT JOIN reservas r ON a.id = r.area_comun_id
               GROUP BY a.id
               ORDER BY a.nombre";
     $stmt = $db->prepare($query);
@@ -47,7 +48,7 @@ try {
         <div class="stat-label">Total Áreas</div>
     </div>
     <div class="stat-card" style="background: linear-gradient(135deg, var(--secondary-green), var(--accent-mint));">
-        <div class="stat-number"><?php echo count(array_filter($areas, function($a) { return $a['disponible'] == 1; })); ?></div>
+        <div class="stat-number"><?php echo count(array_filter($areas, function($a) { return $a['estado'] == 'disponible'; })); ?></div>
         <div class="stat-label">Disponibles</div>
     </div>
     <div class="stat-card" style="background: linear-gradient(135deg, var(--primary-blue), var(--secondary-green));">
@@ -83,16 +84,20 @@ try {
             <div class="bento-card">
                 <div class="d-flex justify-between align-center" style="margin-bottom: 15px;">
                     <h3 style="margin: 0; color: var(--dark-blue);">
-                        <i class="fas fa-<?php echo $area['tipo'] == 'salon' ? 'home' : ($area['tipo'] == 'gimnasio' ? 'dumbbell' : ($area['tipo'] == 'piscina' ? 'swimmer' : 'building')); ?>"></i>
+                        <i class="fas fa-building"></i>
                         <?php echo htmlspecialchars($area['nombre']); ?>
                     </h3>
-                    <?php if ($area['disponible']): ?>
+                    <?php if ($area['estado'] == 'disponible'): ?>
                         <span class="status-badge status-active">
                             <i class="fas fa-check-circle"></i> Disponible
                         </span>
+                    <?php elseif ($area['estado'] == 'mantenimiento'): ?>
+                        <span class="status-badge status-pending">
+                            <i class="fas fa-tools"></i> Mantenimiento
+                        </span>
                     <?php else: ?>
                         <span class="status-badge status-expired">
-                            <i class="fas fa-times-circle"></i> No Disponible
+                            <i class="fas fa-times-circle"></i> Fuera de Servicio
                         </span>
                     <?php endif; ?>
                 </div>
@@ -107,8 +112,16 @@ try {
                         <span style="color: var(--dark-gray);"><?php echo $area['capacidad']; ?> personas</span>
                     </div>
                     <div>
-                        <strong style="color: var(--primary-blue);">Tipo:</strong> 
-                        <span style="color: var(--dark-gray);"><?php echo ucfirst($area['tipo']); ?></span>
+                        <strong style="color: var(--primary-blue);">Horario:</strong> 
+                        <span style="color: var(--dark-gray);">
+                            <?php 
+                            if ($area['horario_apertura'] && $area['horario_cierre']) {
+                                echo date('H:i', strtotime($area['horario_apertura'])) . ' - ' . date('H:i', strtotime($area['horario_cierre']));
+                            } else {
+                                echo 'No definido';
+                            }
+                            ?>
+                        </span>
                     </div>
                 </div>
                 
@@ -143,7 +156,7 @@ try {
                        class="btn btn-sm" style="background: var(--secondary-green); color: white; flex: 1;">
                         <i class="fas fa-calendar"></i> Reservas
                     </a>
-                    <?php if ($area['disponible']): ?>
+                    <?php if ($area['estado'] == 'disponible'): ?>
                         <a href="desactivar_area.php?id=<?php echo $area['id']; ?>" 
                            class="btn btn-sm" style="background: #dc3545; color: white;"
                            onclick="return confirm('¿Desactivar esta área?')">

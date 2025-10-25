@@ -21,16 +21,16 @@ if ($filter_dep) {
     $params[':dep'] = $filter_dep;
 }
 if ($filter_recurso) {
-    $whereParts[] = 's.tipo = :recurso';
+    $whereParts[] = 'l.tipo_servicio = :recurso';
     $params[':recurso'] = $filter_recurso;
 }
 if ($filter_start) {
-    $whereParts[] = 'l.recibido_en >= :start';
-    $params[':start'] = $filter_start . ' 00:00:00';
+    $whereParts[] = 'l.fecha_lectura >= :start';
+    $params[':start'] = $filter_start;
 }
 if ($filter_end) {
-    $whereParts[] = 'l.recibido_en <= :end';
-    $params[':end'] = $filter_end . ' 23:59:59';
+    $whereParts[] = 'l.fecha_lectura <= :end';
+    $params[':end'] = $filter_end;
 }
 $whereSQL = '';
 if (count($whereParts) > 0) {
@@ -75,7 +75,14 @@ try {
     }
 
     // Consumo promedio por recurso desde lecturas/consumos
-    if (tableExists($conn, 'lecturas')) {
+    if (tableExists($conn, 'lecturas_consumo')) {
+        $stmt = $conn->prepare("SELECT tipo_servicio AS recurso, AVG(consumo) AS promedio FROM lecturas_consumo GROUP BY tipo_servicio");
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as $r) {
+            $consumoPromedio[$r['recurso']] = round((float)$r['promedio'],2);
+        }
+    } elseif (tableExists($conn, 'lecturas')) {
         $stmt = $conn->prepare("SELECT s.tipo AS recurso, AVG(l.valor) AS promedio FROM lecturas l JOIN sensores s ON s.id = l.sensor_id GROUP BY s.tipo");
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -124,8 +131,17 @@ try {
     $totalDepartamentosActivos = $totalDeps;
 
     // Tabla detallada: combinar lecturas y estado de pago (si posible)
-    $selectSQL = "SELECT d.nombre AS departamento, s.tipo AS recurso, l.valor AS consumo, l.recibido_en AS fecha, NULL AS estado_pago FROM lecturas l JOIN departamentos d ON d.id = l.departamento_id JOIN sensores s ON s.id = l.sensor_id $whereSQL ORDER BY l.recibido_en DESC LIMIT 100";
-    if (tableExists($conn,'lecturas')) {
+    if (tableExists($conn,'lecturas_consumo')) {
+        $selectSQL = "SELECT d.nombre AS departamento, l.tipo_servicio AS recurso, l.consumo, l.fecha_lectura AS fecha, NULL AS estado_pago 
+                      FROM lecturas_consumo l 
+                      JOIN departamentos d ON d.id = l.departamento_id 
+                      $whereSQL 
+                      ORDER BY l.fecha_lectura DESC LIMIT 100";
+        $stmt = $conn->prepare($selectSQL);
+        $stmt->execute($params);
+        $tablaRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } elseif (tableExists($conn,'lecturas')) {
+        $selectSQL = "SELECT d.nombre AS departamento, s.tipo AS recurso, l.valor AS consumo, l.recibido_en AS fecha, NULL AS estado_pago FROM lecturas l JOIN departamentos d ON d.id = l.departamento_id JOIN sensores s ON s.id = l.sensor_id $whereSQL ORDER BY l.recibido_en DESC LIMIT 100";
         $stmt = $conn->prepare($selectSQL);
         $stmt->execute($params);
         $tablaRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -143,7 +159,17 @@ try {
         $months[] = $m;
         $chart_monthly[$m] = ['agua'=>0,'luz'=>0,'gas'=>0];
     }
-    if (tableExists($conn,'lecturas')) {
+    if (tableExists($conn,'lecturas_consumo')) {
+        $stmt = $conn->prepare("SELECT DATE_FORMAT(l.fecha_lectura,'%Y-%m') AS ym, l.tipo_servicio AS recurso, SUM(l.consumo) as total FROM lecturas_consumo l WHERE l.fecha_lectura >= :since GROUP BY ym, recurso");
+        $since = date('Y-m-01', strtotime('-5 months'));
+        $stmt->execute([':since'=>$since]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as $r) {
+            if (isset($chart_monthly[$r['ym']])) {
+                $chart_monthly[$r['ym']][$r['recurso']] = (float)$r['total'];
+            }
+        }
+    } elseif (tableExists($conn,'lecturas')) {
         $stmt = $conn->prepare("SELECT DATE_FORMAT(l.recibido_en,'%Y-%m') AS ym, s.tipo AS recurso, SUM(l.valor) as total FROM lecturas l JOIN sensores s ON s.id = l.sensor_id WHERE l.recibido_en >= :since GROUP BY ym, recurso");
         $since = date('Y-m-01', strtotime('-5 months')) . ' 00:00:00';
         $stmt->execute([':since'=>$since]);
@@ -192,8 +218,12 @@ function tableExists($conn, $table) {
     try {
         $stmt = $conn->prepare("SHOW TABLES LIKE :t");
         $stmt->execute([':t'=>$table]);
-        return (bool)$stmt->fetchColumn();
+        $exists = (bool)$stmt->fetchColumn();
+        // DEBUG
+        error_log("tableExists($table) = " . ($exists ? 'true' : 'false'));
+        return $exists;
     } catch (Exception $e) {
+        error_log("tableExists($table) ERROR: " . $e->getMessage());
         return false;
     }
 }
@@ -203,6 +233,12 @@ $js_chart_monthly = json_encode($chart_monthly);
 $js_pie_status = json_encode($chart_pie_status);
 $js_line_trend = json_encode($line_trend);
 $js_table = json_encode($tablaRows);
+
+// DEBUG: Descomentar para ver los datos
+echo "<!-- DEBUG: chart_monthly = " . print_r($chart_monthly, true) . " -->";
+echo "<!-- DEBUG: consumoPromedio = " . print_r($consumoPromedio, true) . " -->";
+echo "<!-- DEBUG: Total lecturas_consumo rows = " . count($tablaRows) . " -->";
+echo "<!-- DEBUG: js_chart_monthly = " . $js_chart_monthly . " -->";
 ?>
 
 <div class="bento-page-header">
@@ -377,12 +413,21 @@ $js_table = json_encode($tablaRows);
     const chartMonthlyData = <?php echo $js_chart_monthly; ?>;
     const chartPieData = <?php echo $js_pie_status; ?>;
     const lineTrend = <?php echo $js_line_trend; ?>;
+    
+    console.log('DEBUG chartMonthlyData:', chartMonthlyData);
+    console.log('DEBUG chartPieData:', chartPieData);
+    console.log('DEBUG lineTrend:', lineTrend);
 
     // Preparar datos para chartMonthly
     const labels = Object.keys(chartMonthlyData);
     const agua = labels.map(l => chartMonthlyData[l].agua || 0);
     const luz = labels.map(l => chartMonthlyData[l].luz || 0);
     const gas = labels.map(l => chartMonthlyData[l].gas || 0);
+    
+    console.log('Labels:', labels);
+    console.log('Agua:', agua);
+    console.log('Luz:', luz);
+    console.log('Gas:', gas);
 
     const ctxM = document.getElementById('chartMonthly').getContext('2d');
     new Chart(ctxM, {

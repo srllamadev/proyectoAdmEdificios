@@ -26,6 +26,7 @@ try {
     
 } catch (PDOException $e) {
     $error = "Error al obtener inquilinos: " . $e->getMessage();
+    $inquilinos = [];
 }
 ?>
 

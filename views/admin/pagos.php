@@ -42,49 +42,51 @@ try {
 }
 ?>
 
-<div class="page-header">
-    <h1><i class="fas fa-money-bill-wave"></i> Gestión de Pagos</h1>
-    <p>Control y seguimiento de pagos de alquiler</p>
+<div class="bento-page-header">
+    <h1 class="bento-page-title"><i class="fas fa-money-bill-wave"></i> Gestión de Pagos</h1>
+    <p class="bento-page-subtitle">Control y seguimiento de pagos de alquiler</p>
 </div>
 
 <?php if (isset($error)): ?>
-    <?php showAlert($error, 'error'); ?>
+    <div class="alert alert-error">
+        <i class="fas fa-exclamation-triangle"></i> <?php echo $error; ?>
+    </div>
 <?php endif; ?>
 
 <!-- Estadísticas de pagos -->
-<div class="stats-grid" style="margin-bottom: 30px;">
-    <div class="stat-card">
-        <div class="stat-number"><?php echo $total_pagos; ?></div>
-        <div class="stat-label">Total Pagos</div>
+<div class="bento-stats-grid">
+    <div class="bento-stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="bento-stat-number" style="color: white;"><?php echo $total_pagos; ?></div>
+        <div class="bento-stat-label" style="color: rgba(255,255,255,0.9);">Total Pagos</div>
     </div>
-    <div class="stat-card" style="background: linear-gradient(135deg, var(--secondary-green), var(--accent-mint));">
-        <div class="stat-number"><?php echo $pagos_pagados; ?></div>
-        <div class="stat-label">Pagados</div>
+    <div class="bento-stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+        <div class="bento-stat-number" style="color: white;"><?php echo $pagos_pagados; ?></div>
+        <div class="bento-stat-label" style="color: rgba(255,255,255,0.9);">Pagados</div>
     </div>
-    <div class="stat-card" style="background: linear-gradient(135deg, #ffc107, #ffeb3b);">
-        <div class="stat-number"><?php echo $pagos_pendientes; ?></div>
-        <div class="stat-label">Pendientes</div>
+    <div class="bento-stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #ffeb3b 100%);">
+        <div class="bento-stat-number" style="color: white;"><?php echo $pagos_pendientes; ?></div>
+        <div class="bento-stat-label" style="color: rgba(255,255,255,0.9);">Pendientes</div>
     </div>
-    <div class="stat-card" style="background: linear-gradient(135deg, #dc3545, #ff6b6b);">
-        <div class="stat-number"><?php echo $pagos_vencidos; ?></div>
-        <div class="stat-label">Vencidos</div>
+    <div class="bento-stat-card" style="background: linear-gradient(135deg, #dc3545 0%, #ff6b6b 100%);">
+        <div class="bento-stat-number" style="color: white;"><?php echo $pagos_vencidos; ?></div>
+        <div class="bento-stat-label" style="color: rgba(255,255,255,0.9);">Vencidos</div>
     </div>
 </div>
 
 <!-- Filtros -->
 <div class="bento-card" style="margin-bottom: 30px;">
-    <h3><i class="fas fa-filter"></i> Filtros</h3>
-    <div class="d-flex gap-10" style="flex-wrap: wrap;">
-        <button onclick="filtrarPagos('todos')" class="btn" style="background: var(--primary-blue);">
+    <h3 class="bento-card-title"><i class="fas fa-filter"></i> Filtros de Búsqueda</h3>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+        <button onclick="filtrarPagos('todos')" class="filter-btn filter-todos">
             <i class="fas fa-list"></i> Todos los Pagos
         </button>
-        <button onclick="filtrarPagos('pendiente')" class="btn" style="background: #ffc107; color: black;">
+        <button onclick="filtrarPagos('pendiente')" class="filter-btn filter-pendiente">
             <i class="fas fa-clock"></i> Solo Pendientes
         </button>
-        <button onclick="filtrarPagos('vencido')" class="btn" style="background: #dc3545;">
+        <button onclick="filtrarPagos('vencido')" class="filter-btn filter-vencido">
             <i class="fas fa-exclamation-triangle"></i> Solo Vencidos
         </button>
-        <button onclick="filtrarPagos('pagado')" class="btn" style="background: var(--secondary-green);">
+        <button onclick="filtrarPagos('pagado')" class="filter-btn filter-pagado">
             <i class="fas fa-check-circle"></i> Solo Pagados
         </button>
     </div>
@@ -92,10 +94,10 @@ try {
 
 <!-- Lista de pagos -->
 <div class="bento-card">
-    <h3 id="titulo-pagos"><i class="fas fa-list-alt"></i> Detalle de Todos los Pagos</h3>
+    <h3 class="bento-card-title" id="titulo-pagos"><i class="fas fa-list-alt"></i> Detalle de Todos los Pagos</h3>
     
     <?php if (!empty($pagos)): ?>
-        <div id="lista-pagos">
+        <div id="lista-pagos" style="display: grid; gap: 20px; margin-top: 20px;">
             <?php foreach ($pagos as $pago): ?>
                 <div class="pago-item payment-card" data-estado="<?php echo $pago['estado']; ?>">
                     <div class="payment-header">
@@ -152,13 +154,192 @@ try {
             <?php endforeach; ?>
         </div>
     <?php else: ?>
-        <div style="text-align: center; padding: 40px; background: var(--light-gray); border-radius: var(--border-radius);">
-            <i class="fas fa-money-bill-wave" style="font-size: 3rem; color: var(--dark-gray); margin-bottom: 15px;"></i>
-            <h3 style="color: var(--dark-gray);">No hay registros de pagos</h3>
-            <p style="color: var(--dark-gray);">No se encontraron pagos en el sistema.</p>
+        <div class="bento-empty-state">
+            <i class="fas fa-money-bill-wave"></i>
+            <h3>No hay registros de pagos</h3>
+            <p>No se encontraron pagos en el sistema.</p>
         </div>
     <?php endif; ?>
 </div>
+
+<style>
+.payment-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #667eea;
+    transition: all 0.3s ease;
+}
+
+.payment-card:hover {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.payment-card[data-estado="pagado"] {
+    border-left-color: #43e97b;
+}
+
+.payment-card[data-estado="pendiente"] {
+    border-left-color: #ffc107;
+}
+
+.payment-card[data-estado="vencido"] {
+    border-left-color: #dc3545;
+}
+
+.payment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+.payment-header h4 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 1.3em;
+}
+
+.payment-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.detail-group {
+    background: #f9fafb;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.detail-group h5 {
+    margin: 0 0 12px 0;
+    color: #667eea;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.detail-group p {
+    margin: 8px 0;
+    color: #4b5563;
+    font-size: 0.95em;
+}
+
+.detail-group code {
+    background: white;
+    padding: 3px 8px;
+    border-radius: 5px;
+    color: #667eea;
+    font-weight: 600;
+}
+
+.payment-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 15px;
+    border-top: 2px solid #f3f4f6;
+}
+
+.payment-actions .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.payment-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.filter-btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    background: white;
+    color: #4b5563;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.filter-btn.filter-todos:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+}
+
+.filter-btn.filter-pagado:hover {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+    border-color: #43e97b;
+}
+
+.filter-btn.filter-pendiente:hover {
+    background: linear-gradient(135deg, #ffc107 0%, #ffeb3b 100%);
+    color: white;
+    border-color: #ffc107;
+}
+
+.filter-btn.filter-vencido:hover {
+    background: linear-gradient(135deg, #dc3545 0%, #ff6b6b 100%);
+    color: white;
+    border-color: #dc3545;
+}
+
+.alert {
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-left: 4px solid #ef4444;
+}
+
+@media (max-width: 768px) {
+    .payment-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .payment-actions {
+        flex-direction: column;
+    }
+    
+    .payment-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
 
 <script>
     function filtrarPagos(estado) {

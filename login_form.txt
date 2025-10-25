@@ -6,9 +6,9 @@ codigo: DERFS12
                 <div class="bento-demo-item">
                     <p class="bento-demo-role"><strong>Administrador:</strong></p>
                     <p class="bento-demo-creds">
-                        <strong class="bento-demo-email">admin@edificio.com</strong> / 
+                        <strong class="bento-demo-email">admin@admin.com</strong> / 
                         <strong class="bento-demo-password">ko87K#adm-0</strong>
-                        <button type="button" onclick="fillCredentials('admin@edificio.com', 'ko87K#adm-0')" 
+                        <button type="button" onclick="fillCredentials('admin@admin.com', 'ko87K#adm-0')" 
                                 class="bento-btn bento-btn-secondary bento-btn-small">
                             <i class="fas fa-copy"></i> Usar
                         </button>

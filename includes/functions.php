@@ -48,19 +48,56 @@ function clean_input($data) {
 
 // Función para mostrar alertas con estilo
 function showAlert($message, $type = 'info') {
-    $icons = [
-        'success' => 'fas fa-check-circle',
-        'error' => 'fas fa-exclamation-triangle',
-        'warning' => 'fas fa-exclamation-circle',
-        'info' => 'fas fa-info-circle'
-    ];
+    $alertClass = '';
+    switch($type) {
+        case 'success':
+            $alertClass = 'alert-success';
+            break;
+        case 'error':
+            $alertClass = 'alert-danger';
+            break;
+        case 'warning':
+            $alertClass = 'alert-warning';
+            break;
+        default:
+            $alertClass = 'alert-info';
+    }
     
-    $icon = $icons[$type] ?? $icons['info'];
+    echo "<div class='alert $alertClass' role='alert'>$message</div>";
+}
+
+// Función para verificar el rol requerido y redirigir si no coincide
+function checkUserRole($requiredRole) {
+    if (!isLoggedIn()) {
+        header('Location: ../../login.php');
+        exit();
+    }
     
-    echo "<div class='alert alert-{$type}'>
-            <i class='{$icon}'></i>
-            {$message}
-          </div>";
+    if (!hasRole($requiredRole)) {
+        header('Location: ../../unauthorized.php');
+        exit();
+    }
+    
+    return true;
+}
+
+// Función para formatear moneda
+function formatCurrency($amount) {
+    return '$' . number_format($amount, 2, '.', ',');
+}
+
+// Función para obtener la unidad de medida de un recurso
+function getResourceUnit($resource) {
+    switch($resource) {
+        case 'agua':
+            return 'L';
+        case 'luz':
+            return 'kWh';
+        case 'gas':
+            return 'm³';
+        default:
+            return '';
+    }
 }
 
 // Función para formatear fechas
@@ -76,11 +113,6 @@ function formatDate($date, $format = 'd/m/Y') {
     }
     
     return date($format, $timestamp);
-}
-
-// Función para formatear moneda
-function formatCurrency($amount) {
-    return '$' . number_format($amount, 2);
 }
 
 // Función para obtener el estado con badge

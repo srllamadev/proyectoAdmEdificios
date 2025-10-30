@@ -26,11 +26,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Crear token de recuperación
                 $token = createPasswordResetToken($email);
 
-                // En un entorno real, aquí enviarías el email
-                // Por ahora, mostraremos el enlace directamente para testing
-                $reset_link = "http://" . $_SERVER['HTTP_HOST'] . "/proyectoAdmEdificios/reset-password.php?token=" . $token;
-
-                $message = "Se ha enviado un enlace de recuperación a su email. Para testing, use este enlace: <br><strong><a href='$reset_link' target='_blank'>$reset_link</a></strong>";
+                // Enviar email de recuperación
+                $emailSent = sendPasswordResetEmail($email, $token, $user['name']);
+                
+                if ($emailSent || DEVELOPMENT_MODE) {
+                    // En modo desarrollo, mostrar el enlace directamente
+                    if (DEVELOPMENT_MODE) {
+                        $reset_link = "http://" . $_SERVER['HTTP_HOST'] . "/proyectoAdmEdificios/reset-password.php?token=" . $token;
+                        $message .= "<div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 15px; margin: 20px 0; text-align: center; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);'>";
+                        $message .= "<p style='color: white; margin-bottom: 20px; font-size: 1.1em;'>� <strong>Hola, {$user['name']}</strong></p>";
+                        $message .= "<p style='color: rgba(255,255,255,0.9); margin-bottom: 25px;'>Haz clic en el botón de abajo para restablecer tu contraseña:</p>";
+                        $message .= "<a href='$reset_link' style='display: inline-block; background: white; color: #667eea; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1em; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.2s;' onmouseover='this.style.transform=\"scale(1.05)\"' onmouseout='this.style.transform=\"scale(1)\"'>";
+                        $message .= "🔐 Restablecer Mi Contraseña";
+                        $message .= "</a>";
+                        $message .= "<p style='color: rgba(255,255,255,0.8); margin-top: 25px; font-size: 0.9em;'>⏰ Este enlace expira en <strong>1 hora</strong></p>";
+                        $message .= "</div>";
+                        $message .= "<div style='background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 5px; margin-top: 15px;'>";
+                        $message .= "</div>";
+                    } else {
+                        $message = 'Se ha enviado un correo con las instrucciones para restablecer su contraseña.';
+                    }
+                } else {
+                    $error = 'Error al enviar el correo. Intente nuevamente más tarde.';
+                }
 
                 // Log del evento
                 logSecurityEvent($user['id'], 'password_reset_requested', 'Solicitud de recuperación de contraseña');

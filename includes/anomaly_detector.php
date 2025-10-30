@@ -5,6 +5,63 @@ require_once __DIR__ . '/functions.php';
 // Configuración básica
 $now = new DateTime();
 
+// Funciones para detección de consumos anómalos
+function isConsumoAnomalo($lectura, $tipo_recurso) {
+    $limites = [
+        'agua' => 400,  // litros
+        'luz' => 80,    // kWh
+        'gas' => 40     // m³
+    ];
+    
+    return isset($limites[$tipo_recurso]) && $lectura > $limites[$tipo_recurso];
+}
+
+function getMensajeAlerta($tipo_recurso) {
+    $mensajes = [
+        'agua' => '⚠️ Consumo de agua anormalmente alto. Posible fuga detectada.',
+        'luz' => '⚠️ Consumo eléctrico excesivo detectado.',
+        'gas' => '⚠️ Consumo de gas anómalo. Verificar instalaciones.'
+    ];
+    
+    return isset($mensajes[$tipo_recurso]) ? $mensajes[$tipo_recurso] : 'Consumo anómalo detectado';
+}
+
+function calcularExceso($lectura, $tipo_recurso) {
+    $limites = [
+        'agua' => 400,
+        'luz' => 80,
+        'gas' => 40
+    ];
+    
+    if (!isset($limites[$tipo_recurso]) || $lectura <= $limites[$tipo_recurso]) {
+        return 0;
+    }
+    
+    return round((($lectura - $limites[$tipo_recurso]) / $limites[$tipo_recurso]) * 100);
+}
+
+function getRecomendaciones($tipo_recurso) {
+    $recomendaciones = [
+        'agua' => [
+            'Revisar tuberías y conexiones por posibles fugas',
+            'Verificar el funcionamiento correcto del medidor',
+            'Inspeccionar sanitarios por fugas ocultas'
+        ],
+        'luz' => [
+            'Revisar aparatos de alto consumo',
+            'Verificar si hay cortocircuitos',
+            'Comprobar el funcionamiento del medidor eléctrico'
+        ],
+        'gas' => [
+            'Verificar todas las conexiones de gas',
+            'Realizar prueba de hermeticidad',
+            'Revisar el funcionamiento de aparatos de gas'
+        ]
+    ];
+    
+    return isset($recomendaciones[$tipo_recurso]) ? $recomendaciones[$tipo_recurso] : [];
+}
+
 try {
     $conn = get_db_connection();
 

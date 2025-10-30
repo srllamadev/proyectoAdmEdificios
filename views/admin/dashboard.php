@@ -98,6 +98,14 @@ if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false): ?>
         </a>
     </div>
 
+    <div class="bento-card bento-card-analytics" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <h3 class="bento-card-title" style="color: white;"><i class="fas fa-chart-line"></i> Analiticas</h3>
+        <p class="bento-card-description" style="color: rgba(255,255,255,0.9);">Dashboard ejecutivo con gráficas circulares, comparativas de consumo, indicadores financieros y ranking de departamentos.</p>
+        <a href="dashboard_analytics.php" class="bento-btn" style="background: white; color: #667eea; font-weight: bold;">
+            <i class="fas fa-rocket"></i> Abrir Dashboard Analytics
+        </a>
+    </div>
+
     <div class="bento-card">
         <h3 class="bento-card-title"><i class="fas fa-users"></i> Gestión de Inquilinos</h3>
         <p class="bento-card-description">Administra inquilinos, alquileres y información de residentes del edificio.</p>
@@ -145,6 +153,22 @@ if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false): ?>
             <i class="fas fa-cog"></i> Configurar Áreas
         </a>
     </div>
+
+    <div class="bento-card bento-card-recursos">
+        <h3 class="bento-card-title"><i class="fas fa-tachometer-alt"></i> Gestión de Recursos y Consumo</h3>
+        <p class="bento-card-description">Monitoreo y control de consumos de agua, luz y gas por departamento.</p>
+        <a href="gestion_consumo.php" class="bento-btn bento-btn-primary">
+            <i class="fas fa-chart-bar"></i> Ver Consumos
+        </a>
+    </div>
+
+    <div class="bento-card bento-card-admin-dashboard">
+        <h3 class="bento-card-title"><i class="fas fa-th-large"></i> Dashboard Administrativo</h3>
+        <p class="bento-card-description">Panel centralizado con métricas de finanzas, consumos y morosidad.</p>
+        <a href="dashboard_consumos.php" class="bento-btn bento-btn-primary">
+            <i class="fas fa-chart-pie"></i> Abrir Dashboard
+        </a>
+    </div>
 </div>
 
 <!-- Acciones rápidas -->
@@ -162,10 +186,18 @@ if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false): ?>
             <a href="../../finanzas.php" class="bento-btn bento-btn-finanzas">
                 <i class="fas fa-wallet"></i> Abrir Finanzas (Panel)
             </a>
+            <a href="dashboard_analytics.php" class="bento-btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: bold;">
+                <i class="fas fa-rocket"></i> Analytics Pro
+            </a>
+            <a href="gestion_consumo.php" class="bento-btn bento-btn-secondary">
+                <i class="fas fa-tachometer-alt"></i> Control Consumos
+            </a>
+            <a href="dashboard_consumos.php" class="bento-btn bento-btn-secondary">
+                <i class="fas fa-chart-pie"></i> Dashboard Consumos
+            </a>
         </div>
     </div>
     
-
     <div class="bento-card bento-card-reports">
         <h3 class="bento-card-title"><i class="fas fa-chart-line"></i> Reportes y Estadísticas</h3>
         <p class="bento-card-description">Visualiza información importante del edificio en tiempo real.</p>

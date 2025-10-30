@@ -489,7 +489,27 @@ $staffList = getStaff();
             <p class="bento-card-description">Consulta historial de facturas y pagos de un residente, registra pagos manuales y exporta el historial.</p>
 
             <form method="get" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
-                <div><label>ID Residente</label><input type="number" name="hist_resident_id" class="bento-form-input" value="<?php echo intval($_GET['hist_resident_id'] ?? ''); ?>"></div>
+                <div>
+                    <label><i class="fas fa-user"></i> Inquilino</label>
+                    <?php
+                        // Cargar lista de inquilinos con alquiler activo para historial
+                        try {
+                            $htstmt = $pdo->query("SELECT i.id, u.name AS nombre, a.numero_departamento FROM inquilinos i LEFT JOIN users u ON i.user_id = u.id LEFT JOIN alquileres a ON a.inquilino_id = i.id AND a.estado = 'activo' WHERE a.id IS NOT NULL ORDER BY u.name ASC");
+                            $histTenants = $htstmt->fetchAll(PDO::FETCH_ASSOC);
+                        } catch (Exception $e) {
+                            $histTenants = [];
+                        }
+                        $selectedHistResident = intval($_GET['hist_resident_id'] ?? 0);
+                    ?>
+                    <select name="hist_resident_id" class="bento-form-input">
+                        <option value="">-- Seleccione un inquilino --</option>
+                        <?php foreach ($histTenants as $ht): ?>
+                            <option value="<?php echo intval($ht['id']); ?>" <?php echo ($selectedHistResident == intval($ht['id'])) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars(($ht['nombre'] ?: 'Residente #' . $ht['id']) . ' — Dept: ' . ($ht['numero_departamento'] ?? '-')); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
                 <div><label>Desde</label><input type="date" name="hist_from" class="bento-form-input" value="<?php echo htmlspecialchars($_GET['hist_from'] ?? ''); ?>"></div>
                 <div><label>Hasta</label><input type="date" name="hist_to" class="bento-form-input" value="<?php echo htmlspecialchars($_GET['hist_to'] ?? ''); ?>"></div>
                 <div><label>Tipo</label>
@@ -516,41 +536,140 @@ $staffList = getStaff();
                     $histType = $_GET['hist_type'] ?? null;
                     $history = getInvoiceHistoryByResident($histResident, $histFrom, $histTo, $histType);
                     $paymentsHist = getPaymentsByResident($histResident);
-                    // calcular saldo pendiente
+                    
+                    // calcular saldo pendiente y estadísticas
                     $saldo = 0.0;
+                    $totalFacturado = 0.0;
+                    $totalPagado = 0.0;
+                    $facturasPagadas = 0;
+                    $facturasDeudas = 0;
+                    
                     foreach ($history as $h) {
+                        $totalFacturado += (float)$h['amount'];
+                        $totalPagado += (float)$h['paid'];
                         $owed = max(0, (float)$h['amount'] - (float)$h['paid']);
                         $saldo += $owed;
+                        if ($h['status'] === 'paid') $facturasPagadas++;
+                        if ($owed > 0) $facturasDeudas++;
+                    }
+                    
+                    // Obtener información del inquilino
+                    try {
+                        $inqStmt = $pdo->prepare("SELECT u.name, a.numero_departamento FROM inquilinos i LEFT JOIN users u ON i.user_id = u.id LEFT JOIN alquileres a ON a.inquilino_id = i.id AND a.estado = 'activo' WHERE i.id = :id LIMIT 1");
+                        $inqStmt->execute([':id'=>$histResident]);
+                        $inqInfo = $inqStmt->fetch(PDO::FETCH_ASSOC);
+                    } catch (Exception $e) {
+                        $inqInfo = null;
                     }
             ?>
 
-            <div style="margin-bottom:8px">Saldo pendiente total: <strong>$<?php echo number_format($saldo,2); ?></strong></div>
+            <div style="background:#f8f9fa;padding:16px;border-radius:8px;margin-bottom:16px">
+                <?php if ($inqInfo): ?>
+                    <h3 style="margin:0 0 12px 0"><i class="fas fa-user"></i> <?php echo htmlspecialchars($inqInfo['name'] ?? 'Inquilino #' . $histResident); ?> - Dept: <?php echo htmlspecialchars($inqInfo['numero_departamento'] ?? '-'); ?></h3>
+                <?php endif; ?>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+                    <div style="background:white;padding:12px;border-radius:6px;border-left:4px solid #28a745">
+                        <div style="font-size:24px;font-weight:bold;color:#28a745">$<?php echo number_format($totalPagado,2); ?></div>
+                        <div style="color:#666;font-size:14px">Total Pagado</div>
+                    </div>
+                    <div style="background:white;padding:12px;border-radius:6px;border-left:4px solid <?php echo $saldo > 0 ? '#dc3545' : '#28a745'; ?>">
+                        <div style="font-size:24px;font-weight:bold;color:<?php echo $saldo > 0 ? '#dc3545' : '#28a745'; ?>">$<?php echo number_format($saldo,2); ?></div>
+                        <div style="color:#666;font-size:14px">Saldo Pendiente</div>
+                    </div>
+                    <div style="background:white;padding:12px;border-radius:6px;border-left:4px solid #007bff">
+                        <div style="font-size:24px;font-weight:bold;color:#007bff"><?php echo $facturasPagadas; ?> / <?php echo count($history); ?></div>
+                        <div style="color:#666;font-size:14px">Facturas Pagadas</div>
+                    </div>
+                    <div style="background:white;padding:12px;border-radius:6px;border-left:4px solid #ffc107">
+                        <div style="font-size:24px;font-weight:bold;color:#ffc107"><?php echo $facturasDeudas; ?></div>
+                        <div style="color:#666;font-size:14px">Facturas con Deuda</div>
+                    </div>
+                </div>
+            </div>
             <div style="margin-bottom:8px">
                 <a class="bento-btn bento-btn-primary" href="create_invoice.php?resident_id=<?php echo $histResident; ?>">Crear nueva factura</a>
                 <a class="bento-btn bento-btn-outline" href="api/export_history.php?resident_id=<?php echo $histResident; ?>&from=<?php echo urlencode($histFrom); ?>&to=<?php echo urlencode($histTo); ?>&type=<?php echo urlencode($histType); ?>">Exportar CSV</a>
             </div>
 
             <h4>Facturas</h4>
-            <div class="bento-table-container"><table class="bento-table"><thead><tr><th>Ref</th><th>Fecha</th><th>Tipo</th><th>Monto</th><th>Pagado</th><th>Estado</th><th>Observaciones</th><th>Acciones</th></tr></thead><tbody>
-                <?php if (empty($history)): ?><tr><td colspan="8">No hay facturas</td></tr><?php else: ?>
-                    <?php foreach ($history as $hf): $m = []; if (!empty($hf['meta'])) { if (is_string($hf['meta'])) $m = json_decode($hf['meta'],true)?:[]; else $m = $hf['meta']; } ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($hf['reference']); ?></td>
-                            <td><?php echo htmlspecialchars($hf['created_at']); ?></td>
-                            <td><?php echo htmlspecialchars($m['type'] ?? ''); if (!empty($m['month'])) echo ' - ' . htmlspecialchars($m['month']); ?></td>
-                            <td>$<?php echo number_format($hf['amount'],2); ?></td>
-                            <td>$<?php echo number_format($hf['paid'],2); ?></td>
-                            <td><?php echo htmlspecialchars($hf['status']); ?></td>
-                            <td><?php echo htmlspecialchars($m['observations'] ?? ''); ?></td>
+            <div class="bento-table-container"><table class="bento-table"><thead><tr><th>Ref</th><th>Fecha Emisión</th><th>Tipo</th><th>Monto</th><th>Pagado</th><th>Deuda</th><th>Estado</th><th>Fecha Pago</th><th>Acciones</th></tr></thead><tbody>
+                <?php if (empty($history)): ?><tr><td colspan="9">No hay facturas</td></tr><?php else: ?>
+                    <?php foreach ($history as $hf): 
+                        $m = []; 
+                        if (!empty($hf['meta'])) { 
+                            if (is_string($hf['meta'])) $m = json_decode($hf['meta'],true)?:[]; 
+                            else $m = $hf['meta']; 
+                        }
+                        $deuda = max(0, (float)$hf['amount'] - (float)$hf['paid']);
+                        
+                        // Obtener fecha del último pago si existe
+                        $lastPaymentDate = null;
+                        if ((float)$hf['paid'] > 0) {
+                            try {
+                                $payStmt = $pdo->prepare("SELECT created_at FROM payments WHERE invoice_id = :id ORDER BY created_at DESC LIMIT 1");
+                                $payStmt->execute([':id'=>$hf['id']]);
+                                $lastPay = $payStmt->fetch(PDO::FETCH_ASSOC);
+                                if ($lastPay) $lastPaymentDate = $lastPay['created_at'];
+                            } catch (Exception $e) {}
+                        }
+                        
+                        // Determinar color de fila según estado
+                        $rowStyle = '';
+                        if ($hf['status'] === 'paid') {
+                            $rowStyle = 'background:#e8f5e9';
+                        } elseif ($deuda > 0) {
+                            $rowStyle = 'background:#ffebee';
+                        }
+                    ?>
+                        <tr style="<?php echo $rowStyle; ?>">
+                            <td class="bento-table-code"><?php echo htmlspecialchars($hf['reference']); ?></td>
+                            <td><?php echo date('d/m/Y', strtotime($hf['created_at'])); ?></td>
+                            <td><?php echo htmlspecialchars($m['type'] ?? ''); if (!empty($m['month'])) echo '<br><small>' . htmlspecialchars($m['month']) . '</small>'; ?></td>
+                            <td><strong>$<?php echo number_format($hf['amount'],2); ?></strong></td>
+                            <td style="color:#28a745"><strong>$<?php echo number_format($hf['paid'],2); ?></strong></td>
+                            <td style="color:<?php echo $deuda > 0 ? '#dc3545' : '#28a745'; ?>;font-weight:bold">
+                                <?php if ($deuda > 0): ?>
+                                    <i class="fas fa-exclamation-triangle"></i> $<?php echo number_format($deuda,2); ?>
+                                <?php else: ?>
+                                    <i class="fas fa-check-circle"></i> $0.00
+                                <?php endif; ?>
+                            </td>
                             <td>
-                                <a class="bento-btn bento-btn-small" href="api/invoice_pdf.php?ref=<?php echo urlencode($hf['reference']); ?>" target="_blank"><i class="fas fa-file-pdf"></i></a>
-                                <button class="bento-btn bento-btn-small bento-btn-primary" onclick="document.getElementById('pay_invoice_id').value=<?php echo intval($hf['id']); ?>;document.getElementById('manualPay').scrollIntoView();">Registrar Pago</button>
+                                <?php if ($hf['status'] === 'paid'): ?>
+                                    <span class="status-badge" style="background:#28a745;color:white;padding:4px 8px;border-radius:4px">
+                                        <i class="fas fa-check"></i> Pagada
+                                    </span>
+                                <?php elseif ($deuda > 0): ?>
+                                    <span class="status-badge" style="background:#dc3545;color:white;padding:4px 8px;border-radius:4px">
+                                        <i class="fas fa-clock"></i> Pendiente
+                                    </span>
+                                <?php else: ?>
+                                    <span class="status-badge" style="background:#ffc107;color:#000;padding:4px 8px;border-radius:4px">
+                                        <?php echo htmlspecialchars($hf['status']); ?>
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($lastPaymentDate): ?>
+                                    <i class="fas fa-calendar-check" style="color:#28a745"></i> 
+                                    <?php echo date('d/m/Y H:i', strtotime($lastPaymentDate)); ?>
+                                <?php else: ?>
+                                    <small style="color:#999">Sin pagos</small>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <a class="bento-btn bento-btn-small" href="api/invoice_pdf.php?ref=<?php echo urlencode($hf['reference']); ?>" target="_blank" title="Ver PDF"><i class="fas fa-file-pdf"></i></a>
+                                <?php if ($deuda > 0): ?>
+                                    <button class="bento-btn bento-btn-small bento-btn-primary" onclick="document.getElementById('pay_invoice_id').value=<?php echo intval($hf['id']); ?>;document.getElementById('pay_amount').value=<?php echo $deuda; ?>;document.getElementById('manualPay').scrollIntoView();" title="Registrar Pago">
+                                        <i class="fas fa-dollar-sign"></i> Pagar
+                                    </button>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php if (!empty($hf['items'])): ?>
-                            <tr><td colspan="8"><strong>Desglose:</strong>
-                                <ul>
-                                <?php foreach ($hf['items'] as $it): ?><li><?php echo htmlspecialchars($it['description']); ?> — <?php echo intval($it['qty']); ?> x $<?php echo number_format($it['unit_price'],2); ?> = $<?php echo number_format(round($it['qty']*$it['unit_price'],2),2); ?></li><?php endforeach; ?>
+                            <tr style="<?php echo $rowStyle; ?>"><td colspan="9"><strong>Desglose:</strong>
+                                <ul style="margin:4px 0;padding-left:20px">
+                                <?php foreach ($hf['items'] as $it): ?><li><?php echo htmlspecialchars($it['description']); ?> — <?php echo number_format($it['qty'],2); ?> x $<?php echo number_format($it['unit_price'],2); ?> = $<?php echo number_format(round($it['qty']*$it['unit_price'],2),2); ?></li><?php endforeach; ?>
                                 </ul>
                             </td></tr>
                         <?php endif; ?>
@@ -561,9 +680,9 @@ $staffList = getStaff();
             <h4 id="manualPay">Registrar pago manual</h4>
             <form method="post" style="max-width:420px">
                 <input type="hidden" name="manual_payment" value="1">
-                <div class="bento-form-group"><label>Invoice ID</label><input id="pay_invoice_id" name="invoice_id" class="bento-form-input" required></div>
-                <div class="bento-form-group"><label>Monto</label><input type="number" step="0.01" name="pay_amount" class="bento-form-input" required></div>
-                <div class="bento-form-group"><label>Método</label><select name="pay_method" class="bento-form-input"><option value="manual">Manual</option><option value="transfer">Transferencia</option><option value="card">Tarjeta</option></select></div>
+                <div class="bento-form-group"><label>Invoice ID</label><input id="pay_invoice_id" name="invoice_id" class="bento-form-input" required readonly></div>
+                <div class="bento-form-group"><label>Monto</label><input id="pay_amount" type="number" step="0.01" name="pay_amount" class="bento-form-input" required></div>
+                <div class="bento-form-group"><label>Método</label><select name="pay_method" class="bento-form-input"><option value="manual">Manual</option><option value="transfer">Transferencia</option><option value="card">Tarjeta</option><option value="efectivo">Efectivo</option></select></div>
                 <div class="bento-form-actions"><button class="bento-btn bento-btn-primary" type="submit">Registrar Pago</button></div>
             </form>
 
@@ -677,13 +796,232 @@ $staffList = getStaff();
             <h2 class="bento-card-title"><i class="fas fa-users"></i> Empleados / Planilla</h2>
             <p class="bento-card-description">Gestiona pagos a empleados y genera la planilla por periodo</p>
 
+            <?php
+                // Cargar empleados del proyecto
+                try {
+                    $empStmt = $pdo->query("SELECT e.*, u.name, u.email FROM empleados e LEFT JOIN users u ON e.user_id = u.id WHERE e.estado = 'activo' ORDER BY u.name ASC");
+                    $empleadosProyecto = $empStmt->fetchAll(PDO::FETCH_ASSOC);
+                } catch (Exception $ex) {
+                    $empleadosProyecto = [];
+                }
+                
+                // Seleccionar empleado para ver historial
+                $selectedEmpId = intval($_GET['emp_id'] ?? 0);
+                $empHistorial = [];
+                if ($selectedEmpId > 0) {
+                    try {
+                        // Obtener historial de pagos de planilla para este empleado
+                        $hempStmt = $pdo->prepare("SELECT * FROM payroll WHERE staff_id = :sid ORDER BY period DESC, created_at DESC");
+                        $hempStmt->execute([':sid'=>$selectedEmpId]);
+                        $empHistorial = $hempStmt->fetchAll(PDO::FETCH_ASSOC);
+                    } catch (Exception $ex) {
+                        $empHistorial = [];
+                    }
+                }
+            ?>
+
+            <form method="get" style="margin-bottom:16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                <div>
+                    <label><i class="fas fa-user"></i> Ver historial de empleado</label>
+                    <select name="emp_id" class="bento-form-input">
+                        <option value="">-- Seleccione un empleado --</option>
+                        <?php foreach ($empleadosProyecto as $emp): ?>
+                            <option value="<?php echo intval($emp['id']); ?>" <?php echo ($selectedEmpId == intval($emp['id'])) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars(($emp['name'] ?? 'Empleado #' . $emp['id']) . ' - ' . $emp['cargo']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div style="margin-top:20px">
+                    <button class="bento-btn bento-btn-primary" type="submit">Ver Historial</button>
+                    <a class="bento-btn bento-btn-outline" href="?">Limpiar</a>
+                </div>
+            </form>
+
+            <?php if ($selectedEmpId > 0 && !empty($empleadosProyecto)): ?>
+                <?php 
+                    $empInfo = array_values(array_filter($empleadosProyecto, function($e) use ($selectedEmpId) { return intval($e['id']) === $selectedEmpId; }))[0] ?? null;
+                    if ($empInfo):
+                        // Calcular estadísticas
+                        $totalPagado = 0;
+                        $totalPendiente = 0;
+                        $pagosPagados = 0;
+                        $pagosPendientes = 0;
+                        foreach ($empHistorial as $eh) {
+                            if ($eh['paid']) {
+                                $totalPagado += (float)$eh['net'];
+                                $pagosPagados++;
+                            } else {
+                                $totalPendiente += (float)$eh['net'];
+                                $pagosPendientes++;
+                            }
+                        }
+                        
+                        // Calcular años de servicio y bono
+                        $fechaContratacion = $empInfo['fecha_contratacion'] ?? null;
+                        $añosServicio = 0;
+                        $bonoAnual = 0;
+                        if ($fechaContratacion) {
+                            $fechaContr = new DateTime($fechaContratacion);
+                            $hoy = new DateTime();
+                            $diff = $hoy->diff($fechaContr);
+                            $añosServicio = $diff->y;
+                            // Bono: 5% del salario por cada año de servicio
+                            $bonoAnual = round(($empInfo['salario'] ?? 0) * 0.05 * $añosServicio, 2);
+                        }
+                ?>
+                    <div style="background:#f8f9fa;padding:16px;border-radius:8px;margin-bottom:16px">
+                        <h3 style="margin:0 0 12px 0">
+                            <i class="fas fa-user-tie"></i> <?php echo htmlspecialchars($empInfo['name'] ?? 'Empleado'); ?>
+                        </h3>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-bottom:12px">
+                            <div><strong>Cargo:</strong> <?php echo htmlspecialchars($empInfo['cargo']); ?></div>
+                            <div><strong>DNI:</strong> <?php echo htmlspecialchars($empInfo['dni']); ?></div>
+                            <div><strong>Teléfono:</strong> <?php echo htmlspecialchars($empInfo['telefono'] ?? '-'); ?></div>
+                            <div><strong>Salario:</strong> $<?php echo number_format($empInfo['salario'] ?? 0, 2); ?></div>
+                            <div><strong>Fecha Contratación:</strong> <?php echo date('d/m/Y', strtotime($empInfo['fecha_contratacion'])); ?></div>
+                            <div><strong>Años de Servicio:</strong> <?php echo $añosServicio; ?> año(s)</div>
+                        </div>
+                        <div style="background:#fff3cd;padding:12px;border-radius:6px;border-left:4px solid #ffc107;margin-bottom:12px">
+                            <strong><i class="fas fa-gift"></i> Bono por Antigüedad:</strong> $<?php echo number_format($bonoAnual, 2); ?> anual
+                            <small style="display:block;color:#666;margin-top:4px">(5% del salario base × <?php echo $añosServicio; ?> años)</small>
+                        </div>
+                        
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+                            <div style="background:white;padding:12px;border-radius:6px;border-left:4px solid #28a745">
+                                <div style="font-size:24px;font-weight:bold;color:#28a745">$<?php echo number_format($totalPagado,2); ?></div>
+                                <div style="color:#666;font-size:14px">Total Pagado</div>
+                            </div>
+                            <div style="background:white;padding:12px;border-radius:6px;border-left:4px solid #dc3545">
+                                <div style="font-size:24px;font-weight:bold;color:#dc3545">$<?php echo number_format($totalPendiente,2); ?></div>
+                                <div style="color:#666;font-size:14px">Total Pendiente</div>
+                            </div>
+                            <div style="background:white;padding:12px;border-radius:6px;border-left:4px solid #007bff">
+                                <div style="font-size:24px;font-weight:bold;color:#007bff"><?php echo $pagosPagados; ?> / <?php echo count($empHistorial); ?></div>
+                                <div style="color:#666;font-size:14px">Pagos Realizados</div>
+                            </div>
+                            <div style="background:white;padding:12px;border-radius:6px;border-left:4px solid #ffc107">
+                                <div style="font-size:24px;font-weight:bold;color:#ffc107"><?php echo $pagosPendientes; ?></div>
+                                <div style="color:#666;font-size:14px">Pagos Pendientes</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>Historial de Pagos</h4>
+                    <div class="bento-table-container">
+                        <table class="bento-table">
+                            <thead>
+                                <tr><th>Periodo</th><th>Fecha Registro</th><th>Gross</th><th>Deducciones</th><th>Net</th><th>Estado</th><th>Fecha Pago</th><th>Acción</th></tr>
+                            </thead>
+                            <tbody>
+                            <?php if (empty($empHistorial)): ?>
+                                <tr><td colspan="8" style="text-align:center;color:#999">No hay registros de pagos</td></tr>
+                            <?php else: ?>
+                                <?php foreach ($empHistorial as $eh): 
+                                    $rowBg = $eh['paid'] ? 'background:#e8f5e9' : 'background:#ffebee';
+                                ?>
+                                    <tr style="<?php echo $rowBg; ?>">
+                                        <td><strong><?php echo htmlspecialchars($eh['period']); ?></strong></td>
+                                        <td><?php echo date('d/m/Y', strtotime($eh['created_at'])); ?></td>
+                                        <td>$<?php echo number_format($eh['gross'],2); ?></td>
+                                        <td style="color:#dc3545">$<?php echo number_format($eh['deductions'],2); ?></td>
+                                        <td><strong>$<?php echo number_format($eh['net'],2); ?></strong></td>
+                                        <td>
+                                            <?php if ($eh['paid']): ?>
+                                                <span class="status-badge" style="background:#28a745;color:white;padding:4px 8px;border-radius:4px">
+                                                    <i class="fas fa-check"></i> Pagado
+                                                </span>
+                                            <?php else: ?>
+                                                <span class="status-badge" style="background:#dc3545;color:white;padding:4px 8px;border-radius:4px">
+                                                    <i class="fas fa-clock"></i> Pendiente
+                                                </span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php if ($eh['paid']): ?>
+                                                <i class="fas fa-calendar-check" style="color:#28a745"></i> 
+                                                <?php echo date('d/m/Y', strtotime($eh['updated_at'] ?? $eh['created_at'])); ?>
+                                            <?php else: ?>
+                                                <small style="color:#999">-</small>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php if (!$eh['paid']): ?>
+                                                <form method="post" style="display:inline">
+                                                    <input type="hidden" name="payroll_id" value="<?php echo intval($eh['id']); ?>">
+                                                    <input type="hidden" name="mark_payroll_paid" value="1">
+                                                    <button class="bento-btn bento-btn-small bento-btn-primary" type="submit">
+                                                        <i class="fas fa-money-bill-wave"></i> Marcar Pagado
+                                                    </button>
+                                                </form>
+                                            <?php else: ?>
+                                                <a class="bento-btn bento-btn-small" href="api/payroll_pdf.php?period=<?php echo urlencode($eh['period']); ?>" target="_blank">
+                                                    <i class="fas fa-file-pdf"></i> PDF
+                                                </a>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <hr style="margin:24px 0">
+            
             <form method="post" style="margin-bottom:12px;display:flex;gap:8px;align-items:center">
                 <label for="payroll_period">Periodo (YYYY-MM)</label>
                 <input type="month" id="payroll_period" name="payroll_period" value="<?php echo htmlspecialchars($payrollPeriod); ?>">
                 <a class="bento-btn bento-btn-primary" href="api/payroll_pdf.php?period=<?php echo urlencode($payrollPeriod); ?>" target="_blank"><i class="fas fa-file-pdf"></i> Generar PDF Planilla</a>
             </form>
 
-            <div style="display:flex;gap:16px;margin-bottom:12px">
+            <h4>Lista de Empleados del Edificio</h4>
+            <div class="bento-table-container">
+                <table class="bento-table">
+                    <thead>
+                        <tr><th>Nombre</th><th>Cargo</th><th>Salario</th><th>Antigüedad</th><th>Bono Anual</th><th>Estado</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody>
+                    <?php if (empty($empleadosProyecto)): ?>
+                        <tr><td colspan="7" style="text-align:center;color:#999">No hay empleados registrados</td></tr>
+                    <?php else: ?>
+                        <?php foreach ($empleadosProyecto as $emp): 
+                            $fechaContr = $emp['fecha_contratacion'] ? new DateTime($emp['fecha_contratacion']) : null;
+                            $añosServ = 0;
+                            if ($fechaContr) {
+                                $diff = (new DateTime())->diff($fechaContr);
+                                $añosServ = $diff->y;
+                            }
+                            $bonoEmp = round(($emp['salario'] ?? 0) * 0.05 * $añosServ, 2);
+                        ?>
+                            <tr>
+                                <td><strong><?php echo htmlspecialchars($emp['name'] ?? 'Empleado #' . $emp['id']); ?></strong></td>
+                                <td><?php echo htmlspecialchars($emp['cargo']); ?></td>
+                                <td>$<?php echo number_format($emp['salario'] ?? 0, 2); ?></td>
+                                <td><?php echo $añosServ; ?> año(s)</td>
+                                <td style="color:#ffc107;font-weight:bold">$<?php echo number_format($bonoEmp, 2); ?></td>
+                                <td>
+                                    <span class="status-badge" style="background:<?php echo $emp['estado'] === 'activo' ? '#28a745' : '#999'; ?>;color:white;padding:4px 8px;border-radius:4px">
+                                        <?php echo ucfirst($emp['estado']); ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <a class="bento-btn bento-btn-small bento-btn-primary" href="?emp_id=<?php echo intval($emp['id']); ?>">
+                                        <i class="fas fa-history"></i> Ver Historial
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <hr style="margin:24px 0">
+
+            <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap">
                 <div style="flex:1">
                     <h4>Añadir empleado</h4>
                     <form method="post">

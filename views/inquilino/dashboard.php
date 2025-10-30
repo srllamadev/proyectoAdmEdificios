@@ -543,6 +543,11 @@ try {
                 <i class="fas fa-comments"></i>
                 <span>Ver Comunicaciones</span>
             </a>
+            <a href="tickets.php" class="action-btn">
+    <i class="fas fa-tools"></i>
+    <span>Mis Tickets</span>
+</a>
+
         </div>
         
         <div class="main-content">

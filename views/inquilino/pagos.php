@@ -1,5 +1,6 @@
 <?php
 require_once '../../includes/functions.php';
+require_once '../../includes/financial.php';
 
 // Verificar que está logueado y es inquilino
 if (!isLoggedIn() || !hasRole('inquilino')) {
@@ -9,6 +10,52 @@ if (!isLoggedIn() || !hasRole('inquilino')) {
 
 $database = new Database();
 $db = $database->getConnection();
+
+$successMsg = '';
+$errorMsg = '';
+
+// Procesar pago si se envió formulario
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay_invoice'])) {
+    $invoiceId = intval($_POST['invoice_id']);
+    $paymentAmount = floatval($_POST['payment_amount']);
+    $paymentMethod = $_POST['payment_method'] ?? 'transferencia';
+    $paymentProof = $_POST['payment_proof'] ?? '';
+    
+    // Verificar que la factura pertenece al inquilino
+    $query = "SELECT i.id, inv.amount, inv.status 
+              FROM inquilinos i 
+              JOIN invoices inv ON inv.resident_id = i.id 
+              WHERE i.user_id = :user_id AND inv.id = :invoice_id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':user_id', $_SESSION['user_id']);
+    $stmt->bindParam(':invoice_id', $invoiceId);
+    $stmt->execute();
+    $invoice = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($invoice) {
+        // Registrar pago usando los parámetros correctos de la función
+        try {
+            $result = recordPayment(
+                $invoiceId,           // invoice_id
+                $paymentAmount,       // amount
+                $paymentMethod,       // method
+                null,                 // gateway
+                $paymentProof,        // tx_ref (número de comprobante)
+                ['paid_by' => $_SESSION['user_id'], 'notes' => 'Pago registrado por inquilino']  // metadata
+            );
+            
+            if ($result['status'] === 'ok') {
+                $successMsg = '✓ Pago registrado exitosamente. Referencia: ' . ($result['payment_ref'] ?? 'N/A');
+            } else {
+                $errorMsg = 'Error al registrar pago: ' . ($result['message'] ?? 'Desconocido');
+            }
+        } catch (Exception $e) {
+            $errorMsg = 'Error: ' . $e->getMessage();
+        }
+    } else {
+        $errorMsg = 'Factura no válida o no pertenece a su cuenta';
+    }
+}
 
 // Obtener información del inquilino
 try {
@@ -45,12 +92,26 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Pagos - Inquilino</title>
+    <link rel="stylesheet" href="../../assets/css/bento-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <h1>Gestión de Pagos</h1>
     <p><a href="dashboard.php">← Volver al Dashboard</a> | <a href="../../logout.php">Cerrar Sesión</a></p>
     
     <hr>
+    
+    <?php if ($successMsg): ?>
+        <div style="color: green; background: #e6ffe6; padding: 15px; border: 1px solid green; margin: 10px 0; border-radius: 5px;">
+            <strong>✓ Éxito:</strong> <?php echo $successMsg; ?>
+        </div>
+    <?php endif; ?>
+    
+    <?php if ($errorMsg): ?>
+        <div style="color: red; background: #ffe6e6; padding: 15px; border: 1px solid red; margin: 10px 0; border-radius: 5px;">
+            <strong>✗ Error:</strong> <?php echo $errorMsg; ?>
+        </div>
+    <?php endif; ?>
     
     <?php if (isset($error)): ?>
         <div style="color: red; background: #ffe6e6; padding: 10px; border: 1px solid red; margin: 10px 0;">
@@ -135,29 +196,68 @@ try {
                         
                         <?php if ($status != 'paid'): ?>
                             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
-                                <h4>Formas de Pago Disponibles:</h4>
-                                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                                    <div style="background: white; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-                                        <strong>Transferencia Bancaria</strong><br>
-                                        <small>Banco: Banco Ejemplo<br>
-                                        Cuenta: 1234567890<br>
-                                        CBU: 1234567890123456789012</small>
+                                <h4>💳 Realizar Pago</h4>
+                                <form method="POST" style="background: white; padding: 15px; border-radius: 5px; border: 1px solid #007bff;">
+                                    <input type="hidden" name="invoice_id" value="<?php echo $pago['id']; ?>">
+                                    <input type="hidden" name="payment_amount" value="<?php echo $pago['amount'] - $paidAmount; ?>">
+                                    
+                                    <div style="margin-bottom: 10px;">
+                                        <label><strong>Monto a Pagar:</strong></label>
+                                        <div style="font-size: 24px; color: #007bff; font-weight: bold;">
+                                            $<?php echo number_format($pago['amount'] - $paidAmount, 2); ?>
+                                        </div>
                                     </div>
-                                    <div style="background: white; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-                                        <strong>Efectivo</strong><br>
-                                        <small>En administración<br>
-                                        Lunes a Viernes: 9:00 - 17:00<br>
-                                        Sábados: 9:00 - 13:00</small>
+                                    
+                                    <div style="margin-bottom: 10px;">
+                                        <label for="payment_method_<?php echo $pago['id']; ?>"><strong>Método de Pago:</strong></label>
+                                        <select name="payment_method" id="payment_method_<?php echo $pago['id']; ?>" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                                            <option value="transferencia">Transferencia Bancaria</option>
+                                            <option value="efectivo">Efectivo</option>
+                                            <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                                            <option value="otro">Otro</option>
+                                        </select>
                                     </div>
-                                    <div style="background: white; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-                                        <strong>Débito Automático</strong><br>
-                                        <small>Contactar administración<br>
-                                        para configurar débito<br>
-                                        automático mensual</small>
+                                    
+                                    <div style="margin-bottom: 10px;">
+                                        <label for="payment_proof_<?php echo $pago['id']; ?>"><strong>Comprobante / Número de Transacción:</strong></label>
+                                        <input type="text" name="payment_proof" id="payment_proof_<?php echo $pago['id']; ?>" 
+                                               placeholder="Ej: #123456789" 
+                                               style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
+                                    </div>
+                                    
+                                    <button type="submit" name="pay_invoice" 
+                                            style="background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%;">
+                                        <i class="fas fa-check-circle"></i> Confirmar Pago
+                                    </button>
+                                </form>
+                                
+                                <div style="margin-top: 15px;">
+                                    <h5>Formas de Pago Disponibles:</h5>
+                                    <div style="display: flex; gap: 15px; flex-wrap: wrap; font-size: 12px;">
+                                        <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; border: 1px solid #dee2e6; flex: 1; min-width: 200px;">
+                                            <strong>🏦 Transferencia Bancaria</strong><br>
+                                            Banco: Banco Ejemplo<br>
+                                            Cuenta: 1234567890<br>
+                                            CBU: 1234567890123456789012
+                                        </div>
+                                        <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; border: 1px solid #dee2e6; flex: 1; min-width: 200px;">
+                                            <strong>💵 Efectivo</strong><br>
+                                            En administración<br>
+                                            Lun-Vie: 9:00 - 17:00<br>
+                                            Sáb: 9:00 - 13:00
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         <?php endif; ?>
+                        
+                        <div style="margin-top: 15px; text-align: center;">
+                            <a href="../../api/invoice_pdf.php?id=<?php echo $pago['id']; ?>" 
+                               target="_blank"
+                               style="display: inline-block; background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                                <i class="fas fa-file-pdf"></i> Ver/Descargar Factura PDF con QR
+                            </a>
+                        </div>
                         
                         <?php if ($status == 'overdue' || $status == 'vencido'): ?>
                             <div style="background: #ffebee; padding: 10px; border-radius: 5px; margin-top: 15px;">

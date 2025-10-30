@@ -658,7 +658,9 @@ $staffList = getStaff();
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <a class="bento-btn bento-btn-small" href="api/invoice_pdf.php?ref=<?php echo urlencode($hf['reference']); ?>" target="_blank" title="Ver PDF"><i class="fas fa-file-pdf"></i></a>
+                                <a class="bento-btn bento-btn-small" href="api/invoice_pdf.php?id=<?php echo intval($hf['id']); ?>" target="_blank" title="Ver/Descargar Factura PDF con QR">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </a>
                                 <?php if ($deuda > 0): ?>
                                     <button class="bento-btn bento-btn-small bento-btn-primary" onclick="document.getElementById('pay_invoice_id').value=<?php echo intval($hf['id']); ?>;document.getElementById('pay_amount').value=<?php echo $deuda; ?>;document.getElementById('manualPay').scrollIntoView();" title="Registrar Pago">
                                         <i class="fas fa-dollar-sign"></i> Pagar
@@ -947,18 +949,18 @@ $staffList = getStaff();
                                         </td>
                                         <td>
                                             <?php if (!$eh['paid']): ?>
-                                                <form method="post" style="display:inline">
+                                                <form method="post" style="display:inline;margin-right:4px">
                                                     <input type="hidden" name="payroll_id" value="<?php echo intval($eh['id']); ?>">
                                                     <input type="hidden" name="mark_payroll_paid" value="1">
-                                                    <button class="bento-btn bento-btn-small bento-btn-primary" type="submit">
+                                                    <button class="bento-btn bento-btn-small bento-btn-primary" type="submit" style="margin-right:4px">
                                                         <i class="fas fa-money-bill-wave"></i> Marcar Pagado
                                                     </button>
                                                 </form>
-                                            <?php else: ?>
-                                                <a class="bento-btn bento-btn-small" href="api/payroll_pdf.php?period=<?php echo urlencode($eh['period']); ?>" target="_blank">
-                                                    <i class="fas fa-file-pdf"></i> PDF
-                                                </a>
                                             <?php endif; ?>
+                                            <a class="bento-btn bento-btn-small" href="api/payroll_pdf.php?id=<?php echo intval($eh['id']); ?>" target="_blank" 
+                                               title="Ver/Descargar comprobante PDF con QR">
+                                                <i class="fas fa-file-pdf"></i> Ver Comprobante
+                                            </a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -968,6 +970,91 @@ $staffList = getStaff();
                     </div>
                 <?php endif; ?>
             <?php endif; ?>
+
+            <hr style="margin:24px 0">
+            
+            <div id="create_payroll_form" style="background:#f8f9fa;padding:20px;border-radius:8px;margin-bottom:20px">
+                <h4><i class="fas fa-money-bill-wave"></i> Generar Pago de Nómina para Empleado</h4>
+                <form method="post">
+                    <input type="hidden" name="create_payroll_entry" value="1">
+                    
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:16px">
+                        <div class="bento-form-group">
+                            <label>Empleado</label>
+                            <select id="payroll_emp_id" name="pay_staff_id" class="bento-form-input" required onchange="updatePayrollSalary(this)">
+                                <option value="">-- Seleccionar empleado --</option>
+                                <?php foreach ($empleadosProyecto as $emp): ?>
+                                    <option value="<?php echo intval($emp['id']); ?>" 
+                                            data-salary="<?php echo $emp['salario'] ?? 0; ?>"
+                                            data-name="<?php echo htmlspecialchars($emp['name'] ?? ''); ?>">
+                                        <?php echo htmlspecialchars(($emp['name'] ?? 'Empleado #' . $emp['id']) . ' - ' . $emp['cargo']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <input type="hidden" id="payroll_emp_name" value="">
+                        </div>
+                        
+                        <div class="bento-form-group">
+                            <label>Período (Mes/Año)</label>
+                            <input type="month" name="pay_period" value="<?php echo date('Y-m'); ?>" class="bento-form-input" required>
+                        </div>
+                    </div>
+                    
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:16px">
+                        <div class="bento-form-group">
+                            <label>Salario Bruto</label>
+                            <input type="number" step="0.01" id="payroll_gross" name="pay_gross" class="bento-form-input" required placeholder="0.00">
+                        </div>
+                        
+                        <div class="bento-form-group">
+                            <label>Deducciones (Impuestos, etc.)</label>
+                            <input type="number" step="0.01" name="pay_deductions" class="bento-form-input" value="0.00" placeholder="0.00">
+                        </div>
+                        
+                        <div class="bento-form-group">
+                            <label>Días Trabajados</label>
+                            <input type="number" name="pay_days_worked" class="bento-form-input" value="30" min="1" max="31">
+                        </div>
+                        
+                        <div class="bento-form-group">
+                            <label><strong>Neto a Pagar</strong></label>
+                            <div style="background:#e7f5ff;padding:12px;border-radius:6px;border-left:4px solid #007bff">
+                                <span style="font-size:20px;font-weight:bold;color:#007bff" id="payroll_net_display">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bento-form-actions">
+                        <button class="bento-btn bento-btn-success" type="submit">
+                            <i class="fas fa-check-circle"></i> Generar Pago de Nómina
+                        </button>
+                        <button class="bento-btn bento-btn-outline" type="button" onclick="this.form.reset();document.getElementById('payroll_net_display').textContent='$0.00';">
+                            <i class="fas fa-times"></i> Limpiar
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <script>
+            function updatePayrollSalary(select) {
+                const option = select.options[select.selectedIndex];
+                const salary = option.getAttribute('data-salary') || 0;
+                const grossInput = document.getElementById('payroll_gross');
+                grossInput.value = salary;
+                calculateNet();
+            }
+            
+            function calculateNet() {
+                const gross = parseFloat(document.getElementById('payroll_gross').value) || 0;
+                const deductions = parseFloat(document.querySelector('input[name="pay_deductions"]').value) || 0;
+                const net = gross - deductions;
+                document.getElementById('payroll_net_display').textContent = '$' + net.toFixed(2);
+            }
+            
+            // Actualizar neto cuando cambian los valores
+            document.getElementById('payroll_gross').addEventListener('input', calculateNet);
+            document.querySelector('input[name="pay_deductions"]').addEventListener('input', calculateNet);
+            </script>
 
             <hr style="margin:24px 0">
             
@@ -1008,9 +1095,16 @@ $staffList = getStaff();
                                     </span>
                                 </td>
                                 <td>
-                                    <a class="bento-btn bento-btn-small bento-btn-primary" href="?emp_id=<?php echo intval($emp['id']); ?>">
+                                    <a class="bento-btn bento-btn-small bento-btn-primary" href="?emp_id=<?php echo intval($emp['id']); ?>" style="margin-right:4px">
                                         <i class="fas fa-history"></i> Ver Historial
                                     </a>
+                                    <button class="bento-btn bento-btn-small bento-btn-success" 
+                                            onclick="document.getElementById('payroll_emp_id').value=<?php echo intval($emp['id']); ?>;
+                                                     document.getElementById('payroll_emp_name').value='<?php echo htmlspecialchars($emp['name'] ?? ''); ?>';
+                                                     document.getElementById('payroll_gross').value=<?php echo $emp['salario'] ?? 0; ?>;
+                                                     document.getElementById('create_payroll_form').scrollIntoView({behavior:'smooth'});">
+                                        <i class="fas fa-dollar-sign"></i> Generar Pago
+                                    </button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

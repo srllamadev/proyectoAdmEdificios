@@ -22,23 +22,16 @@ try {
     $inquilino = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if ($inquilino && $inquilino['alquiler_id']) {
-        // Obtener todos los pagos del inquilino
-        $query = "SELECT p.* 
-                  FROM pagos p 
-                  WHERE p.alquiler_id = :alquiler_id 
-                  ORDER BY p.fecha_vencimiento DESC";
-        $stmt = $db->prepare($query);
-        $stmt->bindParam(':alquiler_id', $inquilino['alquiler_id']);
-        $stmt->execute();
-        $pagos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        // Calcular estadísticas
-        $total_pagos = count($pagos);
-        $pagos_pendientes = count(array_filter($pagos, function($p) { return $p['estado'] == 'pendiente'; }));
-        $pagos_vencidos = count(array_filter($pagos, function($p) { return $p['estado'] == 'vencido'; }));
-        $monto_pendiente = array_sum(array_map(function($p) { 
-            return $p['estado'] == 'pendiente' ? $p['monto'] + $p['recargo'] : 0; 
-        }, $pagos));
+        // Obtener facturas del residente (incluir servicios como electricidad/agua/gas/mantenimiento)
+        require_once __DIR__ . '/../../includes/financial.php';
+        $invoices = getInvoicesByResident($inquilino['id']);
+        $debtReport = getDebtsByResident($inquilino['id']);
+
+        // Estadísticas básicas
+        $total_pagos = count($invoices);
+        $pagos_pendientes = count(array_filter($invoices, function($p) { return ($p['status'] ?? '') !== 'paid'; }));
+        $pagos_vencidos = count(array_filter($invoices, function($p) { return ($p['status'] ?? '') === 'overdue'; }));
+        $monto_pendiente = $debtReport['total_debt'];
     }
     
 } catch (PDOException $e) {
@@ -97,50 +90,50 @@ try {
         <!-- Lista de pagos -->
         <h2>Historial de Pagos</h2>
         
-        <?php if (!empty($pagos)): ?>
+        <?php if (!empty($invoices)): ?>
             <div style="margin: 20px 0;">
-                <?php foreach ($pagos as $pago): ?>
+                <?php foreach ($invoices as $pago): ?>
                     <div style="border: 1px solid #ddd; padding: 20px; margin: 15px 0; background: <?php 
-                        echo $pago['estado'] == 'pagado' ? '#e6ffe6' : 
-                            ($pago['estado'] == 'vencido' ? '#ffe6e6' : '#fff8e1'); 
+                        $status = $pago['status'] ?? 'pending';
+                        echo $status == 'paid' ? '#e6ffe6' : ($status == 'overdue' ? '#ffe6e6' : '#fff8e1');
                     ?>; border-left: 4px solid <?php 
-                        echo $pago['estado'] == 'pagado' ? 'green' : 
-                            ($pago['estado'] == 'vencido' ? 'red' : 'orange'); 
+                        echo $status == 'paid' ? 'green' : ($status == 'overdue' ? 'red' : 'orange');
                     ?>;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
                             <h3 style="margin: 0; color: <?php 
-                                echo $pago['estado'] == 'pagado' ? 'green' : 
-                                    ($pago['estado'] == 'vencido' ? 'red' : 'orange'); 
+                                echo $status == 'paid' ? 'green' : ($status == 'overdue' ? 'red' : 'orange');
                             ?>;">
-                                <?php echo htmlspecialchars($pago['descripcion']); ?>
+                                <?php echo htmlspecialchars($pago['reference'] ?? $pago['id']); ?>
                             </h3>
-                            <span style="background: <?php 
-                                echo $pago['estado'] == 'pagado' ? 'green' : 
-                                    ($pago['estado'] == 'vencido' ? 'red' : 'orange'); 
-                            ?>; color: white; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: bold;">
-                                <?php echo strtoupper($pago['estado']); ?>
+                            <span style="background: <?php echo ($status == 'paid' ? 'green' : ($status == 'overdue' ? 'red' : 'orange')); ?>; color: white; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: bold;">
+                                <?php echo strtoupper($status); ?>
                             </span>
                         </div>
                         
                         <div style="display: flex; gap: 30px; flex-wrap: wrap;">
                             <div>
-                                <p style="margin: 5px 0;"><strong>Monto:</strong> $<?php echo number_format($pago['monto'], 2); ?></p>
-                                <?php if ($pago['recargo'] > 0): ?>
-                                    <p style="margin: 5px 0; color: red;"><strong>Recargo:</strong> $<?php echo number_format($pago['recargo'], 2); ?></p>
-                                    <p style="margin: 5px 0; font-weight: bold;"><strong>Total:</strong> $<?php echo number_format($pago['monto'] + $pago['recargo'], 2); ?></p>
+                                <p style="margin: 5px 0;"><strong>Monto:</strong> $<?php echo number_format($pago['amount'] ?? 0, 2); ?></p>
+                                <?php $meta = json_decode($pago['meta'] ?? '{}', true); ?>
+                                <?php if (!empty($meta['type'])): ?>
+                                    <p style="margin:5px 0;"><strong>Tipo:</strong> <?php echo htmlspecialchars($meta['type']); ?></p>
                                 <?php endif; ?>
                             </div>
                             
                             <div>
-                                <p style="margin: 5px 0;"><strong>Fecha Vencimiento:</strong> <?php echo date('d/m/Y', strtotime($pago['fecha_vencimiento'])); ?></p>
-                                <?php if ($pago['fecha_pago']): ?>
-                                    <p style="margin: 5px 0; color: green;"><strong>Fecha Pago:</strong> <?php echo date('d/m/Y', strtotime($pago['fecha_pago'])); ?></p>
-                                    <p style="margin: 5px 0;"><strong>Método de Pago:</strong> <?php echo htmlspecialchars($pago['metodo_pago']); ?></p>
+                                <p style="margin: 5px 0;"><strong>Fecha Vencimiento:</strong> <?php echo htmlspecialchars($pago['due_date']); ?></p>
+                                <!-- Si hay pagos registrados, mostrar resumen -->
+                                <?php 
+                                    $paidStmt = $db->prepare("SELECT COALESCE(SUM(amount),0) as paid FROM payments WHERE invoice_id = :inv");
+                                    $paidStmt->execute([':inv'=>$pago['id']]);
+                                    $paidAmount = (float)$paidStmt->fetchColumn();
+                                ?>
+                                <?php if ($paidAmount > 0): ?>
+                                    <p style="margin: 5px 0; color: green;"><strong>Pagado:</strong> $<?php echo number_format($paidAmount,2); ?></p>
                                 <?php endif; ?>
                             </div>
                         </div>
                         
-                        <?php if ($pago['estado'] == 'pendiente'): ?>
+                        <?php if ($status != 'paid'): ?>
                             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
                                 <h4>Formas de Pago Disponibles:</h4>
                                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
@@ -166,7 +159,7 @@ try {
                             </div>
                         <?php endif; ?>
                         
-                        <?php if ($pago['estado'] == 'vencido'): ?>
+                        <?php if ($status == 'overdue' || $status == 'vencido'): ?>
                             <div style="background: #ffebee; padding: 10px; border-radius: 5px; margin-top: 15px;">
                                 <strong style="color: red;">⚠️ PAGO VENCIDO</strong><br>
                                 <small>Este pago está vencido. Puede aplicar recargos. Contacte a administración para más información.</small>

@@ -16,8 +16,18 @@ $pdf = generateInvoicePDF($inv);
 // Si Dompdf está disponible, devolvemos PDF
 if (is_string($pdf) && substr($pdf,0,5) === '%PDF-') {
     header('Content-Type: application/pdf');
-    header('Content-Disposition: attachment; filename="invoice_' . preg_replace('/[^A-Za-z0-9_-]/','', $inv['reference']) . '.pdf"');
+    $name = 'factura_' . preg_replace('/[^A-Za-z0-9_-]/','', $inv['reference']) . '.pdf';
+    header('Content-Disposition: attachment; filename="' . $name . '"');
     echo $pdf; exit;
+}
+
+// Fallback: intentar generar con FPDF mínimo
+$pdf2 = generateInvoicePDFWithFPDF($inv);
+if ($pdf2 && is_string($pdf2) && substr($pdf2,0,5) === '%PDF-') {
+    header('Content-Type: application/pdf');
+    $name = 'factura_' . preg_replace('/[^A-Za-z0-9_-]/','', $inv['reference']) . '.pdf';
+    header('Content-Disposition: attachment; filename="' . $name . '"');
+    echo $pdf2; exit;
 }
 
 // Si no es binario PDF, mostramos HTML en navegador y ofrecemos descarga

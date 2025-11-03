@@ -80,7 +80,23 @@ function getBuildingContext() {
     $db = new Database();
     $conn = $db->getConnection();
     
-    $context = [];
+    // Inicializar contexto con valores por defecto
+    $context = [
+        'total_departamentos' => 0,
+        'inquilinos_activos' => 0,
+        'empleados_activos' => 0,
+        'pagos_pendientes_cantidad' => 0,
+        'pagos_pendientes_monto' => 0,
+        'pagos_vencidos_cantidad' => 0,
+        'pagos_vencidos_monto' => 0,
+        'reservas_pendientes' => 0,
+        'areas_disponibles' => 0,
+        'consumos_mes' => [],
+        'deuda_consumos' => 0,
+        'top_deudores' => [],
+        'eventos_seguridad_hoy' => 0,
+        'fecha_actual' => date('Y-m-d H:i:s')
+    ];
     
     try {
         // Estadísticas de departamentos
@@ -97,7 +113,7 @@ function getBuildingContext() {
         
         // Pagos pendientes
         $stmt = $conn->query("
-            SELECT COUNT(*) as cantidad, COALESCE(SUM(monto_pendiente), 0) as total
+            SELECT COUNT(*) as cantidad, COALESCE(SUM(monto), 0) as total
             FROM pagos 
             WHERE estado = 'pendiente'
         ");
@@ -107,7 +123,7 @@ function getBuildingContext() {
         
         // Pagos vencidos
         $stmt = $conn->query("
-            SELECT COUNT(*) as cantidad, COALESCE(SUM(monto_pendiente), 0) as total
+            SELECT COUNT(*) as cantidad, COALESCE(SUM(monto), 0) as total
             FROM pagos 
             WHERE estado = 'vencido'
         ");
@@ -155,7 +171,7 @@ function getBuildingContext() {
         
         // Top 3 departamentos con mayor deuda
         $stmt = $conn->query("
-            SELECT d.nombre, SUM(p.monto_pendiente) as deuda
+            SELECT d.nombre, SUM(p.monto + COALESCE(p.recargo, 0)) as deuda
             FROM pagos p
             JOIN alquileres a ON p.alquiler_id = a.id
             JOIN departamentos d ON a.departamento_id = d.id

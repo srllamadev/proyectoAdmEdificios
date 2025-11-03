@@ -1,0 +1,64 @@
+To: admin@admin.com
+Subject: 🔑 Recuperación de Contraseña - Sistema Edificio
+Headers: MIME-Version: 1.0
+Content-type: text/html; charset=utf-8
+From: Sistema Edificio Admin <noreply@edificio.com>
+Reply-To: noreply@edificio.com
+X-Mailer: PHP/8.2.12
+
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; background: #667eea; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }
+            .info-box { background: white; padding: 15px; margin: 20px 0; border-radius: 5px; border: 1px solid #e5e7eb; }
+            .warning { background: #fef3cd; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 0.9em; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1>🔑 Recuperación de Contraseña</h1>
+            </div>
+            <div class='content'>
+                <p>Hola <strong>Administrador Principal</strong>,</p>
+                
+                <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta en el Sistema de Administración de Edificios.</p>
+                
+                <p>Para crear una nueva contraseña, haz clic en el siguiente botón:</p>
+                
+                <div style='text-align: center;'>
+                    <a href='http://localhost/proyectoAdmEdificios/reset-password.php?token=3c774dbfa90a3057e8f24bb79b8a6022f1817c8b775a002a4b4b0351b4a89234' class='button'>
+                        Restablecer Contraseña
+                    </a>
+                </div>
+                
+                <div class='info-box'>
+                    <p><strong>O copia y pega este enlace en tu navegador:</strong></p>
+                    <p style='word-break: break-all; color: #667eea;'>http://localhost/proyectoAdmEdificios/reset-password.php?token=3c774dbfa90a3057e8f24bb79b8a6022f1817c8b775a002a4b4b0351b4a89234</p>
+                </div>
+                
+                <div class='warning'>
+                    <strong>⏱️ IMPORTANTE:</strong> Este enlace expirará en <strong>1 hora</strong> por seguridad.
+                </div>
+                
+                <p><strong>¿No solicitaste este cambio?</strong></p>
+                <p>Si no solicitaste restablecer tu contraseña, puedes ignorar este correo. Tu contraseña actual permanecerá sin cambios.</p>
+                
+                <div class='footer'>
+                    <p>Este es un correo automático del sistema.</p>
+                    <p>Sistema de Administración de Edificios</p>
+                    <p style='font-size: 0.8em; color: #999;'>Por favor, no respondas a este correo.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    

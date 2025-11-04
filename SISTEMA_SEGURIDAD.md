@@ -1,6 +1,6 @@
-# 🔐 Sistema de Seguridad y Recuperación de Contraseña
+# Sistema de Seguridad y Recuperación de Contraseña
 
-## ✅ Funcionalidades Implementadas
+## Funcionalidades Implementadas
 
 ### 1. 📧 Email del Administrador Actualizado
 
@@ -8,11 +8,11 @@
 **Email actual:** `admin@admin.com`  
 **Contraseña:** `ko87K#adm-0`
 
-✅ El email ha sido actualizado en la base de datos.
+El email ha sido actualizado en la base de datos.
 
 ---
 
-### 2. 🔄 Sistema de Recuperación de Contraseña
+### 2. Sistema de Recuperación de Contraseña
 
 El sistema ahora permite a los usuarios recuperar su contraseña si la olvidan.
 
@@ -57,9 +57,9 @@ El sistema ahora envía notificaciones por correo después de 3 intentos fallido
 #### Funcionamiento:
 
 **Después de 3 intentos fallidos:**
-- ✉️ Se envía automáticamente un correo al usuario
-- 📊 Se registra el evento en los logs de seguridad
-- 🔔 El correo incluye:
+- Se envía automáticamente un correo al usuario
+- Se registra el evento en los logs de seguridad
+- El correo incluye:
   - Número de intentos fallidos
   - Fecha y hora del último intento
   - Dirección IP del intento
@@ -67,14 +67,14 @@ El sistema ahora envía notificaciones por correo después de 3 intentos fallido
   - Advertencia de bloqueo después de 5 intentos
 
 **Después de 5 intentos fallidos:**
-- 🔒 La cuenta se bloquea automáticamente por 15 minutos
-- ✉️ Se envía notificación adicional informando el bloqueo
-- ⏱️ El usuario debe esperar o contactar al administrador
+- La cuenta se bloquea automáticamente por 15 minutos
+- Se envía notificación adicional informando el bloqueo
+- El usuario debe esperar o contactar al administrador
 
 #### Ejemplo de Notificación:
 
 ```
-Asunto: ⚠️ Alerta de Seguridad - Intentos de Acceso Fallidos
+Asunto:  Alerta de Seguridad - Intentos de Acceso Fallidos
 
 Se han detectado 3 intentos fallidos de acceso a tu cuenta.
 
@@ -98,10 +98,10 @@ ADVERTENCIA: Después de 5 intentos, tu cuenta será bloqueada por 15 minutos.
 ### Modo de Desarrollo (Actual)
 
 En modo desarrollo (`DEVELOPMENT_MODE = true`):
-- ✅ Los correos NO se envían realmente
-- ✅ Se guardan como archivos HTML en `logs/emails/`
-- ✅ Los enlaces de recuperación se muestran en pantalla
-- ✅ Perfecto para testing sin configurar servidor SMTP
+- Los correos NO se envían realmente
+- Se guardan como archivos HTML en `logs/emails/`
+- Los enlaces de recuperación se muestran en pantalla
+- Perfecto para testing sin configurar servidor SMTP
 
 ### Ubicación de Correos Guardados:
 ```
@@ -130,42 +130,42 @@ Para activar el envío real de correos:
 
 ## 🎨 Tipos de Correos Implementados
 
-### 1. 🔑 Recuperación de Contraseña
+### 1. Recuperación de Contraseña
 - **Trigger:** Usuario solicita recuperar contraseña
 - **Contenido:** Enlace seguro con token temporal
 - **Validez:** 1 hora
 - **Template:** HTML con diseño bento-style
 
-### 2. 🚨 Alerta de Intentos Fallidos
+### 2. Alerta de Intentos Fallidos
 - **Trigger:** 3 o más intentos fallidos de login
 - **Contenido:** Detalles del intento + enlace de recuperación
 - **Incluye:** IP, fecha/hora, número de intentos
 
-### 3. ✅ Confirmación de Cambio de Contraseña
+### 3. Confirmación de Cambio de Contraseña
 - **Trigger:** Contraseña actualizada exitosamente
 - **Contenido:** Confirmación del cambio + detalles
 - **Seguridad:** Alerta si no fue el usuario quien cambió
 
 ---
 
-## 🔒 Medidas de Seguridad
+## Medidas de Seguridad
 
 ### Contraseñas
-- ✅ Hashing con Argon2ID (máxima seguridad)
-- ✅ Validación de fortaleza (mínimo 8 caracteres, mayúsculas, minúsculas, números, símbolos)
-- ✅ No se almacenan en texto plano nunca
+- Hashing con Argon2ID (máxima seguridad)
+- Validación de fortaleza (mínimo 8 caracteres, mayúsculas, minúsculas, números, símbolos)
+- No se almacenan en texto plano nunca
 
 ### Tokens de Recuperación
-- ✅ Generados con `random_bytes()` (criptográficamente seguros)
-- ✅ Longitud de 64 caracteres
-- ✅ Válidos por 1 hora solamente
-- ✅ Se invalidan después de usarse
+- Generados con `random_bytes()` (criptográficamente seguros)
+- Longitud de 64 caracteres
+- Válidos por 1 hora solamente
+- Se invalidan después de usarse
 
 ### Intentos de Login
-- ✅ Contador de intentos fallidos por usuario
-- ✅ Bloqueo temporal después de 5 intentos
-- ✅ Notificación después de 3 intentos
-- ✅ Logs de seguridad de todos los eventos
+- Contador de intentos fallidos por usuario
+- Bloqueo temporal después de 5 intentos
+- Notificación después de 3 intentos
+- Logs de seguridad de todos los eventos
 
 ### Logs de Seguridad
 Todos los eventos se registran en la tabla `security_logs`:
@@ -211,14 +211,14 @@ start logs\emails\email_[nombre_archivo].html
 
 ---
 
-## 📊 Estadísticas del Sistema
+## Estadísticas del Sistema
 
-- ✅ **3 tipos de correos** implementados
-- ✅ **3 intentos** antes de notificar
-- ✅ **5 intentos** antes de bloquear
-- ✅ **15 minutos** de bloqueo temporal
-- ✅ **1 hora** de validez de token
-- ✅ **100% funcional** en modo desarrollo
+- **3 tipos de correos** implementados
+- **3 intentos** antes de notificar
+- **5 intentos** antes de bloquear
+- **15 minutos** de bloqueo temporal
+- **1 hora** de validez de token
+- **100% funcional** en modo desarrollo
 
 ---
 
@@ -247,7 +247,7 @@ start logs\emails\email_[nombre_archivo].html
 
 ---
 
-## 📝 Credenciales Actualizadas
+## Credenciales Actualizadas
 
 ### Administrador
 - **Email:** admin@admin.com
@@ -265,12 +265,12 @@ start logs\emails\email_[nombre_archivo].html
 
 ---
 
-## ✅ Estado Final
+## Estado Final
 
-- 🟢 Email del admin actualizado
-- 🟢 Sistema de recuperación funcional
-- 🟢 Notificaciones por intentos fallidos activas
-- 🟢 Correos se guardan en logs/ (modo desarrollo)
-- 🟢 Todas las funciones de seguridad operativas
+- Email del admin actualizado
+- Sistema de recuperación funcional
+- Notificaciones por intentos fallidos activas
+- Correos se guardan en logs/ (modo desarrollo)
+- Todas las funciones de seguridad operativas
 
 ¡Sistema completamente funcional y seguro! 🎉

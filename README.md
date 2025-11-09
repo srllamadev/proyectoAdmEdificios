@@ -1,9 +1,9 @@
 # Sistema de Administración de Edificios - SLH
 
-## 📋 Descripción
+## Descripción
 Sistema completo de gestión residencial que incluye módulos de administración, finanzas, consumos, comunicaciones y reservas.
 
-## 🏗️ Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 proyectoAdmEdificios/

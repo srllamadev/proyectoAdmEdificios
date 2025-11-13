@@ -1,5 +1,5 @@
 <?php
-// Configurar CORS para permitir solicitudes desde Flutter
+// Configurar CORS para permitir solicitudes desde aplicaciones web/clientes externos
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');

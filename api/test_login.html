@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Login API</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        input, button { display: block; width: 100%; margin: 10px 0; padding: 10px; }
+        #result { margin-top: 20px; padding: 15px; border: 1px solid #ddd; background: #f9f9f9; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Test Login API</h1>
+    
+    <form id="loginForm">
+        <input type="email" id="email" value="admin@admin.com" placeholder="Email" required>
+        <input type="password" id="password" value="ko87K#adm-0" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+    
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.innerHTML = 'Enviando solicitud...';
+            
+            try {
+                const formData = new FormData();
+                formData.append('email', email);
+                formData.append('password', password);
+                
+                const response = await fetch('http://localhost/proyectoAdmEdificios/api/auth/login.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✓ Login exitoso!</h3>
+                            <p><strong>Token:</strong> ${data.token}</p>
+                            <p><strong>Usuario:</strong> ${data.user.nombre} (${data.user.email})</p>
+                            <p><strong>Rol:</strong> ${data.user.rol}</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>✗ Error de login</h3>
+                            <p>${data.message}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>✗ Error de conexión</h3>
+                        <p>${error.message}</p>
+                        <p>Verifica que:</p>
+                        <ul>
+                            <li>Apache esté corriendo en XAMPP</li>
+                            <li>La base de datos 'edificio_admin' exista</li>
+                            <li>La tabla 'usuarios' tenga el admin insertado</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

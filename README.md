@@ -1,9 +1,29 @@
 # Sistema de Administración de Edificios - SLH
 
-## 📋 Descripción
+## Descripción
 Sistema completo de gestión residencial que incluye módulos de administración, finanzas, consumos, comunicaciones y reservas.
 
-## 🏗️ Estructura del Proyecto
+## 🚀 Despliegue con Ngrok
+
+Para desarrollo y testing remoto, el proyecto incluye configuración completa con Ngrok:
+
+### Configuración Rápida
+1. **Ejecuta el script incluido**:
+   ```bash
+   # Desde la carpeta del proyecto
+   ./start_ngrok.bat
+   ```
+
+2. **Copia la URL HTTPS** que aparezca (ej: `https://abc123.ngrok.io`)
+
+3. **Prueba la conexión**:
+   - Accede a: `https://abc123.ngrok.io/proyectoAdmEdificios/`
+   - API Test: `https://abc123.ngrok.io/proyectoAdmEdificios/api/test.php`
+
+### Documentación Detallada
+Ver [`NGROK_SETUP.md`](NGROK_SETUP.md) para instrucciones completas.
+
+## Estructura del Proyecto
 
 ```
 proyectoAdmEdificios/

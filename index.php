@@ -32,6 +32,51 @@ $servicios = [
         'descripcion' => 'Comprometidos con el medio ambiente y eficiencia energética máxima.'
     ]
 ];
+
+$departamentos = [
+    [
+        'imagen' => 'departamento1.jpg',
+        'titulo' => 'Departamento Tipo A',
+        'precio' => '$1,200/mes',
+        'caracteristicas' => ['2 Dormitorios', '1 Baño', '60m²', 'Balcón'],
+        'descripcion' => 'Amplio departamento con excelente iluminación natural y vistas panorámicas.'
+    ],
+    [
+        'imagen' => 'departamento2.jpg',
+        'titulo' => 'Departamento Tipo B',
+        'precio' => '$1,450/mes',
+        'caracteristicas' => ['3 Dormitorios', '2 Baños', '85m²', 'Cocina Equipada'],
+        'descripcion' => 'Espacioso departamento familiar con acabados de primera calidad.'
+    ],
+    [
+        'imagen' => 'departamento3.webp',
+        'titulo' => 'Loft Moderno',
+        'precio' => '$1,800/mes',
+        'caracteristicas' => ['1 Dormitorio', '1 Baño', '45m²', 'Altura Doble'],
+        'descripcion' => 'Loft contemporáneo perfecto para profesionales jóvenes.'
+    ],
+    [
+        'imagen' => 'departamento4.webp',
+        'titulo' => 'Penthouse Premium',
+        'precio' => '$2,500/mes',
+        'caracteristicas' => ['4 Dormitorios', '3 Baños', '120m²', 'Terraza Privada'],
+        'descripcion' => 'Exclusivo penthouse con terraza privada y acabados de lujo.'
+    ],
+    [
+        'imagen' => 'departamento5.webp',
+        'titulo' => 'Estudio Compacto',
+        'precio' => '$950/mes',
+        'caracteristicas' => ['1 Ambiente', '1 Baño', '35m²', 'Equipado'],
+        'descripcion' => 'Estudio funcional ideal para estudiantes o profesionales.'
+    ],
+    [
+        'imagen' => 'departamento6.jpeg',
+        'titulo' => 'Departamento Familiar',
+        'precio' => '$1,650/mes',
+        'caracteristicas' => ['3 Dormitorios', '2 Baños', '90m²', 'Jardín'],
+        'descripcion' => 'Amplio departamento familiar con acceso directo a áreas verdes.'
+    ]
+];
 ?>
 
 <!DOCTYPE html>
@@ -405,12 +450,122 @@ $servicios = [
             line-height: 1.6;
         }
 
-        /* Footer */
-        .footer {
-            padding: 2rem;
+        /* Gallery Section */
+        .gallery {
+            padding: 4rem 2rem;
+        }
+
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-title {
             text-align: center;
-            background: rgba(10, 10, 10, 0.8);
-            border-top: 1px solid var(--glass-border);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, var(--primary-magenta), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .apartment-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .apartment-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .apartment-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .apartment-card:hover .apartment-image {
+            transform: scale(1.05);
+        }
+
+        .apartment-content {
+            padding: 1.5rem;
+        }
+
+        .apartment-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .apartment-price {
+            font-size: 1.5rem;
+            font-weight: 900;
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(45deg, var(--primary-cyan), var(--primary-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .apartment-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-tag {
+            background: rgba(0, 255, 255, 0.1);
+            color: var(--primary-cyan);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.875rem;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .apartment-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .view-details-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(45deg, var(--primary-cyan), var(--primary-magenta));
+            color: var(--dark-bg);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .view-details-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
         }
 
         .footer-content {
@@ -586,6 +741,34 @@ $servicios = [
         </div>
     </section>
 
+    <!-- Gallery Section -->
+    <section class="gallery">
+        <div class="gallery-container">
+            <h2 class="gallery-title">Nuestros Departamentos</h2>
+            <div class="gallery-grid">
+                <?php foreach ($departamentos as $dept): ?>
+                <div class="apartment-card">
+                    <img src="assets/img/<?php echo $dept['imagen']; ?>" alt="<?php echo $dept['titulo']; ?>" class="apartment-image">
+                    <div class="apartment-content">
+                        <h3 class="apartment-title"><?php echo $dept['titulo']; ?></h3>
+                        <div class="apartment-price"><?php echo $dept['precio']; ?></div>
+                        <div class="apartment-features">
+                            <?php foreach ($dept['caracteristicas'] as $feature): ?>
+                            <span class="feature-tag"><?php echo $feature; ?></span>
+                            <?php endforeach; ?>
+                        </div>
+                        <p class="apartment-description"><?php echo $dept['descripcion']; ?></p>
+                        <a href="login.php" class="view-details-btn">
+                            <i class="fas fa-eye"></i>
+                            Ver Detalles
+                        </a>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
@@ -656,7 +839,7 @@ $servicios = [
         }, observerOptions);
 
         // Observe all cards for animation
-        document.querySelectorAll('.stat-card, .service-card').forEach(card => {
+        document.querySelectorAll('.stat-card, .service-card, .apartment-card').forEach(card => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(50px)';
             card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';

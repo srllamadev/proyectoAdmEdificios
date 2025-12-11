@@ -1,4 +1,4 @@
-# Sistema de Administración de Edificios - SLH
+# Sistema de Administración de Edificios - GreenSmart
 
 ## Descripción
 Sistema completo de gestión residencial que incluye módulos de administración, finanzas, consumos, comunicaciones y reservas.
@@ -238,5 +238,5 @@ php includes/anomaly_detector.php
 
 ---
 
-**SLH - El Futuro de la Vida Urbana** 🏙️</content>
+**GreenSmart - El Futuro de la Vida Urbana** 🏙️</content>
 <parameter name="filePath">c:\xampp\htdocs\proyectoAdmEdificios\README.md

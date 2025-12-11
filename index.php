@@ -95,7 +95,7 @@ $departamentos = [
     <!-- PWA Links -->
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="assets/img/icon-192.svg">
-    <title>SLH - El Futuro de la Vida Urbana</title>
+    <title>GreenSmart - El Futuro de la Vida Urbana</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -803,7 +803,7 @@ $departamentos = [
     <!-- Navigation -->
     <nav class="navbar">
         <div class="logo">
-            <img src="assets/img/logo1.png" alt="SLH Logo" style="height: 50px; filter: drop-shadow(0 0 20px rgba(0, 155, 119, 0.4));">
+            <img src="assets/img/logo1.png" alt="GreenSmart Logo FFF" style="height: 50px; filter: drop-shadow(0 0 20px rgba(0, 155, 119, 0.4));">
         </div>
         <a href="login.php" class="login-btn">
             <i class="fas fa-sign-in-alt"></i>
@@ -923,7 +923,7 @@ $departamentos = [
         <div class="footer-content">
             <p class="footer-text">
                 <i class="fas fa-leaf"></i>
-                © 2025 SLH - Sistema de Administración de Edificios Sustentable.
+                © 2025 GreenSmart - Sistema de Administración de Edificios Sustentable.
                 Tecnología verde para un futuro mejor.
             </p>
             <div class="footer-links">
@@ -935,7 +935,7 @@ $departamentos = [
                     <i class="fas fa-seedling"></i>
                     Servicios
                 </a>
-                <a href="mailto:contacto@slh.com">
+                <a href="mailto:contacto@GreenSmart.com">
                     <i class="fas fa-envelope"></i>
                     Contacto
                 </a>

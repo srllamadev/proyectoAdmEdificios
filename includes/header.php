@@ -33,7 +33,7 @@ function getUserClass() {
     <nav class="bento-top-nav">
         <div class="bento-top-nav-content">
             <div style="display: flex; align-items: center; gap: 1.5rem;">
-                <img src="<?php echo $basePath; ?>assets/img/logoCuadrado.png" alt="SLH Logo" style="height: 40px; filter: drop-shadow(0 0 10px rgba(0, 155, 119, 0.3));">
+                <img src="<?php echo $basePath; ?>assets/img/logo1.png" alt="GreenSmart Logo TTT" style="height: 40px; filter: drop-shadow(0 0 10px rgba(0, 155, 119, 0.3));">
                 <div class="bento-user-info">
                     <i class="fas fa-user-circle"></i>
                     <span class="bento-user-name"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span>

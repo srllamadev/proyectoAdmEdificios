@@ -106,8 +106,8 @@ function generarRespuestaChatbot($message, $pdo) {
         }
 
         // Preparar el prompt para DeepSeek
-        $prompt = "Eres un asistente virtual amigable y útil para un edificio residencial llamado 'SLH'.
-        Tu nombre es 'SLH Assistant' y eres el asistente oficial del edificio.
+        $prompt = "Eres un asistente virtual amigable y útil para un edificio residencial llamado 'GreenSmart'.
+        Tu nombre es 'GreenSmart Assistant' y eres el asistente oficial del edificio.
 
         Información del edificio:
         $context

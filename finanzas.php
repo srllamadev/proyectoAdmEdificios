@@ -33,7 +33,7 @@ $report = reportIncomeExpenses(date('Y-m-01'), date('Y-m-t'));
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>Finanzas - SLH</title>
+    <title>Finanzas - GreenSmart</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="assets/css/bento-glass-emerald.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">

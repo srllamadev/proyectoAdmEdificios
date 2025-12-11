@@ -193,9 +193,9 @@
         <div class="bento-login-container fade-in">
             <!-- Columna Izquierda - Logo -->
             <div class="bento-login-logo-section">
-                <img src="assets/img/logo1.png" alt="SLH - Sistema de Gestión de Edificios">
+                <img src="assets/img/logo1.png" alt="GreenSmart - Sistema de Gestión de Edificios">
                 <div class="bento-login-logo-text">
-                    <h2><i class="fas fa-leaf"></i> SLH</h2>
+                    <h2><i class="fas fa-leaf"></i> GreenSmart</h2>
                     <p>Sistema de Administración de Edificios</p>
                 </div>
             </div>

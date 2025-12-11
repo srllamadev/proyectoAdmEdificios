@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Para testing, siempre validar como correcto
         $recaptcha_valid = true;
-        $debug_info = "reCAPTCHA: ✅ Verificación de prueba exitosa | ";
+        $debug_info = " | ";
 
         // En producción, usar esta verificación real:
         /*
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         */
     }
 
-    $debug_info .= "Intento de login - Email: '$email'";
+    $debug_info .= "";
 
     if (empty($email) || empty($password)) {
         $error = 'Por favor, complete todos los campos.';
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt->bindParam(':email', $email);
                 $stmt->execute();
 
-                $debug_info .= " | Registros encontrados: " . $stmt->rowCount();
+                $debug_info .= "" . $stmt->rowCount();
 
                 if ($stmt->rowCount() == 1) {
                     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Email no encontrado - pero registrar como intento fallido para prevenir enumeración
                     recordFailedLogin($email);
                     $error = 'Credenciales incorrectas.';
-                    $debug_info .= " | ❌ Usuario no encontrado";
+                    $debug_info .= " | ";
                 }
             } catch (PDOException $e) {
                 $error = 'Error de base de datos: ' . $e->getMessage();

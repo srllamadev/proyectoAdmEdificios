@@ -3,6 +3,10 @@
  * Configuración de entorno para el proyecto
  */
 
+// Cargar variables de entorno desde .env
+require_once __DIR__ . '/../includes/env_loader.php';
+EnvLoader::load();
+
 // Definir entorno (development/production)
 define('ENVIRONMENT', getenv('ENVIRONMENT') ?: 'development');
 

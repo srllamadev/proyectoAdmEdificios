@@ -249,6 +249,18 @@ body {
   border-color: var(--color-pink);
 }
 
+.bento-btn-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.bento-btn-success:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
 /* Bento Form */
 .bento-form-group {
   margin-bottom: var(--spacing-lg);

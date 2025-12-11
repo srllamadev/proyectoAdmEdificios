@@ -1,9 +1,6 @@
 <?php
-// Configuración de la base de datos
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'edificio_admin');
-define('DB_USER', 'root');
-define('DB_PASS', ''); // XAMPP por defecto no tiene contraseña para root
+// Incluir configuración de entorno
+require_once __DIR__ . '/../../config/environment.php';
 
 // Función para obtener conexión PDO
 function getDBConnection() {

@@ -109,17 +109,27 @@ if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false): ?>
     <div class="bento-card">
         <h3 class="bento-card-title"><i class="fas fa-users"></i> Gestión de Inquilinos</h3>
         <p class="bento-card-description">Administra inquilinos, alquileres y información de residentes del edificio.</p>
-        <a href="inquilinos.php" class="bento-btn bento-btn-primary">
-            <i class="fas fa-eye"></i> Ver Inquilinos
-        </a>
+        <div style="display: flex; gap: 10px;">
+            <a href="inquilinos.php" class="bento-btn bento-btn-primary" style="flex: 1;">
+                <i class="fas fa-eye"></i> Ver Inquilinos
+            </a>
+            <a href="crear_usuario.php" class="bento-btn bento-btn-success" style="flex: 1;">
+                <i class="fas fa-user-plus"></i> Crear Usuario
+            </a>
+        </div>
     </div>
     
     <div class="bento-card">
         <h3 class="bento-card-title"><i class="fas fa-user-tie"></i> Gestión de Empleados</h3>
         <p class="bento-card-description">Controla empleados, asigna tareas y supervisa el personal del edificio.</p>
-        <a href="empleados.php" class="bento-btn bento-btn-primary">
-            <i class="fas fa-eye"></i> Ver Empleados
-        </a>
+        <div style="display: flex; gap: 10px;">
+            <a href="empleados.php" class="bento-btn bento-btn-primary" style="flex: 1;">
+                <i class="fas fa-eye"></i> Ver Empleados
+            </a>
+            <a href="crear_empleado.php" class="bento-btn bento-btn-success" style="flex: 1;">
+                <i class="fas fa-user-plus"></i> Crear Empleado
+            </a>
+        </div>
     </div>
     
     <div class="bento-card">
@@ -755,6 +765,7 @@ async function sendMessage() {
             headers: {
                 'Content-Type': 'application/json'
             },
+            credentials: 'same-origin',
             body: JSON.stringify({
                 action: 'send_message',
                 message: message,

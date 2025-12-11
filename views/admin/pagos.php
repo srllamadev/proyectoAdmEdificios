@@ -55,21 +55,21 @@ try {
 
 <!-- Estadísticas de pagos -->
 <div class="bento-stats-grid">
-    <div class="bento-stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="bento-stat-card" style="background: linear-gradient(135deg, #001F54 0%, #009B77 100%);">
         <div class="bento-stat-number" style="color: white;"><?php echo $total_pagos; ?></div>
-        <div class="bento-stat-label" style="color: rgba(255,255,255,0.9);">Total Pagos</div>
+        <div class="bento-stat-label" style="color: rgba(255,255,255,0.95);">Total Pagos</div>
     </div>
-    <div class="bento-stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+    <div class="bento-stat-card" style="background: linear-gradient(135deg, #009B77 0%, #7ED957 100%);">
         <div class="bento-stat-number" style="color: white;"><?php echo $pagos_pagados; ?></div>
-        <div class="bento-stat-label" style="color: rgba(255,255,255,0.9);">Pagados</div>
+        <div class="bento-stat-label" style="color: rgba(255,255,255,0.95);">Pagados</div>
     </div>
-    <div class="bento-stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #ffeb3b 100%);">
+    <div class="bento-stat-card" style="background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);">
         <div class="bento-stat-number" style="color: white;"><?php echo $pagos_pendientes; ?></div>
-        <div class="bento-stat-label" style="color: rgba(255,255,255,0.9);">Pendientes</div>
+        <div class="bento-stat-label" style="color: rgba(255,255,255,0.95);">Pendientes</div>
     </div>
     <div class="bento-stat-card" style="background: linear-gradient(135deg, #dc3545 0%, #ff6b6b 100%);">
         <div class="bento-stat-number" style="color: white;"><?php echo $pagos_vencidos; ?></div>
-        <div class="bento-stat-label" style="color: rgba(255,255,255,0.9);">Vencidos</div>
+        <div class="bento-stat-label" style="color: rgba(255,255,255,0.95);">Vencidos</div>
     </div>
 </div>
 
@@ -137,7 +137,7 @@ try {
                         <div class="payment-actions">
                             <a href="marcar_pagado.php?id=<?php echo $pago['id']; ?>" 
                                onclick="return confirm('¿Confirmar que este pago ha sido recibido?')"
-                               class="btn" style="background: var(--secondary-green);">
+                               class="btn" style="background: linear-gradient(135deg, #009B77 0%, #7ED957 100%);">
                                <i class="fas fa-check"></i> Marcar como Pagado
                             </a>
                             <a href="agregar_recargo.php?id=<?php echo $pago['id']; ?>" 
@@ -145,7 +145,7 @@ try {
                                <i class="fas fa-plus"></i> Agregar Recargo
                             </a>
                             <a href="enviar_recordatorio.php?id=<?php echo $pago['id']; ?>" 
-                               class="btn" style="background: #ffc107; color: black;">
+                               class="btn" style="background: #D4AF37; color: white;">
                                <i class="fas fa-envelope"></i> Enviar Recordatorio
                             </a>
                         </div>
@@ -168,21 +168,21 @@ try {
     border-radius: 15px;
     padding: 25px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border-left: 5px solid #667eea;
+    border-left: 5px solid #009B77;
     transition: all 0.3s ease;
 }
 
 .payment-card:hover {
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 5px 20px rgba(0, 155, 119, 0.2);
     transform: translateY(-2px);
 }
 
 .payment-card[data-estado="pagado"] {
-    border-left-color: #43e97b;
+    border-left-color: #7ED957;
 }
 
 .payment-card[data-estado="pendiente"] {
-    border-left-color: #ffc107;
+    border-left-color: #D4AF37;
 }
 
 .payment-card[data-estado="vencido"] {
@@ -200,7 +200,7 @@ try {
 
 .payment-header h4 {
     margin: 0;
-    color: #1f2937;
+    color: #2F2F2F;
     font-size: 1.3em;
 }
 
@@ -212,23 +212,25 @@ try {
 }
 
 .detail-group {
-    background: #f9fafb;
+    background: linear-gradient(135deg, rgba(0, 155, 119, 0.05) 0%, rgba(255, 255, 255, 0.5) 100%);
     padding: 15px;
     border-radius: 10px;
+    border: 1px solid rgba(0, 155, 119, 0.1);
 }
 
 .detail-group h5 {
     margin: 0 0 12px 0;
-    color: #667eea;
+    color: #009B77;
     font-size: 1em;
     display: flex;
     align-items: center;
     gap: 8px;
+    font-weight: 700;
 }
 
 .detail-group p {
     margin: 8px 0;
-    color: #4b5563;
+    color: #2F2F2F;
     font-size: 0.95em;
 }
 
@@ -236,8 +238,9 @@ try {
     background: white;
     padding: 3px 8px;
     border-radius: 5px;
-    color: #667eea;
+    color: #009B77;
     font-weight: 600;
+    border: 1px solid rgba(0, 155, 119, 0.2);
 }
 
 .payment-actions {
@@ -270,9 +273,9 @@ try {
 .filter-btn {
     padding: 12px 24px;
     border-radius: 10px;
-    border: 2px solid #e5e7eb;
+    border: 2px solid rgba(0, 155, 119, 0.2);
     background: white;
-    color: #4b5563;
+    color: #2F2F2F;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
@@ -283,25 +286,25 @@ try {
 
 .filter-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 155, 119, 0.15);
 }
 
 .filter-btn.filter-todos:hover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #001F54 0%, #009B77 100%);
     color: white;
-    border-color: #667eea;
+    border-color: #009B77;
 }
 
 .filter-btn.filter-pagado:hover {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    background: linear-gradient(135deg, #009B77 0%, #7ED957 100%);
     color: white;
-    border-color: #43e97b;
+    border-color: #7ED957;
 }
 
 .filter-btn.filter-pendiente:hover {
-    background: linear-gradient(135deg, #ffc107 0%, #ffeb3b 100%);
+    background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
     color: white;
-    border-color: #ffc107;
+    border-color: #D4AF37;
 }
 
 .filter-btn.filter-vencido:hover {

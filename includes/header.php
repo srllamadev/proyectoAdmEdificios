@@ -9,7 +9,7 @@ function getCSSPath() {
     
     // Construir la ruta relativa al CSS
     $basePath = str_repeat('../', max(0, $levels));
-    return $basePath . 'assets/css/bento-style.css';
+    return $basePath . 'assets/css/bento-glass-emerald.css';
 }
 
 // Función para obtener la clase de usuario para el body

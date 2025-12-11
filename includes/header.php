@@ -9,7 +9,7 @@ function getCSSPath() {
     
     // Construir la ruta relativa al CSS
     $basePath = str_repeat('../', max(0, $levels));
-    return $basePath . 'assets/css/bento-style.css';
+    return $basePath . 'assets/css/bento-glass-emerald.css';
 }
 
 // Función para obtener la clase de usuario para el body
@@ -32,10 +32,13 @@ function getUserClass() {
 <body class="<?php echo getUserClass(); ?>"><?php if (isset($_SESSION['user_name'])): ?>
     <nav class="bento-top-nav">
         <div class="bento-top-nav-content">
-            <div class="bento-user-info">
-                <i class="fas fa-user-circle"></i>
-                <span class="bento-user-name"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
-                <span class="bento-user-role"><?php echo ucfirst($_SESSION['role']); ?></span>
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <img src="<?php echo $basePath; ?>assets/img/logo1.png" alt="GreenSmart Logo TTT" style="height: 40px; filter: drop-shadow(0 0 10px rgba(0, 155, 119, 0.3));">
+                <div class="bento-user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="bento-user-name"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
+                    <span class="bento-user-role"><?php echo ucfirst($_SESSION['role']); ?></span>
+                </div>
             </div>
             
             <div class="bento-nav-menu">

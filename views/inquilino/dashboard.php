@@ -78,7 +78,8 @@ try {
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #E8F5F1 0%, #D4F1E8 30%, #C8EFE0 60%, #E1F0FF 100%);
+            background-attachment: fixed;
             min-height: 100vh;
             padding: 20px;
         }
@@ -89,22 +90,39 @@ try {
         }
 
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(16px);
             border-radius: 20px;
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 155, 119, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .header:hover {
+            box-shadow: 0 12px 40px rgba(0, 155, 119, 0.25);
+            border: 1px solid rgba(0, 155, 119, 0.4);
         }
 
         .header h1 {
-            color: #2F455C;
+            background: linear-gradient(135deg, #001F54, #009B77);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-size: 2.5rem;
             margin-bottom: 15px;
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 15px;
+        }
+
+        .header h1 i {
+            background: linear-gradient(135deg, #009B77, #7ED957);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .welcome-info {
@@ -119,15 +137,22 @@ try {
             display: flex;
             align-items: center;
             gap: 15px;
-            background: linear-gradient(135deg, #34F5C5, #21D0B2);
+            background: linear-gradient(135deg, #009B77, #7ED957);
             padding: 15px 25px;
             border-radius: 15px;
-            color: #2F455C;
+            color: white;
             font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 155, 119, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .user-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 155, 119, 0.4);
         }
 
         .apartment-badge {
-            background: linear-gradient(135deg, #ff9a56, #ff6b35);
+            background: linear-gradient(135deg, #D4AF37, #F4D03F);
             color: white;
             padding: 12px 20px;
             border-radius: 12px;
@@ -136,6 +161,13 @@ try {
             display: flex;
             align-items: center;
             gap: 8px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .apartment-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
         }
 
         .logout-btn {
@@ -157,18 +189,29 @@ try {
         }
 
         .rental-info {
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-            border-left: 5px solid #2196f3;
+            background: rgba(0, 155, 119, 0.15);
+            backdrop-filter: blur(16px);
+            border-left: 5px solid #009B77;
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 155, 119, 0.2);
+            border: 1px solid rgba(0, 155, 119, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .rental-info:hover {
+            box-shadow: 0 12px 35px rgba(0, 155, 119, 0.3);
         }
 
         .rental-info h3 {
-            color: #1976d2;
+            background: linear-gradient(135deg, #001F54, #009B77);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 20px;
             font-size: 1.4rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -185,7 +228,9 @@ try {
             align-items: center;
             gap: 10px;
             padding: 10px;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 10px;
         }
 
@@ -197,7 +242,7 @@ try {
         }
 
         .action-btn {
-            background: linear-gradient(135deg, #28a745, #20c997);
+            background: linear-gradient(135deg, #009B77, #7ED957);
             color: white;
             padding: 20px;
             border-radius: 15px;
@@ -209,21 +254,31 @@ try {
             flex-direction: column;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 155, 119, 0.25);
         }
 
         .action-btn:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 155, 119, 0.4);
         }
 
         .action-btn.payments {
-            background: linear-gradient(135deg, #007cba, #0288d1);
+            background: linear-gradient(135deg, #001F54, #009B77);
+            box-shadow: 0 8px 25px rgba(0, 155, 119, 0.25);
+        }
+
+        .action-btn.payments:hover {
+            box-shadow: 0 15px 35px rgba(0, 155, 119, 0.4);
         }
 
         .action-btn.communications {
-            background: linear-gradient(135deg, #ffc107, #ff9800);
-            color: #2F455C;
+            background: linear-gradient(135deg, #D4AF37, #F4D03F);
+            color: white;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25);
+        }
+
+        .action-btn.communications:hover {
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4);
         }
 
         .action-btn i {
@@ -237,12 +292,18 @@ try {
         }
 
         .payments-section, .activities-section {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(16px);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 155, 119, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .payments-section:hover, .activities-section:hover {
+            box-shadow: 0 12px 40px rgba(0, 155, 119, 0.25);
+            border: 1px solid rgba(0, 155, 119, 0.4);
         }
 
         .section-header {
@@ -250,17 +311,22 @@ try {
             align-items: center;
             gap: 15px;
             margin-bottom: 25px;
-            color: #2F455C;
+            background: linear-gradient(135deg, #001F54, #009B77);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-size: 1.5rem;
             font-weight: 700;
         }
 
         .payment-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(12px);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
             border-left: 5px solid;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -273,7 +339,7 @@ try {
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(52, 245, 197, 0.1), rgba(33, 208, 178, 0.1));
+            background: linear-gradient(135deg, rgba(0, 155, 119, 0.05), rgba(126, 217, 87, 0.05));
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -284,20 +350,27 @@ try {
 
         .payment-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 155, 119, 0.2);
+            border-color: rgba(0, 155, 119, 0.4);
         }
 
         .payment-card.pagado {
-            border-left-color: #28a745;
-            background: linear-gradient(135deg, #e8f5e8, #d4edda);
+            border-left-color: #7ED957;
+            border-left-width: 5px;
+            background: rgba(126, 217, 87, 0.15);
         }
 
         .payment-card.pendiente {
-            border-left-color: #ffc107;
-            background: linear-gradient(135deg, #fff8e1, #fff3cd);
+            border-left-color: #D4AF37;
+            border-left-width: 5px;
+            background: rgba(212, 175, 55, 0.15);
         }
 
         .payment-card.vencido {
+            border-left-color: #f44336;
+            border-left-width: 5px;
+            background: rgba(244, 67, 54, 0.15);
+        }
             border-left-color: #dc3545;
             background: linear-gradient(135deg, #fdf2f2, #f8d7da);
         }
@@ -346,67 +419,80 @@ try {
         }
 
         .status-pagado {
-            background: linear-gradient(135deg, #28a745, #20c997);
+            background: linear-gradient(135deg, #7ED957, #A8E063);
             color: white;
+            box-shadow: 0 4px 12px rgba(126, 217, 87, 0.3);
         }
 
         .status-pendiente {
-            background: linear-gradient(135deg, #ffc107, #ff9800);
-            color: #2F455C;
+            background: linear-gradient(135deg, #D4AF37, #F4D03F);
+            color: white;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
         }
 
         .status-vencido {
-            background: linear-gradient(135deg, #dc3545, #c82333);
+            background: linear-gradient(135deg, #f44336, #ff5252);
             color: white;
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
         }
 
         .reservation-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(12px);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 15px;
             transition: all 0.3s ease;
             border-left: 4px solid;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .reservation-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 155, 119, 0.2);
+            border-color: rgba(0, 155, 119, 0.4);
         }
 
         .reservation-card.confirmada {
-            border-left-color: #28a745;
+            border-left-color: #7ED957;
+            border-left-width: 4px;
         }
 
         .reservation-card.pendiente {
-            border-left-color: #ffc107;
+            border-left-color: #D4AF37;
+            border-left-width: 4px;
         }
 
         .reservation-card.cancelada {
-            border-left-color: #dc3545;
+            border-left-color: #f44336;
+            border-left-width: 4px;
         }
 
         .communication-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(12px);
             border-radius: 15px;
             padding: 15px;
             margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             transition: all 0.3s ease;
         }
 
         .communication-card.unread {
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-            border-left: 4px solid #2196f3;
+            background: rgba(0, 155, 119, 0.15);
+            border-left: 4px solid #009B77;
+            border: 1px solid rgba(0, 155, 119, 0.3);
         }
 
         .communication-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 20px rgba(0, 155, 119, 0.2);
+            border: 1px solid rgba(0, 155, 119, 0.4);
         }
 
         .comm-title {
             font-weight: 700;
-            color: #2F455C;
+            color: #001F54;
             margin-bottom: 10px;
         }
 

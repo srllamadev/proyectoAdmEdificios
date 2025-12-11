@@ -1,0 +1,72 @@
+To: admin@admin.com
+Subject: ⚠️ Alerta de Seguridad - Intentos de Acceso Fallidos
+Headers: MIME-Version: 1.0
+Content-type: text/html; charset=utf-8
+From: Sistema Edificio Admin <noreply@edificio.com>
+Reply-To: noreply@edificio.com
+X-Mailer: PHP/8.2.12
+
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset='UTF-8'>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .alert-box { background: #fef3cd; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; }
+            .info-box { background: white; padding: 15px; margin: 20px 0; border-radius: 5px; border: 1px solid #e5e7eb; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 0.9em; }
+            .button { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h1>🔒 Alerta de Seguridad</h1>
+            </div>
+            <div class='content'>
+                <p>Hola <strong>Administrador Principal</strong>,</p>
+                
+                <div class='alert-box'>
+                    <strong>⚠️ ADVERTENCIA:</strong> Se han detectado múltiples intentos fallidos de acceso a tu cuenta.
+                </div>
+                
+                <div class='info-box'>
+                    <h3>Detalles del Intento:</h3>
+                    <ul>
+                        <li><strong>Cuenta:</strong> admin@admin.com</li>
+                        <li><strong>Intentos fallidos:</strong> 3</li>
+                        <li><strong>Fecha y hora:</strong> 30/10/2025 18:43:54</li>
+                        <li><strong>Dirección IP:</strong> ::1</li>
+                    </ul>
+                </div>
+                
+                <p><strong>¿Fuiste tú?</strong></p>
+                <ul>
+                    <li>Si fuiste tú quien intentó acceder, puedes recuperar tu contraseña usando el enlace a continuación.</li>
+                    <li>Si NO fuiste tú, tu cuenta podría estar en riesgo. Te recomendamos cambiar tu contraseña inmediatamente.</li>
+                </ul>
+                
+                <div style='text-align: center;'>
+                    <a href='http://localhost/proyectoAdmEdificios/forgot-password.php' class='button'>
+                        Recuperar Contraseña
+                    </a>
+                </div>
+                
+                <div class='alert-box' style='background: #fee2e2; border-left-color: #ef4444;'>
+                    <strong>⚠️ IMPORTANTE:</strong> Si se alcanzan 5 intentos fallidos, tu cuenta será bloqueada temporalmente por 15 minutos por seguridad.
+                </div>
+                
+                <div class='footer'>
+                    <p>Este es un correo automático del sistema de seguridad.</p>
+                    <p>Sistema de Administración de Edificios</p>
+                    <p style='font-size: 0.8em; color: #999;'>Si no solicitaste este correo, ignóralo.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    

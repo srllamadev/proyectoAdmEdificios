@@ -1,5 +1,5 @@
 /* ===========================================
-   SISTEMA DE GESTIÓN DE EDIFICIOS - SLH
+   SISTEMA DE GESTIÓN DE EDIFICIOS - GreenSmart
    Paleta de Colores Bento Style
    =========================================== */
 
@@ -247,6 +247,18 @@ body {
 .bento-btn-ghost:hover {
   background: var(--color-blush);
   border-color: var(--color-pink);
+}
+
+.bento-btn-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.bento-btn-success:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, #059669, #047857);
 }
 
 /* Bento Form */

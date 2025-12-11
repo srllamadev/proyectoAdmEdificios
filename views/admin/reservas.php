@@ -68,51 +68,51 @@ try {
 
 <!-- Estadísticas -->
 <div class="bento-stats-grid">
-    <div class="bento-stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="bento-stat-card" style="background: linear-gradient(135deg, #001F54 0%, #009B77 100%);">
         <div class="bento-stat-number" style="color: white;"><?php echo $total_reservas; ?></div>
-        <div class="bento-stat-label" style="color: rgba(255,255,255,0.9);">Total Reservas</div>
+        <div class="bento-stat-label" style="color: rgba(255,255,255,0.95);">Total Reservas</div>
     </div>
-    <div class="bento-stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+    <div class="bento-stat-card" style="background: linear-gradient(135deg, #009B77 0%, #7ED957 100%);">
         <div class="bento-stat-number" style="color: white;"><?php echo $reservas_hoy; ?></div>
-        <div class="bento-stat-label" style="color: rgba(255,255,255,0.9);">Reservas Hoy</div>
+        <div class="bento-stat-label" style="color: rgba(255,255,255,0.95);">Reservas Hoy</div>
     </div>
-    <div class="bento-stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+    <div class="bento-stat-card" style="background: linear-gradient(135deg, #7ED957 0%, #A8E063 100%);">
         <div class="bento-stat-number" style="color: white;"><?php echo $reservas_activas; ?></div>
-        <div class="bento-stat-label" style="color: rgba(255,255,255,0.9);">Confirmadas</div>
+        <div class="bento-stat-label" style="color: rgba(255,255,255,0.95);">Confirmadas</div>
     </div>
-    <div class="bento-stat-card" style="background: linear-gradient(135deg, #ffc107 0%, #ffeb3b 100%);">
+    <div class="bento-stat-card" style="background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);">
         <div class="bento-stat-number" style="color: white;"><?php echo $reservas_pendientes; ?></div>
-        <div class="bento-stat-label" style="color: rgba(255,255,255,0.9);">Pendientes</div>
+        <div class="bento-stat-label" style="color: rgba(255,255,255,0.95);">Pendientes</div>
     </div>
 </div>
 
 <!-- Acciones rápidas -->
 <div class="bento-grid" style="margin-bottom: 30px;">
-    <div class="bento-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white;">
-        <h3><i class="fas fa-plus-circle"></i> Gestión de Áreas</h3>
-        <p style="color: var(--dark-blue);">Administrar áreas comunes y disponibilidad.</p>
+    <div class="bento-card" style="background: linear-gradient(135deg, rgba(0, 155, 119, 0.15) 0%, rgba(255, 255, 255, 0.25) 100%); backdrop-filter: blur(16px); border: 1px solid rgba(0, 155, 119, 0.3);">
+        <h3 style="color: #009B77;"><i class="fas fa-plus-circle"></i> Gestión de Áreas</h3>
+        <p style="color: #2F2F2F; opacity: 0.85;">Administrar áreas comunes y disponibilidad.</p>
         <div class="d-flex gap-10" style="flex-wrap: wrap;">
-            <a href="areas_comunes.php" class="btn" style="background: var(--dark-blue); color: white;">
+            <a href="areas_comunes.php" class="bento-btn bento-btn-primary">
                 <i class="fas fa-building"></i> Ver Áreas Comunes
             </a>
-            <a href="nueva_area.php" class="btn" style="background: var(--primary-blue); color: white;">
+            <a href="nueva_area.php" class="bento-btn bento-btn-success">
                 <i class="fas fa-plus"></i> Nueva Área
             </a>
         </div>
     </div>
     
-    <div class="bento-card" style="background: linear-gradient(135deg, var(--primary-blue), var(--secondary-green)); color: white;">
-        <h3><i class="fas fa-chart-line"></i> Estadísticas de Uso</h3>
-        <p style="color: rgba(255,255,255,0.9);">Análisis del uso de las áreas comunes.</p>
+    <div class="bento-card" style="background: linear-gradient(135deg, rgba(0, 31, 84, 0.15) 0%, rgba(0, 155, 119, 0.15) 100%); backdrop-filter: blur(16px); border: 1px solid rgba(0, 155, 119, 0.3);">
+        <h3 style="color: #001F54;"><i class="fas fa-chart-line"></i> Estadísticas de Uso</h3>
+        <p style="color: #2F2F2F; opacity: 0.85;">Análisis del uso de las áreas comunes.</p>
         <div class="d-flex justify-between align-center">
             <div>
-                <strong style="font-size: 1.2rem;">
+                <strong style="font-size: 1.2rem; color: #009B77;">
                     Activas: <?php echo $reservas_activas; ?><br>
                     Pendientes: <?php echo $reservas_pendientes; ?><br>
                     Hoy: <?php echo $reservas_hoy; ?>
                 </strong>
             </div>
-            <i class="fas fa-chart-bar" style="font-size: 2rem; opacity: 0.7;"></i>
+            <i class="fas fa-chart-bar" style="font-size: 2rem; opacity: 0.3; color: #009B77;"></i>
         </div>
     </div>
 </div>
@@ -142,11 +142,11 @@ try {
                             <td><strong><?php echo $reserva['id']; ?></strong></td>
                             <td>
                                 <?php echo htmlspecialchars($reserva['usuario_nombre'] ?? 'N/A'); ?>
-                                <br><small style="color: var(--dark-gray);"><?php echo htmlspecialchars($reserva['usuario_email'] ?? 'N/A'); ?></small>
+                                <br><small style="color: #2F2F2F; opacity: 0.7;"><?php echo htmlspecialchars($reserva['usuario_email'] ?? 'N/A'); ?></small>
                             </td>
                             <td>
-                                <strong><?php echo htmlspecialchars($reserva['area_nombre'] ?? 'N/A'); ?></strong>
-                                <br><small style="color: var(--dark-gray);">Capacidad: <?php echo $reserva['area_capacidad'] ?? 0; ?> personas</small>
+                                <strong style="color: #009B77;"><?php echo htmlspecialchars($reserva['area_nombre'] ?? 'N/A'); ?></strong>
+                                <br><small style="color: #2F2F2F; opacity: 0.7;">Capacidad: <?php echo $reserva['area_capacidad'] ?? 0; ?> personas</small>
                             </td>
                             <td>
                                 <i class="fas fa-calendar-alt"></i> 
@@ -169,7 +169,7 @@ try {
                                 ?>
                             </td>
                             <td>
-                                <span class="badge" style="background: var(--accent-mint); color: var(--dark-blue);">
+                                <span class="badge" style="background: linear-gradient(135deg, #D4AF37, #F4D03F); color: white; font-weight: 600; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);">
                                     <?php echo number_format($reserva['precio_total'] ?? 0, 2); ?> €
                                 </span>
                             </td>
@@ -195,7 +195,7 @@ try {
                                 <div class="d-flex gap-5">
                                     <?php if ($reserva['estado'] == 'pendiente'): ?>
                                         <a href="aprobar_reserva.php?id=<?php echo $reserva['id']; ?>" 
-                                           class="btn btn-sm" style="background: var(--secondary-green); color: white; padding: 5px 10px;">
+                                           class="btn btn-sm" style="background: linear-gradient(135deg, #009B77, #7ED957); color: white; padding: 5px 10px; box-shadow: 0 0 15px rgba(0, 155, 119, 0.3);">
                                             <i class="fas fa-check"></i>
                                         </a>
                                         <a href="rechazar_reserva.php?id=<?php echo $reserva['id']; ?>" 
@@ -204,7 +204,7 @@ try {
                                         </a>
                                     <?php endif; ?>
                                     <a href="detalle_reserva.php?id=<?php echo $reserva['id']; ?>" 
-                                       class="btn btn-sm" style="background: var(--primary-blue); color: white; padding: 5px 10px;">
+                                       class="btn btn-sm" style="background: #001F54; color: white; padding: 5px 10px;">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 </div>
@@ -215,10 +215,10 @@ try {
             </table>
         </div>
     <?php else: ?>
-        <div style="text-align: center; padding: 40px; background: var(--light-gray); border-radius: var(--border-radius);">
-            <i class="fas fa-calendar-times" style="font-size: 3rem; color: var(--dark-gray); margin-bottom: 15px;"></i>
-            <h3 style="color: var(--dark-gray);">No hay reservas registradas</h3>
-            <p style="color: var(--dark-gray);">Las reservas aparecerán aquí cuando los usuarios las realicen.</p>
+        <div style="text-align: center; padding: 40px; background: linear-gradient(135deg, rgba(0, 155, 119, 0.05) 0%, rgba(255, 255, 255, 0.3) 100%); backdrop-filter: blur(12px); border-radius: 20px; border: 1px solid rgba(0, 155, 119, 0.2);">
+            <i class="fas fa-calendar-times" style="font-size: 3rem; color: #009B77; margin-bottom: 15px; opacity: 0.5;"></i>
+            <h3 style="color: #2F2F2F;">No hay reservas registradas</h3>
+            <p style="color: #2F2F2F; opacity: 0.7;">Las reservas aparecerán aquí cuando los usuarios las realicen.</p>
         </div>
     <?php endif; ?>
 </div>

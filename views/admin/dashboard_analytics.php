@@ -115,21 +115,24 @@ try {
 
 <style>
 :root {
-    --color-agua: #00bcd4;
-    --color-luz: #ffc107;
-    --color-gas: #9c27b0;
-    --color-success: #4caf50;
-    --color-warning: #ff9800;
+    --color-agua: #009B77;
+    --color-luz: #D4AF37;
+    --color-gas: #7ED957;
+    --color-success: #7ED957;
+    --color-warning: #D4AF37;
     --color-danger: #f44336;
-    --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-    --gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --gradient-1: linear-gradient(135deg, #001F54 0%, #009B77 100%);
+    --gradient-2: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
+    --gradient-3: linear-gradient(135deg, #009B77 0%, #7ED957 100%);
+    --gradient-4: linear-gradient(135deg, #7ED957 0%, #A8E063 100%);
+    --gradient-5: linear-gradient(135deg, #001F54 0%, #009B77 100%);
+    --glass-white: rgba(255, 255, 255, 0.15);
+    --glass-emerald: rgba(0, 155, 119, 0.15);
 }
 
 body {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #E8F5F1 0%, #D4F1E8 30%, #C8EFE0 60%, #E1F0FF 100%);
+    background-attachment: fixed;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -169,10 +172,12 @@ body {
 }
 
 .stat-card-premium {
-    background: white;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0, 155, 119, 0.15);
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
@@ -181,7 +186,8 @@ body {
 
 .stat-card-premium:hover {
     transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    box-shadow: 0 20px 40px rgba(0, 155, 119, 0.25);
+    border: 1px solid rgba(0, 155, 119, 0.4);
 }
 
 .stat-card-premium::before {
@@ -255,11 +261,19 @@ body {
 }
 
 .chart-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0, 155, 119, 0.15);
     animation: fadeIn 0.8s;
+    transition: all 0.3s ease;
+}
+
+.chart-card:hover {
+    box-shadow: 0 15px 40px rgba(0, 155, 119, 0.25);
+    border: 1px solid rgba(0, 155, 119, 0.4);
 }
 
 .chart-card.full { grid-column: span 12; }
@@ -313,14 +327,17 @@ body {
 }
 
 .table-premium tbody tr {
-    background: white;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 10px rgba(0, 155, 119, 0.08);
     transition: all 0.3s;
 }
 
 .table-premium tbody tr:hover {
     transform: scale(1.02);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 20px rgba(0, 155, 119, 0.2);
+    border: 1px solid rgba(0, 155, 119, 0.3);
 }
 
 .table-premium tbody td {
@@ -368,18 +385,21 @@ body {
 }
 
 .badge-pagado {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    background: linear-gradient(135deg, #7ED957 0%, #A8E063 100%);
     color: white;
+    box-shadow: 0 4px 15px rgba(126, 217, 87, 0.3);
 }
 
 .badge-pendiente {
-    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
     color: white;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
 .badge-vencido {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
     color: white;
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
 }
 
 /* Animaciones */
@@ -596,13 +616,13 @@ Chart.defaults.font.size = 12;
 
 // Colores
 const colors = {
-    agua: '#00bcd4',
-    luz: '#ffc107',
-    gas: '#9c27b0',
-    gradient1: 'rgba(102, 126, 234, 0.8)',
-    gradient2: 'rgba(118, 75, 162, 0.8)',
-    success: '#4caf50',
-    warning: '#ff9800',
+    agua: '#009B77',
+    luz: '#D4AF37',
+    gas: '#7ED957',
+    gradient1: 'rgba(0, 155, 119, 0.8)',
+    gradient2: 'rgba(126, 217, 87, 0.8)',
+    success: '#7ED957',
+    warning: '#D4AF37',
     danger: '#f44336'
 };
 
@@ -611,8 +631,8 @@ const ingresosData = <?php echo json_encode($grafica_ingresos); ?>;
 const ctxIngresos = document.getElementById('chartIngresos').getContext('2d');
 
 const gradientIngresos = ctxIngresos.createLinearGradient(0, 0, 0, 400);
-gradientIngresos.addColorStop(0, 'rgba(102, 126, 234, 0.8)');
-gradientIngresos.addColorStop(1, 'rgba(118, 75, 162, 0.1)');
+gradientIngresos.addColorStop(0, 'rgba(0, 155, 119, 0.8)');
+gradientIngresos.addColorStop(1, 'rgba(126, 217, 87, 0.1)');
 
 new Chart(ctxIngresos, {
     type: 'line',

@@ -98,11 +98,11 @@ if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false): ?>
         </a>
     </div>
 
-    <div class="bento-card bento-card-analytics" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-        <h3 class="bento-card-title" style="color: white;"><i class="fas fa-chart-line"></i> Analiticas</h3>
-        <p class="bento-card-description" style="color: rgba(255,255,255,0.9);">Dashboard ejecutivo con gráficas circulares, comparativas de consumo, indicadores financieros y ranking de departamentos.</p>
-        <a href="dashboard_analytics.php" class="bento-btn" style="background: white; color: #667eea; font-weight: bold;">
-            <i class="fas fa-rocket"></i> Abrir Dashboard Analytics
+    <div class="bento-card bento-card-analytics" style="background: linear-gradient(135deg, #009B77 0%, #7ED957 100%); color: white;">
+        <h3 class="bento-card-title" style="color: white;"><i class="fas fa-chart-line"></i> Analíticas</h3>
+        <p class="bento-card-description" style="color: rgba(255,255,255,0.95);">Dashboard ejecutivo con gráficas circulares, comparativas de consumo, indicadores financieros y ranking de departamentos.</p>
+        <a href="dashboard_analytics.php" class="bento-btn" style="background: white; color: #009B77; font-weight: bold; box-shadow: 0 0 20px rgba(0, 155, 119, 0.3);">
+            <i class="fas fa-chart-line"></i> Abrir Dashboard Analytics
         </a>
     </div>
 

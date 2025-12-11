@@ -10,6 +10,95 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     
     <style>
+        /* Layout de dos columnas para login */
+        .bento-login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .bento-login-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 1200px;
+            width: 100%;
+            background: var(--glass-white);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl), var(--glow-emerald);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Columna izquierda - Logo */
+        .bento-login-logo-section {
+            background: linear-gradient(135deg, #009B77 0%, #7ED957 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bento-login-logo-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        .bento-login-logo-section img {
+            max-width: 80%;
+            height: auto;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+            position: relative;
+            z-index: 1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .bento-login-logo-text {
+            margin-top: 2rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .bento-login-logo-text h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .bento-login-logo-text p {
+            font-size: 1rem;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+        
+        /* Columna derecha - Formulario */
+        .bento-login-form-section {
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
         /* Estilos para reCAPTCHA */
         .g-recaptcha {
             display: inline-block;
@@ -64,11 +153,11 @@
             justify-content: space-between;
             margin-top: 1.5rem;
             padding-top: 1rem;
-            border-top: 1px solid var(--color-light-gray);
+            border-top: 1px solid rgba(0, 155, 119, 0.1);
         }
         
         .bento-login-link {
-            color: var(--color-dark-blue);
+            color: var(--color-emerald);
             text-decoration: none;
             font-size: var(--font-size-sm);
             font-weight: var(--font-weight-medium);
@@ -76,17 +165,49 @@
         }
         
         .bento-login-link:hover {
-            color: var(--color-pink);
+            color: var(--color-lime);
+        }
+        
+        /* Responsive */
+        @media (max-width: 968px) {
+            .bento-login-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .bento-login-logo-section {
+                padding: 3rem 2rem;
+            }
+            
+            .bento-login-logo-section img {
+                max-width: 60%;
+            }
+            
+            .bento-login-form-section {
+                padding: 3rem 2rem;
+            }
         }
     </style>
 </head>
 <body class="bento-body">
-    <div class="bento-login-container">
-        <div class="bento-card bento-login-card fade-in">
-            <div class="bento-login-header">
-                <h1 class="bento-login-title"><i class="fas fa-building"></i> Sistema de Edificios</h1>
-                <p class="bento-login-subtitle">Acceso al panel de administración</p>
+    <div class="bento-login-wrapper">
+        <div class="bento-login-container fade-in">
+            <!-- Columna Izquierda - Logo -->
+            <div class="bento-login-logo-section">
+                <img src="assets/img/logo1.png" alt="SLH - Sistema de Gestión de Edificios">
+                <div class="bento-login-logo-text">
+                    <h2><i class="fas fa-leaf"></i> SLH</h2>
+                    <p>Sistema de Administración de Edificios</p>
+                </div>
             </div>
+            
+            <!-- Columna Derecha - Formulario -->
+            <div class="bento-login-form-section">
+                <div class="bento-login-header" style="margin-bottom: 2rem;">
+                    <h1 class="bento-page-title" style="font-size: 2rem; margin-bottom: 0.5rem;">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                    </h1>
+                    <p class="bento-page-subtitle" style="font-size: 1rem;">Acceso al panel de administración</p>
+                </div>
             
             <?php if (isset($success_message) && !empty($success_message)): ?>
                 <div class="bento-alert bento-alert-success">
@@ -158,11 +279,12 @@
             
             <!--elimine unas cositas con codigo: DERFS12-->
                 
-                <div class="bento-demo-tip">
-                    <small><i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Haz clic en "Usar" para autocompletar las credenciales</small>
+                <div class="bento-demo-tip" style="margin-top: 1rem;">
+                    
                 </div>
             </div>
         </div>
+    </div>
     </div>
     
     <script>

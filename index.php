@@ -803,8 +803,7 @@ $departamentos = [
     <!-- Navigation -->
     <nav class="navbar">
         <div class="logo">
-            <i class="fas fa-leaf"></i>
-            SLH
+            <img src="assets/img/logo1.png" alt="SLH Logo" style="height: 50px; filter: drop-shadow(0 0 20px rgba(0, 155, 119, 0.4));">
         </div>
         <a href="login.php" class="login-btn">
             <i class="fas fa-sign-in-alt"></i>
